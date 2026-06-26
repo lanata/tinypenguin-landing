@@ -1,0 +1,16 @@
+# Public marketing landing page — static site served by nginx.
+#
+# No build step: the site is plain HTML/CSS under ./site, bind-mounted
+# read-only into nginx. Edit ./site/index.html and redeploy the stack to
+# publish. Fronted by the cloudflared tunnel; routing is hand-wired in
+# terraform/cloudflare/tinypenguin.tf (apex CNAME + tunnel ingress, public).
+services:
+  tinypenguin-landing:
+    image: nginx:alpine
+    container_name: tinypenguin-landing
+    restart: unless-stopped
+    ports:
+      - 8088:80
+    volumes:
+      - ./site:/usr/share/nginx/html:ro
+networks: {}

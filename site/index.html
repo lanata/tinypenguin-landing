@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tiny Penguin — Apps that just work</title>
+  <meta name="description" content="A small studio building delightful, privacy-respecting apps." />
+
+  <!-- Open Graph / social preview. Update url + image once you have assets. -->
+  <meta property="og:title" content="Tiny Penguin" />
+  <meta property="og:description" content="Apps that just work." />
+  <meta property="og:type" content="website" />
+
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐧</text></svg>" />
+
+  <style>
+    /* ---- Design tokens. Tweak these to rebrand the whole page. ---- */
+    :root {
+      --bg:        #0b1020;
+      --bg-soft:   #11182e;
+      --card:      #151d36;
+      --border:    #243154;
+      --text:      #e8ecf6;
+      --muted:     #9aa6c4;
+      --brand:     #6ea8fe;
+      --brand-2:   #8b7bff;
+      --radius:    16px;
+      --maxw:      1080px;
+      --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--text);
+      background: radial-gradient(1200px 600px at 50% -10%, #1b2547 0%, var(--bg) 55%);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+
+    /* ---- Nav ---- */
+    header {
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: blur(10px);
+      background: rgba(11,16,32,0.7);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav { display: flex; align-items: center; justify-content: space-between; height: 64px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 18px; }
+    .brand .logo { font-size: 24px; }
+    .nav-links { display: flex; gap: 28px; color: var(--muted); font-size: 15px; }
+    .nav-links a:hover { color: var(--text); }
+    @media (max-width: 640px) { .nav-links { display: none; } }
+
+    /* ---- Buttons ---- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 22px; border-radius: 999px; font-weight: 600; font-size: 15px;
+      border: 1px solid transparent; cursor: pointer; transition: transform .12s ease, opacity .12s ease;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #0b1020; }
+    .btn-ghost { border-color: var(--border); color: var(--text); }
+
+    /* ---- Hero ---- */
+    .hero { text-align: center; padding: 96px 0 72px; }
+    .pill {
+      display: inline-block; padding: 6px 14px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--bg-soft);
+      color: var(--muted); font-size: 13px; margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 60px); line-height: 1.05; margin: 0 0 18px;
+      letter-spacing: -0.02em;
+      background: linear-gradient(180deg, #fff, #b9c4e6);
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+    }
+    .hero p { font-size: clamp(17px, 2.4vw, 20px); color: var(--muted); max-width: 620px; margin: 0 auto 32px; }
+    .cta { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    /* ---- Sections ---- */
+    section { padding: 64px 0; }
+    .section-head { text-align: center; margin-bottom: 48px; }
+    .section-head h2 { font-size: clamp(26px, 4vw, 36px); margin: 0 0 12px; letter-spacing: -0.01em; }
+    .section-head p { color: var(--muted); margin: 0; }
+
+    /* ---- App showcase grid ---- */
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    .card {
+      background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+      padding: 28px; transition: border-color .15s ease, transform .15s ease;
+    }
+    .card:hover { border-color: var(--brand); transform: translateY(-2px); }
+    .app-icon {
+      width: 56px; height: 56px; border-radius: 14px; display: grid; place-items: center;
+      font-size: 30px; margin-bottom: 18px;
+      background: linear-gradient(135deg, #1c2742, #131a30);
+      border: 1px solid var(--border);
+    }
+    .card h3 { margin: 0 0 8px; font-size: 19px; }
+    .card p { margin: 0 0 16px; color: var(--muted); font-size: 15px; }
+    .card .link { color: var(--brand); font-weight: 600; font-size: 14px; }
+
+    /* ---- Features ---- */
+    .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
+    .feature .ico { font-size: 26px; margin-bottom: 10px; }
+    .feature h4 { margin: 0 0 6px; font-size: 17px; }
+    .feature p { margin: 0; color: var(--muted); font-size: 15px; }
+
+    /* ---- Footer ---- */
+    footer { border-top: 1px solid var(--border); padding: 40px 0; color: var(--muted); font-size: 14px; }
+    .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .foot a:hover { color: var(--text); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wrap nav">
+      <div class="brand"><span class="logo">🐧</span> Tiny Penguin</div>
+      <nav class="nav-links">
+        <a href="#apps">Apps</a>
+        <a href="#features">Why us</a>
+        <a href="#contact">Contact</a>
+      </nav>
+      <a class="btn btn-primary" href="#apps">See the apps</a>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap">
+        <span class="pill">✨ New apps shipping this year</span>
+        <h1>Apps that just work.</h1>
+        <p>A tiny studio building fast, private, delightful apps for the things you do every day.</p>
+        <div class="cta">
+          <a class="btn btn-primary" href="#apps">Explore apps</a>
+          <a class="btn btn-ghost" href="#contact">Get in touch</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- APP SHOWCASE — duplicate a .card block per app -->
+    <section id="apps">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Our apps</h2>
+          <p>Each one designed to do a single thing exceptionally well.</p>
+        </div>
+        <div class="grid">
+
+          <a class="card" href="#">
+            <div class="app-icon">🏠</div>
+            <h3>App One</h3>
+            <p>One-line pitch for what this app does and who it's for.</p>
+            <span class="link">Learn more →</span>
+          </a>
+
+          <a class="card" href="#">
+            <div class="app-icon">🎵</div>
+            <h3>App Two</h3>
+            <p>One-line pitch for what this app does and who it's for.</p>
+            <span class="link">Learn more →</span>
+          </a>
+
+          <a class="card" href="#">
+            <div class="app-icon">📅</div>
+            <h3>App Three</h3>
+            <p>One-line pitch for what this app does and who it's for.</p>
+            <span class="link">Learn more →</span>
+          </a>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section id="features" style="background: var(--bg-soft); border-block: 1px solid var(--border);">
+      <div class="wrap">
+        <div class="section-head">
+          <h2>Built the right way</h2>
+          <p>The principles behind everything we ship.</p>
+        </div>
+        <div class="features">
+          <div class="feature"><div class="ico">🔒</div><h4>Private by default</h4><p>Your data stays yours. No tracking, no ads.</p></div>
+          <div class="feature"><div class="ico">⚡</div><h4>Fast</h4><p>Native-feeling speed on every device.</p></div>
+          <div class="feature"><div class="ico">🎨</div><h4>Thoughtful design</h4><p>Clean, focused, a joy to use.</p></div>
+          <div class="feature"><div class="ico">🛠️</div><h4>Lovingly maintained</h4><p>Real updates from real people.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+      <div class="wrap section-head" style="margin-bottom:0;">
+        <h2>Say hello</h2>
+        <p>Questions, ideas, or just want to chat?</p>
+        <p style="margin-top:20px;">
+          <a class="btn btn-primary" href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a>
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div>© <span id="year"></span> Tiny Penguin</div>
+      <div style="display:flex; gap:20px;">
+        <a href="#apps">Apps</a>
+        <a href="mailto:hello@tinypenguin.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+</body>
+</html>
