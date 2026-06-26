@@ -6,8 +6,9 @@ Static, build-free marketing page served by GitHub Pages. Public-facing.
 
 Everything lives in `index.html` — a single self-contained file (HTML +
 inline CSS, no build step, no external dependencies). Rebrand by editing the
-`:root` design tokens at the top; add an app by duplicating a `.card` block in
-the `#apps` section.
+`:root` design tokens at the top; add a roadmap entry by duplicating a `.card`
+block in the `#rookery` section (use `.tag.hatching` for the next thing
+shipping, plain `.tag` for "still an egg").
 
 ## Deploy
 
