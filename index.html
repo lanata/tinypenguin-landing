@@ -3,12 +3,11 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tiny Penguin — Apps worth waddling over (soon)</title>
-  <meta name="description" content="A tiny studio building fast, private, delightful apps. We're still in the rookery — but the first chicks are nearly ready to hatch." />
+  <title>Tiny Penguin · Apps worth waddling over</title>
+  <meta name="description" content="A tiny studio building fast, private, delightful apps. Our first one, Flotilla, runs a fleet of coding agents on your Mac." />
 
-  <!-- Open Graph / social preview. Update url + image once you have assets. -->
   <meta property="og:title" content="Tiny Penguin" />
-  <meta property="og:description" content="A tiny studio building delightful, private apps. Currently under construction — mind the ice." />
+  <meta property="og:description" content="A tiny studio building delightful, private apps. First up: Flotilla, a fleet of coding agents on your Mac." />
   <meta property="og:type" content="website" />
 
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐧</text></svg>" />
@@ -24,9 +23,15 @@
       --muted:     #9aa6c4;
       --brand:     #6ea8fe;
       --brand-2:   #8b7bff;
+      --sea:       #4fbefa;
+      --green:     #a6e3a1;
+      --red:       #f28ca8;
+      --yellow:    #f2cc73;
+      --mauve:     #cca6f7;
       --radius:    16px;
       --maxw:      1080px;
       --font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
     }
 
     * { box-sizing: border-box; }
@@ -41,15 +46,18 @@
     }
     a { color: inherit; text-decoration: none; }
     .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    @media (max-width: 640px) { .wrap { padding: 0 16px; } }
 
-    /* ---- Construction banner ---- */
+    /* ---- Announcement banner ---- */
     .banner {
-      background: repeating-linear-gradient(45deg, #2a3358, #2a3358 12px, #222a49 12px, #222a49 24px);
+      display: block;
+      background: linear-gradient(90deg, rgba(79,190,250,.16), rgba(139,123,255,.16));
       border-bottom: 1px solid var(--border);
       color: var(--text); font-size: 14px; text-align: center;
       padding: 10px 16px;
     }
-    .banner strong { color: var(--brand); }
+    .banner strong { color: var(--sea); }
+    .banner:hover span { text-decoration: underline; }
 
     /* ---- Nav ---- */
     header {
@@ -73,15 +81,17 @@
     }
     .btn:hover { transform: translateY(-1px); }
     .btn-primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #0b1020; }
+    .btn-sea { background: linear-gradient(135deg, #8fd8ff, var(--sea) 45%, #2a8deb); color: #031020; box-shadow: 0 10px 40px -12px rgba(79,190,250,.6); }
     .btn-ghost { border-color: var(--border); color: var(--text); }
 
     /* ---- Hero ---- */
-    .hero { text-align: center; padding: 88px 0 64px; }
+    .hero { text-align: center; padding: 88px 0 56px; }
     .pill {
-      display: inline-block; padding: 6px 14px; border-radius: 999px;
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 999px;
       border: 1px solid var(--border); background: var(--bg-soft);
       color: var(--muted); font-size: 13px; margin-bottom: 24px;
     }
+    .pill:hover { border-color: var(--sea); color: var(--text); }
     .hero h1 {
       font-size: clamp(36px, 6vw, 60px); line-height: 1.05; margin: 0 0 18px;
       letter-spacing: -0.02em;
@@ -95,13 +105,55 @@
       0%, 100% { transform: rotate(-6deg) translateY(0); }
       50%      { transform: rotate(6deg) translateY(-4px); }
     }
-    @media (prefers-reduced-motion: reduce) { .hero .waddle { animation: none; } }
 
     /* ---- Sections ---- */
     section { padding: 64px 0; }
     .section-head { text-align: center; margin-bottom: 48px; }
     .section-head h2 { font-size: clamp(26px, 4vw, 36px); margin: 0 0 12px; letter-spacing: -0.01em; }
     .section-head p { color: var(--muted); margin: 0; }
+
+    /* ---- Featured app ---- */
+    .featured {
+      position: relative; overflow: hidden;
+      display: grid; grid-template-columns: 1.1fr 1fr; gap: 40px; align-items: center;
+      padding: 44px; border-radius: 24px;
+      border: 1px solid rgba(79,190,250,.4);
+      background:
+        radial-gradient(600px 300px at 0% 0%, rgba(79,190,250,.16), transparent 70%),
+        radial-gradient(500px 300px at 100% 100%, rgba(139,123,255,.14), transparent 70%),
+        var(--card);
+      box-shadow: 0 40px 100px -40px rgba(42,141,235,.55);
+    }
+    @media (max-width: 860px) { .featured { grid-template-columns: 1fr; padding: 28px; } }
+    .featured .icon {
+      width: 72px; height: 72px; border-radius: 18px; display: grid; place-items: center; margin-bottom: 18px;
+      background: linear-gradient(135deg, #4fbefa, #2a8deb);
+      box-shadow: 0 12px 30px -8px rgba(79,190,250,.7), inset 0 1px 0 rgba(255,255,255,.3);
+    }
+    .featured .icon img { width: 48px; height: 48px; }
+    .featured h2 { font-size: clamp(32px, 5vw, 46px); line-height: 1; letter-spacing: -0.03em; margin: 12px 0 10px; }
+    .featured .sub { font-size: 19px; color: var(--text); margin: 0 0 14px; }
+    .featured p { color: var(--muted); margin: 0 0 20px; }
+    .featured ul { list-style: none; padding: 0; margin: 0 0 28px; display: grid; gap: 8px; }
+    .featured li { display: grid; grid-template-columns: 20px 1fr; gap: 8px; color: var(--muted); font-size: 15px; }
+    .featured li::before { content: "✓"; color: var(--sea); font-weight: 700; }
+    .featured .cta { justify-content: flex-start; }
+    .featured .fine { margin-top: 14px; font-size: 13px; color: var(--muted); opacity: .8; }
+
+    /* A small fleet list, styled after Flotilla's sidebar */
+    .fleet { border-radius: 16px; border: 1px solid rgba(255,255,255,.1); background: #1c1c1f; padding: 14px 10px; box-shadow: 0 30px 70px -20px rgba(0,0,0,.7); font-size: 13px; }
+    .fleet .lights { display: flex; gap: 7px; padding: 0 6px 14px; }
+    .fleet .lights i { width: 11px; height: 11px; border-radius: 50%; }
+    .fleet .lights i:nth-child(1) { background: #ff5f57; } .fleet .lights i:nth-child(2) { background: #febc2e; } .fleet .lights i:nth-child(3) { background: #28c840; }
+    .fleet .grp { display: flex; align-items: center; gap: 8px; padding: 4px 8px 6px; font-size: 11px; font-weight: 700; letter-spacing: .06em; color: #a1a1a6; }
+    .fleet .grp i { width: 8px; height: 8px; border-radius: 50%; background: var(--sea); }
+    .fleet .row { display: grid; grid-template-columns: 22px 1fr; column-gap: 10px; align-items: center; padding: 7px 8px; border-radius: 8px; }
+    .fleet .row.sel { background: rgba(255,255,255,.08); }
+    .fleet .g { grid-row: span 2; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font: 700 10px var(--mono); }
+    .fleet b { color: #f2f2f4; font-weight: 600; }
+    .fleet small { color: #8e8e93; font-size: 12px; }
+    .fleet .row.alert { animation: alert 1.6s ease-in-out infinite; }
+    @keyframes alert { 50% { box-shadow: inset 0 0 0 1px rgba(242,140,168,.6); background: rgba(242,140,168,.1); } }
 
     /* ---- Roadmap / "in the rookery" grid ---- */
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
@@ -125,6 +177,7 @@
       color: var(--muted); background: var(--bg-soft);
     }
     .tag.hatching { color: var(--brand); border-color: var(--brand); }
+    .tag.out { color: var(--green); border-color: rgba(166,227,161,.5); background: rgba(166,227,161,.08); }
 
     /* ---- Features ---- */
     .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 28px; }
@@ -136,20 +189,23 @@
     footer { border-top: 1px solid var(--border); padding: 40px 0; color: var(--muted); font-size: 14px; }
     .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
     .foot a:hover { color: var(--text); }
+
+    @media (prefers-reduced-motion: reduce) { .hero .waddle, .fleet .row.alert { animation: none; } }
   </style>
 </head>
 <body>
-  <div class="banner">🚧 <strong>Under construction</strong> — pardon the ice chips. We're still building, but you can watch us waddle. 🐧</div>
+  <a class="banner" href="/flotilla/">⛵ <strong>Flotilla is out.</strong> <span>Run a fleet of coding agents on your Mac →</span></a>
 
   <header>
     <div class="wrap nav">
       <div class="brand"><span class="logo">🐧</span> Tiny Penguin</div>
       <nav class="nav-links">
+        <a href="/flotilla/">Flotilla</a>
         <a href="#rookery">In the rookery</a>
         <a href="#features">Our values</a>
         <a href="#contact">Say hi</a>
       </nav>
-      <a class="btn btn-primary" href="#contact">Keep me posted</a>
+      <a class="btn btn-primary" href="/flotilla/">Get Flotilla</a>
     </div>
   </header>
 
@@ -158,43 +214,69 @@
     <section class="hero">
       <div class="wrap">
         <span class="waddle" aria-hidden="true">🐧</span>
-        <div><span class="pill">❄️ Still in the rookery — nothing's hatched just yet</span></div>
-        <h1>Cool apps are on ice.<br>(The good kind of ice.)</h1>
+        <div><a class="pill" href="/flotilla/">🐣 Our first app just hatched: Flotilla</a></div>
+        <h1>Small studio.<br>Apps worth waddling over.</h1>
         <p>
           Tiny Penguin is a one-iceberg studio building fast, private, genuinely
-          delightful apps. We're not ready to make a big splash yet — but when we
-          dive in, it'll be worth the waddle.
+          delightful apps. The first one is out in the water, and there's more in the rookery.
         </p>
         <div class="cta">
-          <a class="btn btn-primary" href="#contact">Get the cold open</a>
-          <a class="btn btn-ghost" href="#rookery">See what's hatching</a>
+          <a class="btn btn-sea" href="/flotilla/">Meet Flotilla</a>
+          <a class="btn btn-ghost" href="#rookery">See what's next</a>
         </div>
       </div>
     </section>
 
-    <!-- ROADMAP — honest "what we're working on" instead of fake apps.
-         Add a card by duplicating a .card block. Use .tag.hatching for
+    <!-- APPS. Shipped apps get a .featured block; ideas live in the rookery below. -->
+    <section id="apps" style="padding-top: 16px;">
+      <div class="wrap">
+        <div class="featured">
+          <div>
+            <div class="icon"><img src="/flotilla/boat.png" alt="" /></div>
+            <span class="tag out">Out now · macOS</span>
+            <h2>Flotilla</h2>
+            <p class="sub">Run a fleet of coding agents on your Mac.</p>
+            <p>Claude Code, Codex and Cursor agents side by side, each in its own checkout and its own pane, with a sidebar that tells you who's working and who needs you.</p>
+            <ul>
+              <li>Tile, zoom and switch agents from the keyboard</li>
+              <li>Pull requests, CI and review state built in</li>
+              <li>Routines that run agents on a schedule</li>
+            </ul>
+            <div class="cta">
+              <a class="btn btn-sea" href="/flotilla/">Take the tour</a>
+              <a class="btn btn-ghost" data-download href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest">Download</a>
+            </div>
+            <div class="fine">Free to use, with a 14-day Pro trial.</div>
+          </div>
+
+          <div class="fleet" aria-hidden="true">
+            <div class="lights"><i></i><i></i><i></i></div>
+            <div class="grp"><i></i>STOREFRONT</div>
+            <div class="row sel"><span class="g" style="color:var(--green);background:rgba(166,227,161,.16)">▶</span><b>saved-carts</b><small>Update(CartSummary.tsx) · 2m</small></div>
+            <div class="row alert"><span class="g" style="color:var(--red);background:rgba(242,140,168,.16)">!</span><b>fix-flaky-tests</b><small style="color:var(--red)">needs: Bash(npm test)</small></div>
+            <div class="row"><span class="g" style="color:var(--red);background:rgba(242,140,168,.16)">?</span><b>api-pagination</b><small style="color:var(--red)">Which cursor format?</small></div>
+            <div class="row"><span class="g" style="color:var(--yellow);background:rgba(242,204,115,.16)">✓</span><b>dark-mode</b><small style="color:var(--yellow)">done</small></div>
+            <div class="row"><span class="g" style="color:var(--mauve);background:rgba(204,166,247,.16)">●</span><b>search-index</b><small>#418 merged</small></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROADMAP. Add a card by duplicating a .card block. Use .tag.hatching for
          the next thing shipping; plain .tag for "still an egg". -->
     <section id="rookery">
       <div class="wrap">
         <div class="section-head">
-          <h2>What's in the rookery</h2>
-          <p>No vaporware, no fake screenshots — just an honest look at what we're incubating.</p>
+          <h2>What's hatching next</h2>
+          <p>No vaporware, no fake screenshots. Just an honest look at what we're incubating.</p>
         </div>
         <div class="grid">
-
-          <div class="card">
-            <div class="app-icon">🥚</div>
-            <span class="tag hatching">Hatching first</span>
-            <h3 style="margin-top:14px;">Our first app</h3>
-            <p>The flagship chick. It does one everyday thing exceptionally well — we're keeping the details under our flippers until it's ready to fly.</p>
-          </div>
 
           <div class="card">
             <div class="app-icon">🧊</div>
             <span class="tag">Still an egg</span>
             <h3 style="margin-top:14px;">Idea #2</h3>
-            <p>Sketched on a napkin, kept on ice. It'll thaw out once the first one has found its feet.</p>
+            <p>Sketched on a napkin, kept on ice. It'll thaw out now that Flotilla has found its sea legs.</p>
           </div>
 
           <div class="card">
@@ -213,7 +295,7 @@
       <div class="wrap">
         <div class="section-head">
           <h2>The colony rules</h2>
-          <p>The principles we'll stand on, even when the ice gets thin.</p>
+          <p>The principles we stand on, even when the ice gets thin.</p>
         </div>
         <div class="features">
           <div class="feature"><div class="ico">🔒</div><h4>Private by default</h4><p>Your data stays in your nest. No tracking, no ads, no funny business.</p></div>
@@ -228,9 +310,9 @@
     <section id="contact">
       <div class="wrap section-head" style="margin-bottom:0;">
         <h2>Don't get left out in the cold</h2>
-        <p>We're heads-down building. Drop us a line and we'll give you a shout when the first app breaks the ice.</p>
+        <p>Questions about Flotilla, an idea for the next app, or just want to say hi? Drop us a line.</p>
         <p style="margin-top:20px;">
-          <a class="btn btn-primary" href="mailto:hello@tinypenguin.com?subject=Keep%20me%20posted">hello@tinypenguin.com</a>
+          <a class="btn btn-primary" href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a>
         </p>
       </div>
     </section>
@@ -238,14 +320,27 @@
 
   <footer>
     <div class="wrap foot">
-      <div>© <span id="year"></span> Tiny Penguin · Built on a small iceberg · 🚧 Work in progress</div>
+      <div>© <span id="year"></span> Tiny Penguin · Built on a small iceberg</div>
       <div style="display:flex; gap:20px;">
+        <a href="/flotilla/">Flotilla</a>
         <a href="#rookery">In the rookery</a>
         <a href="mailto:hello@tinypenguin.com">Contact</a>
       </div>
     </div>
   </footer>
 
-  <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Release zips are versioned (Flotilla-6.1.0.zip), so point Download at the
+    // latest one; it keeps the releases page if GitHub doesn't answer.
+    fetch('https://api.github.com/repos/tiny-penguin-dev/flotilla-releases/releases/latest')
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(release => {
+        const zip = release.assets.find(a => /^Flotilla-.*\.zip$/.test(a.name));
+        if (zip) document.querySelectorAll('[data-download]').forEach(a => { a.href = zip.browser_download_url; });
+      })
+      .catch(() => {});
+  </script>
 </body>
 </html>
