@@ -1,0 +1,1526 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flotilla · Run a fleet of coding agents on your Mac</title>
+  <meta name="description" content="Flotilla is a native Mac app for running Claude Code, Codex and Cursor agents side by side. Every agent gets its own checkout, its own pane and a live status you can read at a glance." />
+  <meta name="theme-color" content="#05080f" />
+
+  <meta property="og:title" content="Flotilla" />
+  <meta property="og:description" content="Run a fleet of coding agents on your Mac. Watch every one of them." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tinypenguin.com/flotilla/" />
+
+  <link rel="icon" type="image/png" href="boat.png" />
+
+  <style>
+    /* ---- Design tokens. Status colors match the app's sidebar palette. ---- */
+    :root {
+      --bg:      #05080f;
+      --bg-2:    #080d1a;
+      --panel:   #0d1324;
+      --panel-2: #111a30;
+      --line:    rgba(150, 180, 255, 0.12);
+      --line-2:  rgba(150, 180, 255, 0.22);
+      --text:    #e8ecf6;
+      --muted:   #8f9abb;
+      --faint:   #5a6482;
+      --brand:   #4fbefa;
+      --brand-2: #2a8deb;
+      --glow:    rgba(79, 190, 250, 0.45);
+
+      --green:  #a6e3a1;
+      --red:    #f28ca8;
+      --yellow: #f2cc73;
+      --peach:  #fab387;
+      --blue:   #8ab5fa;
+      --mauve:  #cca6f7;
+      --sky:    #8adbeb;
+
+      --radius: 18px;
+      --maxw:   1180px;
+      --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+      --ease: cubic-bezier(.2, .8, .2, 1);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--text);
+      background: var(--bg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    @media (max-width: 640px) { .wrap { padding: 0 16px; } }
+
+    .grad-text {
+      background: linear-gradient(100deg, #fff 10%, #bfe6ff 40%, var(--brand) 70%, var(--mauve) 100%);
+      background-size: 200% 100%;
+      -webkit-background-clip: text; background-clip: text; color: transparent;
+      animation: sheen 8s ease-in-out infinite;
+    }
+    @keyframes sheen { 0%, 100% { background-position: 0% 0; } 50% { background-position: 100% 0; } }
+
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 8px;
+      font: 600 12px/1 var(--mono); letter-spacing: .14em; text-transform: uppercase;
+      color: var(--brand);
+    }
+    .eyebrow::before { content: ""; width: 18px; height: 1px; background: currentColor; opacity: .7; }
+
+    /* ---- Nav ---- */
+    header {
+      position: fixed; inset: 0 0 auto; z-index: 50;
+      transition: background .3s ease, border-color .3s ease;
+      border-bottom: 1px solid transparent;
+    }
+    header.scrolled {
+      background: rgba(5, 8, 15, 0.72);
+      backdrop-filter: blur(16px) saturate(140%);
+      -webkit-backdrop-filter: blur(16px) saturate(140%);
+      border-color: var(--line);
+    }
+    /* Equal side columns keep the links centered on the page, over the hero. */
+    .nav { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; height: 64px; gap: 16px; }
+    .nav-end { display: flex; align-items: center; justify-content: flex-end; gap: 20px; font-size: 14px; color: var(--muted); }
+    .nav-end > a:not(.btn):hover { color: var(--text); }
+    @media (max-width: 760px) { .nav { grid-template-columns: 1fr auto; } .nav-end > a:not(.btn) { display: none; } }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 17px; letter-spacing: -.01em; }
+    .brand > a { display: flex; align-items: center; gap: 10px; }
+    .brand img { width: 28px; height: 28px; filter: drop-shadow(0 0 10px var(--glow)); }
+    .brand small { color: var(--faint); font-weight: 500; }
+    .brand small a:hover { color: var(--text); }
+    .nav-links { display: flex; gap: 28px; color: var(--muted); font-size: 14px; }
+    .nav-links a:hover { color: var(--text); }
+    @media (max-width: 760px) { .nav-links, .brand small { display: none; } }
+
+    /* ---- Buttons ---- */
+    .btn {
+      position: relative; display: inline-flex; align-items: center; gap: 10px;
+      padding: 13px 22px; border-radius: 999px; font-weight: 600; font-size: 15px;
+      border: 1px solid transparent; cursor: pointer;
+      transition: transform .2s var(--ease), box-shadow .2s ease, border-color .2s ease;
+    }
+    .btn:hover { transform: translateY(-2px); }
+    .btn-primary {
+      color: #031020;
+      background: linear-gradient(135deg, #8fd8ff, var(--brand) 45%, var(--brand-2));
+      box-shadow: 0 0 0 1px rgba(255,255,255,.15) inset, 0 10px 40px -10px var(--glow);
+    }
+    .btn-primary:hover { box-shadow: 0 0 0 1px rgba(255,255,255,.25) inset, 0 14px 50px -8px var(--glow); }
+    .btn-ghost { color: var(--text); border-color: var(--line-2); background: rgba(255,255,255,.02); }
+    .btn-ghost:hover { border-color: var(--brand); }
+    .btn-sm { padding: 9px 16px; font-size: 14px; }
+    .btn svg { width: 16px; height: 16px; }
+
+    /* ---- Hero ---- */
+    .hero { position: relative; padding: 150px 0 40px; text-align: center; isolation: isolate; }
+    .sky {
+      position: absolute; inset: 0; z-index: -1; overflow: hidden; pointer-events: none;
+      background:
+        radial-gradient(900px 500px at 50% 0%, rgba(42,141,235,.28), transparent 70%),
+        radial-gradient(600px 400px at 85% 30%, rgba(204,166,247,.12), transparent 70%),
+        radial-gradient(600px 400px at 10% 40%, rgba(138,219,235,.10), transparent 70%);
+    }
+    .stars { position: absolute; inset: 0; opacity: .55;
+      background-image:
+        radial-gradient(1px 1px at 12% 18%, #fff, transparent),
+        radial-gradient(1px 1px at 72% 12%, #fff, transparent),
+        radial-gradient(1px 1px at 33% 42%, #cfe8ff, transparent),
+        radial-gradient(1.5px 1.5px at 88% 46%, #fff, transparent),
+        radial-gradient(1px 1px at 52% 8%, #fff, transparent),
+        radial-gradient(1px 1px at 22% 66%, #cfe8ff, transparent),
+        radial-gradient(1px 1px at 64% 58%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 6% 34%, #fff, transparent),
+        radial-gradient(1px 1px at 94% 22%, #cfe8ff, transparent);
+      animation: twinkle 6s ease-in-out infinite alternate;
+    }
+    @keyframes twinkle { from { opacity: .35; } to { opacity: .7; } }
+    /* Perspective sea: a grid floor drifting toward the viewer. */
+    .sea {
+      position: absolute; left: -50%; right: -50%; top: 800px; height: 700px;
+      transform: perspective(600px) rotateX(62deg); transform-origin: 50% 0;
+      background-image:
+        linear-gradient(rgba(79,190,250,.22) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,190,250,.16) 1px, transparent 1px);
+      background-size: 64px 64px;
+      mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 60%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 60%, transparent 100%);
+      animation: sail 4s linear infinite;
+    }
+    @keyframes sail { to { background-position: 0 64px, 0 0; } }
+    .horizon {
+      position: absolute; left: 0; right: 0; top: 800px; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(79,190,250,.7), transparent);
+      filter: blur(1px); box-shadow: 0 0 60px 12px rgba(42,141,235,.25);
+    }
+
+    .badge {
+      display: inline-flex; align-items: center; gap: 10px;
+      padding: 6px 14px 6px 6px; border-radius: 999px;
+      border: 1px solid var(--line-2); background: rgba(13,19,36,.6);
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      font-size: 13px; color: var(--muted); margin-bottom: 28px;
+    }
+    .badge b { font-weight: 600; color: #031020; background: var(--brand); border-radius: 999px; padding: 2px 9px; font-size: 12px; }
+    .hero h1 {
+      font-size: clamp(42px, 8vw, 92px); line-height: .98; margin: 0 auto 22px; max-width: 980px;
+      letter-spacing: -0.045em; font-weight: 800;
+    }
+    .hero p.lede { font-size: clamp(17px, 2.2vw, 21px); color: var(--muted); max-width: 680px; margin: 0 auto 34px; }
+    .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .fine { margin-top: 16px; font-size: 13px; color: var(--faint); }
+
+    .hero-boat {
+      width: 84px; margin: 0 auto 18px;
+      filter: drop-shadow(0 0 24px var(--glow));
+      animation: bob 5s ease-in-out infinite;
+    }
+    @keyframes bob {
+      0%, 100% { transform: translateY(0) rotate(-3deg); }
+      50%      { transform: translateY(-8px) rotate(3deg); }
+    }
+
+    /* Hero window: tilted back, flattens as you scroll (--hero set by JS). */
+    .hero-stage { perspective: 1800px; margin-top: 70px; }
+    .hero-win {
+      --hero: 0;
+      transform:
+        rotateX(calc((1 - var(--hero)) * 24deg))
+        scale(calc(.9 + var(--hero) * .1))
+        translateY(calc((1 - var(--hero)) * 30px));
+      transform-origin: 50% 0;
+      transition: transform .1s linear;
+      position: relative;
+    }
+    .hero-win::before {
+      content: ""; position: absolute; inset: -8% -6% 20%; z-index: -1;
+      background: radial-gradient(closest-side, rgba(42,141,235,.45), transparent);
+      filter: blur(40px);
+    }
+
+    /* ---- Scaled mockups: a fixed design size scaled to the container. ---- */
+    .fit { position: relative; width: 100%; }
+    .fit > .fit-inner { position: absolute; top: 0; left: 0; transform-origin: 0 0; }
+
+    /* ---- App window mockup ---- */
+    /* Mirrors the app: neutral chrome, a status-tinted bar under each pane,
+       the agent's prompt at the bottom of its terminal. */
+    .win {
+      width: 1180px; height: 720px; border-radius: 14px; overflow: hidden;
+      background: #0b0b0c; border: 1px solid rgba(255,255,255,.14);
+      box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 50px 120px -30px rgba(0,0,0,.9), 0 0 80px -20px rgba(79,190,250,.25);
+      display: grid; grid-template-columns: 236px 1fr; text-align: left;
+      font-family: var(--font); color: #dcdcdf; font-size: 13px;
+    }
+    .lights { display: flex; gap: 8px; }
+    .lights i { width: 12px; height: 12px; border-radius: 50%; display: block; }
+    .lights i:nth-child(1) { background: #ff5f57; } .lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
+
+    .side { background: #1c1c1f; border-right: 1px solid rgba(255,255,255,.06); padding: 12px 8px 8px; display: flex; flex-direction: column; gap: 2px; overflow: hidden; min-height: 0; }
+    .side .bar { display: flex; align-items: center; gap: 6px; padding: 0 6px 12px; color: #8e8e93; }
+    .side .bar .lights { margin-right: 10px; }
+    .side .bar .picker { display: flex; padding: 2px; border-radius: 7px; background: rgba(255,255,255,.07); }
+    .side .bar .picker i, .side .bar > i { width: 28px; height: 20px; border-radius: 5px; display: grid; place-items: center; }
+    .side .bar .picker i.on { background: rgba(255,255,255,.16); color: #f2f2f4; }
+    .side .bar > i:last-child { margin-left: auto; }
+    .side svg { width: 14px; height: 14px; }
+    .grp { display: flex; align-items: center; gap: 8px; padding: 10px 8px 4px; font-size: 11px; font-weight: 700; color: #a1a1a6; letter-spacing: .06em; text-transform: uppercase; }
+    .grp .dot { width: 9px; height: 9px; border-radius: 50%; }
+    .grp .plus { margin-left: auto; width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.08); display: grid; place-items: center; color: #8e8e93; }
+    .grp .plus svg { width: 9px; height: 9px; }
+    .row { position: relative; display: grid; grid-template-columns: 20px 1fr; column-gap: 9px; align-items: center; padding: 5px 8px 5px 10px; border-radius: 7px; transition: background .3s ease, box-shadow .3s ease; }
+    .ic { width: 20px; height: 20px; border-radius: 50%; display: grid; place-items: center; flex-shrink: 0; }
+    .ic svg { width: 10px; height: 10px; }
+    .row .ic { grid-row: span 2; }
+    .row .nm { color: #f2f2f4; font-size: 12.5px; font-weight: 600; line-height: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .row .dt { font-size: 11px; color: #8e8e93; line-height: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .row .sub { grid-column: 2; display: flex; gap: 5px; align-items: center; font-size: 10.5px; color: #8e8e93; margin-top: 3px; white-space: nowrap; overflow: hidden; }
+    .row .sub b { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+    .row.sel { background: rgba(255,255,255,.08); }
+    .row.sel::before { content: ""; position: absolute; left: 2px; top: 50%; width: 3px; height: 22px; margin-top: -11px; border-radius: 2px; background: var(--c); }
+    .row.alert { animation: alertPulse 1.6s ease-in-out infinite; }
+    @keyframes alertPulse { 0%, 100% { box-shadow: inset 0 0 0 1px rgba(242,140,168,0); } 50% { box-shadow: inset 0 0 0 1px rgba(242,140,168,.6); background: rgba(242,140,168,.1); } }
+    .side .foot { margin-top: auto; padding: 8px 6px 0; color: #8e8e93; display: flex; gap: 12px; align-items: center; }
+    .side .foot span:last-child { margin-left: auto; }
+
+    .grid4 { display: grid; gap: 5px; padding: 5px; background: #0b0b0c; min-height: 0; position: relative; }
+    .grid4.n4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .pane {
+      --c: #8e8e93;
+      --bar: color-mix(in srgb, #2b2b2e 40%, var(--c));
+      background: color-mix(in srgb, #141416 86%, var(--c));
+      border: 1px solid color-mix(in srgb, #515154 45%, var(--c)); border-radius: 6px;
+      display: grid; grid-template-rows: 1fr 24px; min-height: 0; min-width: 0; overflow: hidden;
+      transition: border-color .4s ease, box-shadow .4s ease;
+    }
+    .pane.has-strip { grid-template-rows: 26px 1fr 24px; }
+    .pane.neutral { --bar: #2b2b2e; background: #141416; border-color: #3a3a3d; }
+    .pane.focus { border: 2px solid var(--bar); }
+    .pane:not(.focus) > :not(.pf) { opacity: .75; }
+    .pane:not(.focus) > .pf { opacity: .55; }
+    .pf { display: flex; align-items: center; gap: 6px; padding: 0 6px 0 10px; background: var(--bar); color: #121214; font-size: 11.5px; font-weight: 600; white-space: nowrap; min-width: 0; }
+    .pane.neutral .pf { color: #c7c7cc; }
+    .pf .lbl { overflow: hidden; text-overflow: ellipsis; }
+    .pf .tabs { margin-left: auto; display: flex; gap: 1px; flex-shrink: 0; }
+    .pf .tabs i { width: 22px; height: 18px; border-radius: 4px; display: grid; place-items: center; opacity: .7; }
+    .pf .tabs i.on { background: rgba(0,0,0,.22); opacity: 1; }
+    .pane.neutral .pf .tabs i.on { background: rgba(255,255,255,.12); }
+    .pf .tabs svg { width: 12px; height: 12px; }
+    .pill { font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 999px; white-space: nowrap; flex-shrink: 0; }
+    .pill.peach { color: #1a0f08; background: var(--peach); box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
+    .prstrip { display: flex; gap: 6px; align-items: center; padding: 0 6px; background: color-mix(in srgb, #080809 88%, var(--c)); overflow: hidden; }
+    .prstrip span { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 5px; font-size: 10.5px; color: #d1d1d6; background: rgba(255,255,255,.06); white-space: nowrap; }
+    .prstrip span.on { background: rgba(255,255,255,.14); color: #fff; }
+    .prstrip span b { width: 7px; height: 7px; border-radius: 50%; }
+
+    /* The agent's terminal: transcript anchored to the bottom, prompt below it */
+    .term { font-family: var(--mono); font-size: 11px; line-height: 1.55; padding: 8px 12px 6px; color: #dcdcdf; overflow: hidden; display: flex; flex-direction: column; min-height: 0; }
+    .term .log { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; overflow: hidden; white-space: pre; min-height: 0; }
+    .term .log > div { flex-shrink: 0; }
+    .term .u { color: #f2f2f4; background: rgba(255,255,255,.07); margin: 4px -4px; padding: 1px 4px; border-radius: 3px; white-space: pre-wrap; }
+    .term .u::before { content: "> "; color: #8e8e93; }
+    .term .t { color: #f2f2f4; margin-top: 4px; }
+    .term .t::before { content: "⏺ "; color: var(--green); }
+    .term .r { color: #8e8e93; }
+    .term .r::before { content: "  ⎿  "; }
+    .term .add { color: #e6ffe4; background: rgba(166,227,161,.18); }
+    .term .del { color: #ffe4ea; background: rgba(242,140,168,.18); }
+    .term .q { color: #f2f2f4; margin-top: 4px; }
+    .term .q::before { content: "⏺ "; color: #f2f2f4; }
+    .term .sel { color: var(--blue); }
+    .term .m { color: #8e8e93; }
+    .term .spin { color: var(--peach); margin-top: 4px; }
+    .term .box { border: 1px solid rgba(250,179,135,.6); border-radius: 4px; padding: 5px 9px; margin-top: 6px; color: #f2f2f4; white-space: pre; }
+    .term .box::first-line { color: var(--peach); font-weight: 700; }
+    .term .input { flex-shrink: 0; margin-top: 6px; }
+    .term .input .pr { border-block: 1px solid #3a3a3d; padding: 3px 0; white-space: nowrap; overflow: hidden; color: #f2f2f4; }
+    .term .input .pr::before { content: "❯ "; color: #8e8e93; }
+    .term .input .mode { color: var(--peach); padding-top: 2px; font-size: 10.5px; }
+    .term.asking .input { display: none; }
+    .caret { display: inline-block; width: 6px; height: 12px; background: #dcdcdf; vertical-align: -2px; animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Native PR tab */
+    .prv { padding: 10px 14px; font-size: 12px; overflow: hidden; min-height: 0; }
+    .prv h5 { margin: 0 0 4px; font-size: 14px; color: #f2f2f4; font-weight: 700; }
+    .prv h5 small { color: #8e8e93; font-weight: 400; margin-left: 4px; }
+    .prv .sub { color: #8e8e93; font-size: 11px; margin-bottom: 8px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .prv .sub .br { font-family: var(--mono); color: #c7c7cc; }
+    .prv .sub .add { color: var(--green); } .prv .sub .del { color: var(--red); }
+    .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+    .chip { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 999px; border: 1px solid currentColor; }
+    .segtabs { display: flex; gap: 4px; margin: 8px 0 10px; }
+    .segtabs span { font-size: 11px; padding: 3px 10px; border-radius: 5px; color: #c7c7cc; background: rgba(255,255,255,.06); }
+    .segtabs span.on { background: #0a84ff; color: #fff; }
+    .checks { display: grid; gap: 3px; }
+    .check { display: grid; grid-template-columns: 16px 1fr auto; gap: 6px; align-items: center; color: #d1d1d6; font-size: 11px; padding: 3px 8px; border-radius: 5px; background: rgba(0,0,0,.25); }
+    .check .s { font-family: var(--mono); text-align: center; }
+    .check .tm { color: #8e8e93; font-family: var(--mono); font-size: 10px; }
+    .prside { display: grid; gap: 6px; align-content: start; font-size: 11px; color: #8e8e93; }
+    .prside h6 { margin: 6px 0 0; font-size: 10px; letter-spacing: .08em; color: #a1a1a6; }
+    .prside .mergebtn { margin-top: 6px; text-align: center; padding: 6px; border-radius: 6px; background: #0a84ff; color: #fff; font-weight: 600; }
+
+    /* Native editor tab */
+    .ed { display: grid; grid-template-columns: 150px 1fr; min-height: 0; font-size: 11px; }
+    .ed .tree { border-right: 1px solid rgba(255,255,255,.06); padding: 8px 6px; color: #c7c7cc; display: grid; gap: 3px; align-content: start; }
+    .ed .tree span.on { background: rgba(255,255,255,.1); border-radius: 4px; }
+    .ed .tree span { padding: 1px 6px; white-space: nowrap; }
+    .ed .code { font-family: var(--mono); padding: 8px 0; white-space: pre; color: #dcdcdf; overflow: hidden; }
+    .ed .code div { display: grid; grid-template-columns: 30px 1fr; }
+    .ed .code div span:first-child { color: #5c5c61; text-align: right; padding-right: 10px; }
+    .ed .kw { color: var(--mauve); } .ed .fn { color: var(--blue); } .ed .st { color: var(--green); }
+
+    /* ---- Generic section scaffolding ---- */
+    section { position: relative; padding: 120px 0; }
+    @media (max-width: 640px) { section { padding: 80px 0; } }
+    .head { max-width: 760px; margin-bottom: 56px; }
+    .head.center { margin-left: auto; margin-right: auto; text-align: center; }
+    .head.center .eyebrow::after { content: ""; width: 18px; height: 1px; background: currentColor; opacity: .7; }
+    .head h2 { font-size: clamp(32px, 5vw, 56px); line-height: 1.03; letter-spacing: -0.035em; margin: 14px 0 16px; font-weight: 800; }
+    .head p { color: var(--muted); font-size: clamp(16px, 2vw, 19px); margin: 0; }
+
+    /* Reveal on scroll */
+    .rv { opacity: 0; transform: translateY(28px); transition: opacity .9s var(--ease), transform .9s var(--ease); transition-delay: var(--d, 0s); }
+    .rv.in { opacity: 1; transform: none; }
+
+    /* ---- Agent strip ---- */
+    .strip { padding: 34px 0; border-block: 1px solid var(--line); background: linear-gradient(180deg, rgba(13,19,36,.5), transparent); overflow: hidden; }
+    .marquee { display: flex; gap: 56px; width: max-content; animation: marquee 40s linear infinite; }
+    .marquee span { font-size: 15px; color: var(--muted); white-space: nowrap; display: inline-flex; align-items: center; gap: 12px; }
+    .marquee span b { color: var(--text); font-weight: 600; }
+    .marquee span i { font-style: normal; font-family: var(--mono); }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+
+    /* ---- Status legend ---- */
+    .legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 14px; }
+    .lg {
+      border: 1px solid var(--line); border-radius: 16px; padding: 20px; background: linear-gradient(180deg, var(--panel), var(--bg-2));
+      position: relative; overflow: hidden;
+    }
+    .lg .gl { font: 700 28px/1 var(--mono); margin-bottom: 14px; display: inline-block; }
+    .lg h4 { margin: 0 0 4px; font-size: 16px; }
+    .lg p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.5; }
+    .lg::after { content: ""; position: absolute; width: 120px; height: 120px; right: -40px; top: -40px; border-radius: 50%; background: var(--c); opacity: .12; filter: blur(30px); }
+    .lg.working .gl { animation: nudge 1.4s ease-in-out infinite; }
+    @keyframes nudge { 50% { transform: translateX(4px); } }
+    .lg.blocked .gl { animation: throb 1.4s ease-in-out infinite; }
+    @keyframes throb { 50% { transform: scale(1.18); filter: drop-shadow(0 0 8px var(--red)); } }
+
+    /* ---- Scrollytelling ---- */
+    .flow { padding-top: 60px; }
+    .flow-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); gap: 56px; }
+    .stage { position: sticky; top: 15vh; height: 70vh; display: flex; align-items: center; }
+    .stage .fit { filter: drop-shadow(0 30px 60px rgba(0,0,0,.6)); }
+    .steps { padding: 18vh 0 30vh; }
+    .step { min-height: 72vh; display: flex; flex-direction: column; justify-content: center; opacity: .28; transition: opacity .5s ease; }
+    .step.on { opacity: 1; }
+    .step .k { font: 600 13px var(--mono); color: var(--brand); margin-bottom: 14px; display: flex; gap: 10px; align-items: center; }
+    .step .k .num { width: 28px; height: 28px; border-radius: 8px; display: grid; place-items: center; border: 1px solid var(--line-2); color: var(--text); }
+    .step h3 { font-size: clamp(26px, 3.4vw, 38px); line-height: 1.08; letter-spacing: -0.03em; margin: 0 0 14px; }
+    .step p { color: var(--muted); font-size: 17px; margin: 0 0 12px; }
+    .step .kbd-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+    @media (max-width: 900px) {
+      .flow-grid { grid-template-columns: 1fr; gap: 0; }
+      .stage { top: 64px; height: auto; padding: 12px 0; z-index: 2; background: linear-gradient(var(--bg) 85%, transparent); }
+      .steps { padding: 4vh 0 10vh; }
+      .step { min-height: 62vh; justify-content: flex-start; padding-top: 6vh; }
+    }
+
+    /* Scenes inside the stage window */
+    .main { position: relative; min-height: 0; background: #0b0b0c; }
+    .scene { position: absolute; inset: 0; opacity: 0; transform: scale(.97); transition: opacity .6s var(--ease), transform .6s var(--ease); pointer-events: none; }
+    .stage[data-scene="0"] .scene[data-s="0"],
+    .stage[data-scene="1"] .scene[data-s="1"],
+    .stage[data-scene="2"] .scene[data-s="2"],
+    .stage[data-scene="3"] .scene[data-s="3"],
+    .stage[data-scene="4"] .scene[data-s="4"] { opacity: 1; transform: none; }
+
+    .scrim { position: absolute; inset: 0; background: rgba(4,6,12,.55); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+    .sheet {
+      position: absolute; left: 50%; top: 70px; width: 520px; transform: translateX(-50%);
+      background: #252528; border: 1px solid rgba(255,255,255,.14); border-radius: 14px; padding: 22px;
+      box-shadow: 0 30px 80px rgba(0,0,0,.6);
+    }
+    .sheet h6 { margin: 0 0 16px; font-size: 15px; color: #f2f2f4; }
+    .fld { display: grid; grid-template-columns: 90px 1fr; align-items: center; gap: 10px; margin-bottom: 12px; font-size: 12.5px; color: #a1a1a6; }
+    .inp { background: #1c1c1f; border: 1px solid rgba(255,255,255,.1); border-radius: 7px; padding: 7px 10px; color: #f2f2f4; font-size: 12.5px; }
+    .inp.focus { border-color: #0a84ff; box-shadow: 0 0 0 3px rgba(10,132,255,.3); }
+    .inp.area { min-height: 64px; line-height: 1.5; white-space: normal; }
+    .segm { display: inline-grid; grid-auto-flow: column; background: #1c1c1f; border: 1px solid rgba(255,255,255,.1); border-radius: 7px; padding: 2px; }
+    .segm span { padding: 4px 12px; font-size: 12px; border-radius: 5px; color: #a1a1a6; }
+    .segm span.on { background: #48484c; color: #fff; }
+    .sheet .acts { display: flex; justify-content: flex-end; gap: 8px; margin-top: 18px; }
+    .sheet .acts span { padding: 6px 14px; border-radius: 7px; font-size: 12.5px; background: #3a3a3d; color: #f2f2f4; }
+    .sheet .acts span.go { background: #0a84ff; color: #fff; }
+    .named { font-size: 11px; color: var(--mauve); margin-left: 6px; }
+
+    /* Worktree scene */
+    .slotchip { font: 600 10px var(--mono); padding: 1px 7px; border-radius: 4px; background: rgba(0,0,0,.25); flex-shrink: 0; }
+    .term .guard { color: var(--red); white-space: pre-wrap; padding-left: 5ch; }
+
+    /* Tiling scene: panes split in sequence while the scene is showing */
+    .tile { position: absolute; inset: 0; padding: 6px; display: grid; gap: 6px; grid-template-columns: 1fr 0fr; grid-template-rows: 1fr 0fr; transition: grid-template-columns .7s var(--ease), grid-template-rows .7s var(--ease); }
+    .tile.s2 { grid-template-columns: 1fr 1fr; }
+    .tile.s3, .tile.s4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    .tile .pane { min-width: 0; }
+    .tile .pane:nth-child(1) { grid-row: 1 / span 2; }
+    .tile.s4 .pane:nth-child(1) { grid-row: auto; }
+    .tile .pane:nth-child(4) { display: none; }
+    .tile.s4 .pane:nth-child(4) { display: grid; }
+    .zone { position: absolute; border: 2px solid rgba(10,132,255,.9); background: rgba(10,132,255,.22); border-radius: 10px; opacity: 0; transition: opacity .3s ease; }
+    .ghost { position: absolute; width: 200px; padding: 6px 10px; border-radius: 8px; background: #2c2c30; border: 1px solid rgba(10,132,255,.7); font-size: 12.5px; font-weight: 600; color: #f2f2f4; box-shadow: 0 16px 40px rgba(0,0,0,.6); opacity: 0; display: flex; gap: 8px; align-items: center; }
+    .ghost .ic { width: 18px; height: 18px; border-radius: 50%; display: grid; place-items: center; }
+    .ghost svg { width: 9px; height: 9px; }
+
+    /* Attention scene */
+    .toast {
+      position: absolute; right: 16px; top: 14px; width: 330px; padding: 12px 14px; border-radius: 14px;
+      background: rgba(44, 44, 48, .94); border: 1px solid rgba(255,255,255,.14); box-shadow: 0 20px 50px rgba(0,0,0,.6);
+      display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: center;
+      transform: translateX(120%); transition: transform .7s var(--ease) .3s;
+    }
+    .stage[data-scene="3"] .toast { transform: none; }
+    .toast img { width: 34px; height: 34px; border-radius: 8px; background: linear-gradient(135deg, #4fbefa, #2a8deb); padding: 4px; }
+    .toast b { display: block; font-size: 12.5px; color: #fff; }
+    .toast span { font-size: 12px; color: #b4bdd8; }
+
+    /* ---- Bento ---- */
+    .bento { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
+    .card {
+      --mx: 50%; --my: 50%;
+      grid-column: span 2; position: relative; overflow: hidden; border-radius: var(--radius);
+      border: 1px solid var(--line); background: linear-gradient(180deg, var(--panel), var(--bg-2));
+      padding: 28px; min-height: 260px; display: flex; flex-direction: column;
+      transition: border-color .3s ease, transform .4s var(--ease);
+    }
+    .card::before {
+      content: ""; position: absolute; inset: 0; pointer-events: none; opacity: 0; transition: opacity .3s ease;
+      background: radial-gradient(420px circle at var(--mx) var(--my), rgba(79,190,250,.14), transparent 60%);
+    }
+    .card:hover { border-color: var(--line-2); }
+    .card:hover::before { opacity: 1; }
+    .card.wide { grid-column: span 3; }
+    .card.xl { grid-column: span 4; }
+    .card h3 { font-size: 21px; letter-spacing: -.02em; margin: 0 0 8px; }
+    .pro { display: inline-block; vertical-align: 3px; margin-left: 6px; font: 700 10px/1 var(--mono); letter-spacing: .08em; text-transform: uppercase; padding: 4px 7px; border-radius: 6px; color: #031020; background: linear-gradient(135deg, #8fd8ff, var(--brand)); }
+
+    /* ---- Pricing ---- */
+    .billing { display: flex; width: max-content; margin: 0 auto 36px; padding: 4px; border-radius: 999px; border: 1px solid var(--line-2); background: rgba(13,19,36,.6); }
+    .billing button { font: 600 14px var(--font); color: var(--muted); background: none; border: 0; padding: 9px 18px; border-radius: 999px; cursor: pointer; display: inline-flex; gap: 8px; align-items: center; transition: background .2s ease, color .2s ease; }
+    .billing button span { font-size: 11px; font-weight: 700; color: var(--green); }
+    .billing button[aria-checked="true"] { background: rgba(255,255,255,.1); color: var(--text); }
+    .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; max-width: 900px; margin: 0 auto; }
+    @media (max-width: 760px) { .plans { grid-template-columns: 1fr; } }
+    .plan { position: relative; border: 1px solid var(--line); border-radius: 22px; padding: 32px; background: linear-gradient(180deg, var(--panel), var(--bg-2)); display: flex; flex-direction: column; }
+    .plan h3 { margin: 0 0 12px; font-size: 20px; }
+    .price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+    .price b { font-size: 52px; line-height: 1; letter-spacing: -.04em; }
+    .price span { color: var(--muted); font-size: 15px; }
+    .plan .blurb { color: var(--muted); margin: 0 0 22px; font-size: 15px; min-height: 24px; }
+    .plan .btn { justify-content: center; margin-bottom: 26px; }
+    .plan ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 11px; }
+    .plan li { display: grid; grid-template-columns: 20px 1fr; gap: 8px; color: var(--muted); font-size: 15px; line-height: 1.45; }
+    .plan li::before { content: "✓"; color: var(--brand); font-weight: 700; }
+    .plan li:has(b) { display: block; }
+    .plan li:has(b)::before { content: none; }
+    .plan li b { color: var(--text); font-weight: 600; }
+    .pro-plan { border-color: rgba(79,190,250,.45); background: radial-gradient(500px 260px at 50% 0%, rgba(42,141,235,.18), transparent 70%), linear-gradient(180deg, var(--panel-2), var(--bg-2)); box-shadow: 0 40px 100px -40px rgba(42,141,235,.6); }
+    .ribbon { position: absolute; top: 28px; right: 28px; font: 700 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--green); border: 1px solid rgba(166,227,161,.4); background: rgba(166,227,161,.08); padding: 5px 10px; border-radius: 999px; }
+    .plan-fine { max-width: 640px; margin: 28px auto 0; text-align: center; color: var(--faint); font-size: 14px; }
+    .card p { color: var(--muted); font-size: 15px; margin: 0; line-height: 1.55; }
+    .card .vis { margin-top: auto; padding-top: 24px; }
+    @media (max-width: 960px) { .bento { grid-template-columns: repeat(2, 1fr); } .card, .card.wide, .card.xl { grid-column: span 1; } .card.xl { grid-column: span 2; } }
+    @media (max-width: 640px) { .bento { grid-template-columns: 1fr; } .card, .card.wide, .card.xl { grid-column: span 1; } }
+
+    .mono { font-family: var(--mono); }
+    .mini-term { font: 12px/1.7 var(--mono); background: #070a13; border: 1px solid var(--line); border-radius: 12px; padding: 14px 16px; color: #cdd6f4; overflow: hidden; white-space: pre; }
+    .mini-term .p { color: var(--brand); }
+    .mini-term .m { color: var(--faint); }
+    .agents-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .agent-chip { display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line-2); font-size: 14px; font-weight: 600; background: rgba(255,255,255,.02); }
+    .agent-chip i { width: 8px; height: 8px; border-radius: 50%; background: var(--c); box-shadow: 0 0 10px var(--c); }
+
+    .survive { display: flex; align-items: center; gap: 14px; }
+    .survive .appbox { width: 56px; height: 56px; border-radius: 14px; background: linear-gradient(135deg, #4fbefa, #2a8deb); display: grid; place-items: center; animation: quit 4s ease-in-out infinite; }
+    .survive .appbox img { width: 36px; }
+    @keyframes quit { 0%, 30% { opacity: 1; transform: scale(1); } 45%, 70% { opacity: .15; transform: scale(.85); } 85%, 100% { opacity: 1; transform: scale(1); } }
+    .survive .lanes { flex: 1; display: grid; gap: 8px; }
+    .survive .lane { height: 6px; border-radius: 3px; background: rgba(166,227,161,.15); overflow: hidden; position: relative; }
+    .survive .lane::after { content: ""; position: absolute; inset: 0; width: 40%; background: linear-gradient(90deg, transparent, var(--green), transparent); animation: run 1.8s linear infinite; animation-delay: var(--d); }
+    @keyframes run { from { transform: translateX(-100%); } to { transform: translateX(260%); } }
+
+    .rule { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px; border: 1px solid var(--line); border-radius: 10px; font: 12.5px var(--mono); background: #070a13; margin-top: 8px; }
+    .rule .ok { color: var(--green); font-size: 11px; }
+
+    .code { font: 12px/1.7 var(--mono); background: #070a13; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .code .ln { display: grid; grid-template-columns: 34px 1fr; }
+    .code .ln span:first-child { color: var(--faint); text-align: right; padding-right: 12px; }
+    .code .hl { background: rgba(79,190,250,.12); box-shadow: inset 2px 0 0 var(--brand); }
+    .code .kw { color: var(--mauve); } .code .fn { color: var(--blue); } .code .st { color: var(--green); } .code .cm { color: var(--faint); }
+    .ask { display: inline-flex; margin: 10px 0 0 34px; padding: 5px 10px; border-radius: 8px; background: var(--brand-2); color: #fff; font: 600 12px var(--font); box-shadow: 0 8px 20px rgba(42,141,235,.4); }
+
+    .prs { display: grid; gap: 8px; }
+    .prs .r { display: grid; grid-template-columns: 18px 1fr auto; gap: 10px; align-items: center; padding: 9px 12px; border: 1px solid var(--line); border-radius: 10px; background: #070a13; font-size: 13px; }
+    .prs .r .g { font-family: var(--mono); text-align: center; }
+    .prs .r small { color: var(--faint); font-family: var(--mono); }
+
+    /* ---- Keyboard ---- */
+    .keys { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+    .kc { display: flex; align-items: center; gap: 14px; padding: 14px 16px; border: 1px solid var(--line); border-radius: 14px; background: rgba(13,19,36,.6); }
+    .kc span { color: var(--muted); font-size: 14.5px; }
+    kbd {
+      display: inline-grid; place-items: center; min-width: 34px; height: 34px; padding: 0 9px;
+      font: 600 14px var(--font); color: var(--text); border-radius: 8px;
+      background: linear-gradient(180deg, #1d2742, #121a30);
+      border: 1px solid rgba(255,255,255,.12); border-bottom-width: 3px;
+      box-shadow: 0 6px 14px rgba(0,0,0,.35);
+      transition: transform .12s ease, border-bottom-width .12s ease, box-shadow .12s ease, color .12s ease;
+    }
+    kbd.press { transform: translateY(2px); border-bottom-width: 1px; color: var(--brand); box-shadow: 0 0 20px -2px var(--glow); }
+    .combo { display: inline-flex; gap: 4px; flex-shrink: 0; }
+
+    /* ---- Routines ---- */
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+    @media (max-width: 900px) { .split { grid-template-columns: 1fr; gap: 40px; } }
+    .routine { border: 1px solid var(--line-2); border-radius: 20px; background: linear-gradient(180deg, var(--panel-2), var(--bg-2)); padding: 24px; box-shadow: 0 40px 100px -40px rgba(42,141,235,.5); }
+    .routine .top { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .routine .top .ic { width: 40px; height: 40px; border-radius: 11px; display: grid; place-items: center; background: rgba(204,166,247,.15); color: var(--mauve); font: 700 18px var(--mono); }
+    .routine .top b { display: block; font-size: 17px; }
+    .routine .top small { color: var(--muted); font-size: 13px; }
+    .routine .top .on { margin-left: auto; width: 38px; height: 22px; border-radius: 999px; background: var(--green); position: relative; }
+    .routine .top .on::after { content: ""; position: absolute; right: 2px; top: 2px; width: 18px; height: 18px; border-radius: 50%; background: #fff; }
+    .sched { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+    .sched span { font: 12px var(--mono); padding: 5px 10px; border-radius: 8px; border: 1px solid var(--line-2); color: var(--muted); }
+    .sched span.on { border-color: var(--mauve); color: var(--mauve); background: rgba(204,166,247,.08); }
+    .runs { display: grid; gap: 8px; }
+    .run { display: grid; grid-template-columns: 70px 1fr; gap: 12px; font-size: 13.5px; padding: 10px 12px; border-radius: 10px; background: #070a13; border: 1px solid var(--line); }
+    .run time { color: var(--faint); font-family: var(--mono); font-size: 12px; padding-top: 1px; }
+    .ask-card { margin-top: 12px; border: 1px solid rgba(242,204,115,.45); background: rgba(242,204,115,.06); border-radius: 12px; padding: 14px; }
+    .ask-card p { margin: 0 0 12px; font-size: 14px; }
+    .ask-card .b { display: flex; gap: 8px; }
+    .ask-card .b span { padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 1px solid var(--line-2); }
+    .ask-card .b span:first-child { background: var(--green); color: #0b1a0a; border-color: transparent; }
+    .ticks { list-style: none; padding: 0; margin: 26px 0 0; display: grid; gap: 12px; }
+    .ticks li { display: grid; grid-template-columns: 22px 1fr; gap: 10px; color: var(--muted); }
+    .ticks li::before { content: "✓"; color: var(--brand); font-weight: 700; }
+    .ticks li b { color: var(--text); font-weight: 600; }
+
+    /* ---- CLI ---- */
+    .cli { font: 13.5px/1.75 var(--mono); background: #05070d; border: 1px solid var(--line-2); border-radius: 16px; overflow: hidden; box-shadow: 0 40px 100px -40px rgba(0,0,0,.9); }
+    .cli .bar { display: flex; gap: 8px; padding: 12px 14px; border-bottom: 1px solid var(--line); background: #0b1020; }
+    .cli .bar i { width: 11px; height: 11px; border-radius: 50%; background: #2a3150; }
+    .cli pre { margin: 0; padding: 18px 20px; min-height: 340px; color: #cdd6f4; white-space: pre-wrap; word-break: break-word; font: inherit; }
+    .cli .p { color: var(--brand); } .cli .m { color: var(--faint); } .cli .ok { color: var(--green); } .cli .w { color: var(--yellow); } .cli .r { color: var(--red); }
+
+    /* ---- Specs ---- */
+    .specs { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+    .spec { background: var(--bg); padding: 26px; }
+    .spec b { display: block; font-size: 22px; letter-spacing: -.02em; margin-bottom: 4px; }
+    .spec span { color: var(--muted); font-size: 14px; }
+
+    /* ---- Final CTA ---- */
+    .final { text-align: center; overflow: hidden; isolation: isolate; }
+    .final .halo { position: absolute; left: 50%; top: 50%; width: 900px; height: 900px; transform: translate(-50%, -50%); z-index: -1;
+      background: conic-gradient(from 0deg, rgba(79,190,250,.0), rgba(79,190,250,.35), rgba(204,166,247,.25), rgba(138,219,235,.2), rgba(79,190,250,.0));
+      border-radius: 50%; filter: blur(80px); opacity: .6; animation: spin 18s linear infinite; }
+    @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+    .final img { width: 120px; margin: 0 auto 26px; filter: drop-shadow(0 0 30px var(--glow)); animation: bob 5s ease-in-out infinite; }
+    .final h2 { font-size: clamp(38px, 6.5vw, 76px); line-height: 1; letter-spacing: -0.045em; margin: 0 0 18px; font-weight: 800; }
+    .final p { color: var(--muted); font-size: 19px; margin: 0 auto 32px; max-width: 560px; }
+
+    footer { border-top: 1px solid var(--line); padding: 36px 0; color: var(--faint); font-size: 14px; }
+    .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; align-items: center; }
+    .foot a:hover { color: var(--text); }
+
+    /* Scroll progress */
+    .progress { position: fixed; top: 0; left: 0; height: 2px; width: 100%; z-index: 60; transform-origin: 0 50%; transform: scaleX(var(--sp, 0)); background: linear-gradient(90deg, var(--brand), var(--mauve)); }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation: none !important; transition: none !important; }
+      .rv { opacity: 1; transform: none; }
+      .hero-win { transform: none; }
+      html { scroll-behavior: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" aria-hidden="true"></div>
+
+  <header id="top">
+    <div class="wrap nav">
+      <div class="brand">
+        <a href="#"><img src="boat.png" alt="" /> Flotilla</a>
+        <small>by <a href="/">Tiny Penguin</a></small>
+      </div>
+      <nav class="nav-links">
+        <a href="#flow">How it works</a>
+        <a href="#features">Features</a>
+        <a href="#routines">Routines</a>
+        <a href="#pricing">Pricing</a>
+      </nav>
+      <div class="nav-end">
+        <a href="https://github.com/tiny-penguin-dev/flotilla-releases/releases">Release notes</a>
+        <a class="btn btn-primary btn-sm" data-download href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest">Download</a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="sky" aria-hidden="true"><div class="stars"></div><div class="horizon"></div><div class="sea"></div></div>
+      <div class="wrap">
+        <img class="hero-boat rv" src="boat.png" alt="" />
+        <div class="rv" style="--d:.05s"><span class="badge"><b>Mac</b> Claude Code, Codex and Cursor, side by side</span></div>
+        <h1 class="rv" style="--d:.1s"><span class="grad-text">Run a fleet of coding agents.</span></h1>
+        <p class="lede rv" style="--d:.2s">
+          Flotilla is a native Mac app for running many AI coding agents at once. Each one gets
+          its own checkout and its own pane, and the sidebar shows you who's working, who's done
+          and who needs you.
+        </p>
+        <div class="cta rv" style="--d:.3s">
+          <a class="btn btn-primary" data-download href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.8 1.3 10.3.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8s2 .8 3.4.8c1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9 0 0-2.7-1-2.7-4.2zM13.9 5c.7-.9 1.2-2 1-3.2-1 0-2.3.7-3 1.5-.7.8-1.2 2-1.1 3.1 1.2.1 2.3-.6 3.1-1.4z"/></svg>
+            Download for Mac
+          </a>
+          <a class="btn btn-ghost" href="#flow">See how it works</a>
+        </div>
+        <div class="fine rv" style="--d:.35s">Free to use · 14-day Pro trial · macOS 26 Tahoe</div>
+
+        <div class="hero-stage">
+          <div class="hero-win">
+            <div class="fit" data-w="1180" data-h="720"><div class="fit-inner" id="heroWin"></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AGENT STRIP -->
+    <div class="strip" aria-hidden="true">
+      <div class="marquee" id="marquee"></div>
+    </div>
+
+    <!-- STATUS LEGEND -->
+    <section id="status">
+      <div class="wrap">
+        <div class="head rv">
+          <span class="eyebrow">Live status</span>
+          <h2>Read the whole fleet in one glance.</h2>
+          <p>Status comes straight from your agents' hooks, never from scraping the screen. One glyph tells you what each agent is doing and whether it's waiting on you.</p>
+        </div>
+        <div class="legend">
+          <div class="lg working rv" style="--c:var(--green)"><span class="gl" style="color:var(--green)">▸</span><h4>Working</h4><p>Busy, with the tool it's running right now.</p></div>
+          <div class="lg blocked rv" style="--c:var(--red);--d:.06s"><span class="gl" style="color:var(--red)">▲</span><h4>Blocked</h4><p>Needs your approval to keep going.</p></div>
+          <div class="lg rv" style="--c:var(--red);--d:.12s"><span class="gl" style="color:var(--red)">◆</span><h4>Waiting</h4><p>Asked you a question or wants a plan approved.</p></div>
+          <div class="lg rv" style="--c:var(--yellow);--d:.18s"><span class="gl" style="color:var(--yellow)">✓</span><h4>Done</h4><p>Finished its turn and handed the work back.</p></div>
+          <div class="lg rv" style="--c:var(--blue);--d:.24s"><span class="gl" style="color:var(--blue)">◐</span><h4>In review</h4><p>Its PR is open, with CI and review state.</p></div>
+          <div class="lg rv" style="--c:var(--mauve);--d:.3s"><span class="gl" style="color:var(--mauve)">●</span><h4>Merged</h4><p>Shipped. Clean it up with one key.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCROLLYTELLING -->
+    <section id="flow" class="flow">
+      <div class="wrap">
+        <div class="head center rv">
+          <span class="eyebrow">How it works</span>
+          <h2>From idea to merged PR,<br>without losing track.</h2>
+        </div>
+        <div class="flow-grid">
+          <div class="stage" id="stage" data-scene="0">
+            <div class="fit" data-w="1180" data-h="720"><div class="fit-inner" id="flowWin"></div></div>
+          </div>
+          <div class="steps">
+            <div class="step" data-step="0">
+              <div class="k"><span class="num">1</span> Start</div>
+              <h3>A new agent is one keystroke away.</h3>
+              <p>Press ⌘N, pick a project, describe the task. Flotilla names the session for you with Apple's on-device model, so you never invent another branch name.</p>
+              <div class="kbd-row"><span class="combo"><kbd>⌘</kbd><kbd>N</kbd></span></div>
+            </div>
+            <div class="step" data-step="1">
+              <div class="k"><span class="num">2</span> Isolate</div>
+              <h3>Every agent gets its own checkout.</h3>
+              <p>Agents work in their own git worktrees, drawn from a pool of ready slots. Ten agents can work in the same repo without stepping on each other's files.</p>
+              <p>Flotilla keeps them honest too: an agent that tries to make a second checkout gets stopped and pointed back to its own.</p>
+            </div>
+            <div class="step" data-step="2">
+              <div class="k"><span class="num">3</span> Arrange</div>
+              <h3>Tile, drag, zoom. All from the keyboard.</h3>
+              <p>Drop agents from the sidebar into the grid, split panes in any direction and zoom in on the one that matters. Smart Organize lays them all out evenly in one key.</p>
+              <div class="kbd-row"><span class="combo"><kbd>⌥</kbd><kbd>D</kbd></span><span class="combo"><kbd>⌥</kbd><kbd>R</kbd></span><span class="combo"><kbd>⌥</kbd><kbd>↩</kbd></span><span class="combo"><kbd>⌥</kbd><kbd>S</kbd></span></div>
+            </div>
+            <div class="step" data-step="3">
+              <div class="k"><span class="num">4</span> Respond</div>
+              <h3>Know the moment someone needs you.</h3>
+              <p>Blocked agents light up in the sidebar and send a notification. Approve once, or turn on auto-approve for agents you trust.</p>
+              <p>Walk away for lunch: Flotilla keeps your Mac awake while agents are working.</p>
+            </div>
+            <div class="step" data-step="4">
+              <div class="k"><span class="num">5</span> Ship</div>
+              <h3>Review and merge without leaving the app.</h3>
+              <p>Each agent's pull requests sit right next to its terminal, with CI checks and review state updating live. When it merges, delete the session and its checkout in one go.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES BENTO -->
+    <section id="features">
+      <div class="wrap">
+        <div class="head rv">
+          <span class="eyebrow">Features</span>
+          <h2>Everything around the agent.<br>Nothing in its way.</h2>
+          <p>Flotilla doesn't replace your agent or your terminal. It's the cockpit around them: layout, status, checkouts, review and scheduling.</p>
+        </div>
+
+        <div class="bento">
+          <div class="card wide rv">
+            <h3>Agents outlive the app <span class="pro">Pro</span></h3>
+            <p>Quit, update or crash Flotilla and your agents keep running in the background. Open it again and every pane is right where you left it.</p>
+            <div class="vis survive">
+              <div class="appbox"><img src="boat.png" alt="" /></div>
+              <div class="lanes">
+                <div class="lane" style="--d:0s"></div><div class="lane" style="--d:.4s"></div><div class="lane" style="--d:.9s"></div><div class="lane" style="--d:1.3s"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card wide rv" style="--d:.08s">
+            <h3>Bring your agent</h3>
+            <p>Claude Code, Codex and Cursor run side by side in one sidebar. Pick a default per project, or per agent when you start it.</p>
+            <div class="vis agents-row">
+              <span class="agent-chip" style="--c:var(--peach)"><i></i>Claude Code</span>
+              <span class="agent-chip" style="--c:var(--green)"><i></i>Codex</span>
+              <span class="agent-chip" style="--c:var(--sky)"><i></i>Cursor</span>
+            </div>
+          </div>
+
+          <div class="card xl rv">
+            <h3>A real editor, one tab over</h3>
+            <p>File tree, Quick Open, Find in Files and syntax highlighting, opened right in the agent's checkout. Select some code and hit Ask the Agent to send it straight to its prompt. Prefer Neovim? It takes the same slot.</p>
+            <div class="vis code">
+              <div class="ln"><span>12</span><span><span class="kw">export function</span> <span class="fn">applyDiscount</span>(cart, code) {</span></div>
+              <div class="ln hl"><span>13</span><span>  <span class="kw">const</span> rate = codes[code] ?? <span class="st">0</span></span></div>
+              <div class="ln hl"><span>14</span><span>  <span class="kw">return</span> cart.total * (<span class="st">1</span> - rate)</span></div>
+              <div class="ln"><span>15</span><span>}</span></div>
+              <span class="ask">Ask the Agent</span>
+            </div>
+          </div>
+
+          <div class="card rv" style="--d:.08s">
+            <h3>Approvals your way <span class="pro">Pro</span></h3>
+            <p>Auto-approve one agent, or allow rules for all of them.</p>
+            <div class="vis">
+              <div class="rule">Bash(npm test)<span class="ok">allowed</span></div>
+              <div class="rule">WebSearch<span class="ok">allowed</span></div>
+            </div>
+          </div>
+
+          <div class="card rv">
+            <h3>Pull requests, built in</h3>
+            <p>Every agent's PRs, with checks and reviews.</p>
+            <div class="vis prs">
+              <div class="r"><span class="g" style="color:var(--green)">✓</span>Add saved carts<small>approved</small></div>
+              <div class="r"><span class="g" style="color:var(--blue)">◐</span>Cursor pagination<small>3 pending</small></div>
+              <div class="r"><span class="g" style="color:var(--mauve)">●</span>Faster search<small>merged</small></div>
+            </div>
+          </div>
+
+          <div class="card rv" style="--d:.08s">
+            <h3>Review before you push <span class="pro">Pro</span></h3>
+            <p>The Changes tab shows the branch, its commits and the diff. Leave notes on any line and send them all to the agent at once.</p>
+          </div>
+
+          <div class="card rv" style="--d:.16s">
+            <h3>Find anything</h3>
+            <p>⌘O finds an agent by name, branch, PR or something it said. ⌘P and ⇧⌘F search the code.</p>
+          </div>
+
+          <div class="card wide rv">
+            <h3>Rendered by Ghostty</h3>
+            <p>Terminals use Ghostty's GPU renderer and read your Ghostty config, so your fonts and theme already match. Need a shell? Every agent has its own terminal tab.</p>
+          </div>
+
+          <div class="card wide rv" style="--d:.08s">
+            <h3>Agents that delegate</h3>
+            <p>Agents get a <span class="mono">flotilla</span> command of their own. They can start helpers, message each other and schedule routines, all in view.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CLI -->
+    <section id="cli" style="padding-top:40px">
+      <div class="wrap split">
+        <div class="cli rv" aria-label="Terminal showing the flotilla command">
+          <div class="bar"><i></i><i></i><i></i></div>
+          <pre id="cliOut"></pre>
+        </div>
+        <div class="rv" style="--d:.1s">
+          <div class="head" style="margin-bottom:0">
+            <span class="eyebrow">Command line</span>
+            <h2>Agents can run the fleet too.</h2>
+            <p>Every agent knows it's inside Flotilla. With the <span class="mono">flotilla</span> command it can see the other agents, hand off a side quest to a new one, message a teammate or set up a routine. You stay in charge, and you see all of it in the sidebar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KEYBOARD -->
+    <section id="keys" style="background: linear-gradient(180deg, transparent, var(--bg-2) 20%, var(--bg-2) 80%, transparent);">
+      <div class="wrap">
+        <div class="head center rv">
+          <span class="eyebrow">Keyboard first</span>
+          <h2>Your hands never leave the keys.</h2>
+          <p>Every action has a shortcut, and every shortcut is in the menu bar when you forget one.</p>
+        </div>
+        <div class="keys" id="keys-grid">
+          <div class="kc rv"><span class="combo"><kbd>⌘</kbd><kbd>N</kbd></span><span>New agent</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⌘</kbd><kbd>O</kbd></span><span>Find an agent</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⇧</kbd><kbd>⌘</kbd><kbd>]</kbd></span><span>Next agent</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⌥</kbd><kbd>R</kbd></span><span>Split right</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⌥</kbd><kbd>D</kbd></span><span>Split down</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⌥</kbd><kbd>↩</kbd></span><span>Zoom pane</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⌥</kbd><kbd>S</kbd></span><span>Smart organize</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⌥</kbd><kbd>⌘</kbd><kbd>←</kbd></span><span>Move focus</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⌃</kbd><kbd>Tab</kbd></span><span>Agent, editor, changes, PRs</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⌘</kbd><kbd>P</kbd></span><span>Quick open</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⌘</kbd><kbd>T</kbd></span><span>New window tab</span></div>
+          <div class="kc rv"><span class="combo"><kbd>⌥</kbd><kbd>⇧</kbd><kbd>Q</kbd></span><span>Clean up finished sessions</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ROUTINES -->
+    <section id="routines">
+      <div class="wrap split">
+        <div class="rv">
+          <div class="head" style="margin-bottom:0">
+            <span class="eyebrow">Routines</span>
+            <h2>Agents that show up on schedule.</h2>
+            <p>Give a prompt a schedule in plain words, like "every 4h" or "weekdays 9:00". Each run is a normal agent you can open and watch, and it leaves a one-line summary in the history.</p>
+          </div>
+          <ul class="ticks">
+            <li><span><b>Asks before it acts.</b> A run can stop and ask you to approve or pick an option. Your answer goes straight back to it.</span></li>
+            <li><span><b>One run at a time.</b> Slow runs never pile up, and stuck ones are stopped at a timeout.</span></li>
+            <li><span><b>Cleans up after itself.</b> A finished run removes its checkout, unless that would lose work.</span></li>
+          </ul>
+        </div>
+        <div class="routine rv" style="--d:.1s">
+          <div class="top">
+            <span class="ic">⟳</span>
+            <div><b>Dependency check</b><small>storefront · Claude Code</small></div>
+            <span class="on" aria-hidden="true"></span>
+          </div>
+          <div class="sched"><span>hourly</span><span>every 4h</span><span class="on">weekdays 9:00</span><span>mon 10am</span></div>
+          <div class="runs">
+            <div class="run"><time>Today</time><span>Bumped 3 patch versions, opened #431. Tests pass.</span></div>
+            <div class="run"><time>Mon</time><span>Nothing new. Removed itself.</span></div>
+            <div class="run"><time>Fri</time><span>Opened #427 for the date library. Changelog looked safe.</span></div>
+          </div>
+          <div class="ask-card">
+            <p>The image library has a new major version with breaking API changes. Upgrade it in this run?</p>
+            <div class="b"><span>Approve</span><span>Deny</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SPECS -->
+    <section style="padding-top:40px">
+      <div class="wrap">
+        <div class="specs rv">
+          <div class="spec"><b>Native</b><span>Swift, SwiftUI and AppKit. No web view in sight.</span></div>
+          <div class="spec"><b>Persistent</b><span>With Pro, agents run in tmux and survive restarts.</span></div>
+          <div class="spec"><b>Private</b><span>Your projects and sessions stay on your Mac.</span></div>
+          <div class="spec"><b>Notarized</b><span>Notarized by Apple, with automatic updates.</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING. Free limits and Pro features mirror Plan.swift in the app. -->
+    <section id="pricing">
+      <div class="wrap">
+        <div class="head center rv">
+          <span class="eyebrow">Pricing</span>
+          <h2>Free to sail. Pro for the whole fleet.</h2>
+          <p>The core of Flotilla is free, for good. Every new account gets 14 days of Pro to try everything.</p>
+        </div>
+
+        <div class="billing rv" role="radiogroup" aria-label="Billing period">
+          <button type="button" role="radio" aria-checked="false" data-period="monthly">Monthly</button>
+          <button type="button" role="radio" aria-checked="true" data-period="yearly">Yearly <span>2 months free</span></button>
+        </div>
+
+        <div class="plans">
+          <div class="plan rv">
+            <h3>Free</h3>
+            <div class="price"><b>$0</b><span>forever</span></div>
+            <p class="blurb">Everything you need to run a small crew.</p>
+            <a class="btn btn-ghost" data-download href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest">Download</a>
+            <ul>
+              <li>Up to 3 agents running at once</li>
+              <li>1 project and 1 routine</li>
+              <li>Claude Code, Codex and Cursor</li>
+              <li>Tiling grid, live status and notifications</li>
+              <li>Editor, Changes and Pull Requests tabs</li>
+              <li><span>The <span class="mono">flotilla</span> command for agents</span></li>
+            </ul>
+          </div>
+
+          <div class="plan pro-plan rv" style="--d:.08s">
+            <span class="ribbon">14-day free trial</span>
+            <h3>Pro</h3>
+            <div class="price" data-price-yearly="$100" data-price-monthly="$10"><b>$100</b><span data-per>/ year</span></div>
+            <p class="blurb" data-blurb-yearly="Just over $8 a month, billed yearly." data-blurb-monthly="Billed monthly.">Just over $8 a month, billed yearly.</p>
+            <a class="btn btn-primary" data-download href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest">Start free trial</a>
+            <ul>
+              <li><b>Everything in Free, plus:</b></li>
+              <li>Unlimited agents, projects and routines</li>
+              <li>Agents that survive quitting Flotilla</li>
+              <li>Auto-approve and allowed rules</li>
+              <li>Review comments for agents and on GitHub PRs</li>
+              <li>Multi-repo projects and ready worktrees</li>
+              <li>Keep the Mac awake, session history, cleanup commands and the lean agent shell</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="plan-fine rv">Start the trial in Flotilla under Settings › Plan. If you don't subscribe, you keep Free: nothing is deleted, and anything past the free limits stays locked until you upgrade.</p>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section id="download" class="final">
+      <div class="halo" aria-hidden="true"></div>
+      <div class="wrap">
+        <img class="rv" src="boat.png" alt="" />
+        <h2 class="rv"><span class="grad-text">Set sail.</span></h2>
+        <p class="rv">Download Flotilla, point it at a repo and start your first agent.</p>
+        <div class="cta rv">
+          <a class="btn btn-primary" data-download href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest">Download for Mac</a>
+          <a class="btn btn-ghost" href="mailto:hello@tinypenguin.com?subject=Flotilla">Say hi</a>
+        </div>
+        <div class="fine rv">Requires macOS 26 and at least one of Claude Code, Codex or Cursor.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div>© <span id="year"></span> <a href="/">Tiny Penguin</a> · Flotilla</div>
+      <div style="display:flex; gap:20px;">
+        <a href="#flow">How it works</a>
+        <a href="https://github.com/tiny-penguin-dev/flotilla-releases/releases">Releases</a>
+        <a href="mailto:hello@tinypenguin.com">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+  (() => {
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Pricing: monthly/yearly toggle
+    const price = document.querySelector('[data-price-yearly]'), blurb = document.querySelector('[data-blurb-yearly]');
+    document.querySelectorAll('[data-period]').forEach(btn => btn.addEventListener('click', () => {
+      const p = btn.dataset.period;
+      document.querySelectorAll('[data-period]').forEach(b => b.setAttribute('aria-checked', b === btn));
+      price.querySelector('b').textContent = price.dataset[p === 'yearly' ? 'priceYearly' : 'priceMonthly'];
+      price.querySelector('[data-per]').textContent = p === 'yearly' ? '/ year' : '/ month';
+      blurb.textContent = blurb.dataset[p === 'yearly' ? 'blurbYearly' : 'blurbMonthly'];
+    }));
+
+    // Release zips are versioned (Flotilla-6.1.0.zip), so point the buttons at
+    // the latest one; they keep the releases page if GitHub doesn't answer.
+    fetch('https://api.github.com/repos/tiny-penguin-dev/flotilla-releases/releases/latest')
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(release => {
+        const zip = release.assets.find(a => /^Flotilla-.*\.zip$/.test(a.name));
+        if (zip) document.querySelectorAll('[data-download]').forEach(a => { a.href = zip.browser_download_url; });
+      })
+      .catch(() => {});
+
+    // ---------- Mockup data (a made-up shop app, nothing real) ----------
+    const C = { green: '#a6e3a1', red: '#f28ca8', yellow: '#f2cc73', blue: '#8ab5fa', mauve: '#cca6f7', sky: '#8adbeb', peach: '#fab387', mute: '#8e8e93' };
+    const sym = {
+      // Drawn after the SF Symbols the sidebar uses for each state.
+      play:  '<svg viewBox="0 0 10 10" fill="currentColor"><path d="M3 1.6c0-.4.4-.6.7-.4l5 3.4c.3.2.3.6 0 .8l-5 3.4c-.3.2-.7 0-.7-.4z"/></svg>',
+      check: '<svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="4.4" fill="currentColor"/><path d="M2.9 5.2l1.5 1.5L7.2 3.6" fill="none" stroke="#1c1c1f" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      alert: '<svg viewBox="0 0 10 10"><path d="M4.3 1.3a.8.8 0 0 1 1.4 0l3.9 6.8a.8.8 0 0 1-.7 1.2H1.1a.8.8 0 0 1-.7-1.2z" fill="currentColor"/><path d="M5 3.6v2.3M5 7.5v.1" stroke="#1c1c1f" stroke-width="1.2" stroke-linecap="round"/></svg>',
+      ask:   '<svg viewBox="0 0 10 10" fill="currentColor"><rect x="2.1" y="2.3" width="1.3" height="4.4" rx=".65"/><rect x="3.6" y=".9" width="1.3" height="5.4" rx=".65"/><rect x="5.1" y="1.3" width="1.3" height="5" rx=".65"/><rect x="6.6" y="2.4" width="1.3" height="4.2" rx=".65"/><path d="M2.1 5.4h5.8V7c0 1.5-1.2 2.6-2.7 2.6-1 0-1.7-.4-2.2-1.2L1 6.3c-.3-.4-.2-.9.2-1.1.4-.2.8 0 1 .3z"/></svg>',
+      clock: '<svg viewBox="0 0 10 10"><circle cx="5" cy="5" r="4.4" fill="currentColor"/><path d="M5 2.6V5l1.6 1" fill="none" stroke="#1c1c1f" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+      merge: '<svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 9.2V6.8L5 4.3M7.5 9.2V6.8L5 4.3V.9M3.4 2.4 5 .8l1.6 1.6"/></svg>',
+    };
+    const ic = (s, c) => `<span class="ic" style="background:color-mix(in srgb, ${C[c]} 18%, transparent);color:${C[c]}">${sym[s]}</span>`;
+
+    const projects = [
+      { name: 'storefront', dot: C.blue, agents: [
+        { name: 'saved-carts',     s: 'play',  c: 'green', d: 'Update(CartSummary.tsx) · 2m' },
+        { name: 'fix-flaky-tests', s: 'alert', c: 'red',   d: 'needs: Bash(npm test)', dc: 'red' },
+        { name: 'api-pagination',  s: 'ask',   c: 'red',   d: 'Which cursor format?', dc: 'red' },
+        { name: 'search-index',    s: 'clock', c: 'blue',  d: '#418 · 3 pending', pr: ['blue', '#418 Rebuild the search index'] },
+      ]},
+      { name: 'mobile-app', dot: C.mauve, agents: [
+        { name: 'dark-mode',       s: 'check', c: 'yellow', d: 'done', dc: 'yellow' },
+        { name: 'widget-refresh',  s: 'play',  c: 'green', d: 'Bash(swift build) · 40s' },
+      ]},
+      { name: 'docs', dot: C.green, agents: [
+        { name: 'release-notes',   s: 'check', c: 'green', d: '#412 approved · 22✓', pr: ['green', '#412 Write release notes for 2.4'] },
+        { name: 'perf-audit',      s: 'merge', c: 'mauve', d: '#405 merged · press x' },
+      ]},
+    ];
+
+    const icon = {
+      // sparkles (Claude Code's tab), text.page, arrow.triangle.branch, GitHub mark, terminal
+      agent:  '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M6.5 3.5c.5 2.7 1.8 4 4.5 4.5-2.7.5-4 1.8-4.5 4.5-.5-2.7-1.8-4-4.5-4.5 2.7-.5 4-1.8 4.5-4.5z"/><path d="M12.3.8c.2 1.1.8 1.7 1.9 1.9-1.1.2-1.7.8-1.9 1.9-.2-1.1-.8-1.7-1.9-1.9 1.1-.2 1.7-.8 1.9-1.9zM12.5 10.8c.15.8.55 1.2 1.35 1.35-.8.15-1.2.55-1.35 1.35-.15-.8-.55-1.2-1.35-1.35.8-.15 1.2-.55 1.35-1.35z"/></svg>',
+      editor: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="3" y="1.5" width="10" height="13" rx="2"/><path d="M5.6 5h4.8M5.6 8h4.8M5.6 11h3"/></svg>',
+      changes:'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 14.5V9.2L3.6 4.8M8 9.2l4.4-4.4M3.6 4.8h3M3.6 4.8v3M12.4 4.8h-3M12.4 4.8v3"/></svg>',
+      prs:    '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 1a7 7 0 0 0-2.2 13.6c.4 0 .5-.2.5-.4v-1.3c-2 .4-2.4-.9-2.4-.9-.3-.8-.8-1-.8-1-.6-.5.1-.5.1-.5.7 0 1.1.7 1.1.7.6 1.1 1.7.8 2.1.6 0-.5.2-.8.4-1-1.6-.2-3.2-.8-3.2-3.5 0-.8.3-1.4.7-1.9 0-.2-.3-.9.1-1.9 0 0 .6-.2 1.9.7a6.6 6.6 0 0 1 3.5 0c1.3-.9 1.9-.7 1.9-.7.4 1 .1 1.7.1 1.9.4.5.7 1.1.7 1.9 0 2.7-1.6 3.3-3.2 3.5.3.2.5.7.5 1.3v2c0 .2.1.4.5.4A7 7 0 0 0 8 1z"/></svg>',
+      shell:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M4.5 6l2 2-2 2M8 10h3"/></svg>',
+    };
+    const ui = {
+      folder:  '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.5 4.5a1 1 0 0 1 1-1h3.6l1.4 1.5h5.9a1 1 0 0 1 1 1v6.5a1 1 0 0 1-1 1H2.5a1 1 0 0 1-1-1z"/></svg>',
+      clock:   '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 4.5V8l2.5 1.5"/></svg>',
+      sidebar: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.5" y="2.5" width="13" height="11" rx="2"/><path d="M6 2.5v11"/></svg>',
+      grid:    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="12" height="12" rx="1.5"/><path d="M8 2v12M2 8h12"/></svg>',
+      more:    '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="3.5" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="12.5" cy="8" r="1.3"/></svg>',
+    };
+    const tabs = (on) => `<span class="tabs">${['agent', 'editor', 'changes', 'prs', 'shell'].map(k => `<i class="${k === on ? 'on' : ''}">${icon[k]}</i>`).join('')}<i>${ui.more}</i></span>`;
+
+    const sidebar = (sel) => `
+      <aside class="side">
+        <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span class="picker"><i class="on">${ui.folder}</i><i>${icon.prs}</i><i>${ui.clock}</i></span><i>${ui.sidebar}</i></div>
+        ${projects.map(p => `
+          <div class="grp"><span class="dot" style="background:${p.dot}"></span>${p.name}<span class="plus"><svg viewBox="0 0 10 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M5 2v6M2 5h6"/></svg></span></div>
+          ${p.agents.map(a => `
+            <div class="row ${a.name === sel ? 'sel' : ''}" style="--c:${C[a.c]}">
+              ${ic(a.s, a.c)}
+              <span class="nm">${a.name}</span>
+              <span class="dt" style="${a.dc ? `color:${C[a.dc]}` : ''}">${a.d}</span>
+              ${a.pr ? `<span class="sub"><b style="background:${C[a.pr[0]]}"></b>${a.pr[1]}</span>` : ''}
+            </div>`).join('')}
+        `).join('')}
+        <div class="foot"><span>${icon.prs}</span><span>${ui.grid}</span><span>${ui.more}</span></div>
+      </aside>`;
+
+    // A pane: optional PR strip on top, the content, and the status-tinted bar below.
+    const pane = ({ name, proj = 'storefront', c, tab = 'agent', focus, body, strip, extra = '', plain }) => `
+      <div class="pane ${focus ? 'focus' : ''} ${strip ? 'has-strip' : ''}" style="--c:${C[c]}${plain ? ';background:#141416' : ''}">
+        ${strip ? `<div class="prstrip">${strip}</div>` : ''}${body}
+        <div class="pf"><span class="lbl">${proj}/${name}</span>${extra}${tabs(tab)}</div>
+      </div>`;
+
+    const promptLine = '⏵⏵ accept edits on (shift+tab to cycle)';
+    const term = (id, typed = '') =>
+      `<div class="term" ${id ? `data-term="${id}"` : ''}><div class="log"></div><div class="input"><div class="pr">${typed}<span class="caret"></span></div><div class="mode">${promptLine}</div></div></div>`;
+
+    const prStrip = (c, text) => `<span class="on"><b style="background:${C[c]}"></b>${text}</span>`;
+    const checkRows = (names, done = true) => names.map((n, i) =>
+      `<div class="check"><span class="s" style="color:${done ? C.green : C.blue}">${done ? '✓' : '◐'}</span>${n}<span class="tm">${done ? (20 + i * 17) + 's' : 'running'}</span></div>`).join('');
+
+    const prView = () => `
+      <div class="prv">
+        <h5>Write release notes for 2.4<small>#412</small></h5>
+        <div class="sub"><span class="chip" style="color:${C.green}">Approved</span><span class="br">release-notes</span>into main<span class="add">+86</span><span class="del">−12</span></div>
+        <div class="segtabs"><span>Conversation</span><span>Files (3)</span><span class="on">Checks (5)</span></div>
+        <div class="checks">${checkRows(['build', 'unit tests', 'lint', 'link check', 'preview deploy'])}</div>
+      </div>`;
+
+    function editorView() {
+      const code = [
+        ['<span class="kw">export function</span> <span class="fn">CartSummary</span>({ cart }) {'],
+        ['  <span class="kw">const</span> saved = <span class="fn">useSavedCarts</span>(cart.userId)'],
+        ['  <span class="kw">return</span> ('],
+        ['    &lt;<span class="fn">Summary</span> total={cart.total}&gt;'],
+        ['      &lt;<span class="fn">SaveForLater</span> items={cart.items} /&gt;'],
+        ['    &lt;/<span class="fn">Summary</span>&gt;'],
+        ['  )'],
+        ['}'],
+      ];
+      return `<div class="ed">
+        <div class="tree"><span>▸ api</span><span>▾ src</span><span>&nbsp;&nbsp;▾ cart</span><span class="on">&nbsp;&nbsp;&nbsp;&nbsp;CartSummary.tsx</span><span>&nbsp;&nbsp;&nbsp;&nbsp;useSavedCarts.ts</span><span>&nbsp;&nbsp;▸ checkout</span><span>▸ tests</span><span>package.json</span></div>
+        <div class="code">${code.map(([l], i) => `<div><span>${i + 12}</span><span>${l}</span></div>`).join('')}</div>
+      </div>`;
+    }
+
+    function changesView() {
+      const lines = [['m', 'src/search/indexer.ts'], ['del', '- rebuildAll(products)'], ['add', '+ for (const p of changedSince(lastRun)) {'], ['add', '+   index.upsert(p)'], ['add', '+ }'], ['m', ''], ['m', 'src/search/queue.ts'], ['add', '+ export const lastRun = store.get("indexedAt")']];
+      return `<div class="term"><div class="log" style="justify-content:flex-start">${lines.map(([k, t]) => `<div class="${k}">${t}</div>`).join('')}</div></div>`;
+    }
+
+    const appWindow = (sidebarHtml, mainHtml) => `<div class="win">${sidebarHtml}${mainHtml}</div>`;
+
+    const grid4 = `
+      <div class="grid4 n4">
+        ${pane({ name: 'saved-carts', c: 'green', focus: true, body: term('a'), extra: '<span class="pill peach">Auto-approve</span>' })}
+        ${pane({ name: 'fix-flaky-tests', c: 'red', body: term('b') })}
+        ${pane({ name: 'api-pagination', c: 'red', body: term('c') })}
+        ${pane({ name: 'release-notes', proj: 'docs', c: 'green', tab: 'prs', strip: prStrip('green', '#412 Write release notes for 2.4'), body: prView() })}
+      </div>`;
+
+    document.getElementById('heroWin').innerHTML = appWindow(sidebar('saved-carts'), grid4);
+
+    // ---------- Flow window: one shared chrome, five scenes ----------
+    const sheetScene = `
+      <div class="scene" data-s="0">
+        <div class="grid4 n4" style="height:100%">
+          ${pane({ name: 'saved-carts', c: 'green', focus: true, body: term('a2') })}
+          ${pane({ name: 'fix-flaky-tests', c: 'red', body: term('b2') })}
+          ${pane({ name: 'api-pagination', c: 'red', body: term('c2') })}
+          ${pane({ name: 'search-index', c: 'blue', body: term('f') })}
+        </div>
+        <div class="scrim"></div>
+        <div class="sheet">
+          <h6>New Agent</h6>
+          <div class="fld">Project<span class="inp">● storefront</span></div>
+          <div class="fld">Agent<span><span class="segm"><span class="on">Claude Code</span><span>Codex</span><span>Cursor</span></span></span></div>
+          <div class="fld" style="align-items:start">Task<span class="inp area focus" data-type="Add a gift message field to checkout and show it on the order confirmation page"></span></div>
+          <div class="fld">Name<span class="inp"><span data-named>…</span><span class="named">✦ suggested</span></span></div>
+          <div class="acts"><span>Cancel</span><span class="go">Start Agent ⏎</span></div>
+        </div>
+      </div>`;
+
+    // Four agents in one repo, each in its own slot; two edit the same file.
+    const slot = n => `<span class="slotchip">.flotilla/slots/${n}</span>`;
+    const wtScene = `
+      <div class="scene" data-s="1">
+        <div class="grid4 n4" style="height:100%">
+          ${pane({ name: 'saved-carts', c: 'green', focus: true, body: term('w1'), extra: slot(1) })}
+          ${pane({ name: 'gift-message', c: 'green', body: term('w2'), extra: slot(2) })}
+          ${pane({ name: 'fix-flaky-tests', c: 'green', body: term('w3'), extra: slot(3) })}
+          ${pane({ name: 'search-index', c: 'green', body: term('w4'), extra: slot(4) })}
+        </div>
+      </div>`;
+
+    const tileScene = `
+      <div class="scene" data-s="2">
+        <div class="tile" id="tile">
+          ${pane({ name: 'gift-message', c: 'green', focus: true, body: term('d') })}
+          ${pane({ name: 'saved-carts', c: 'green', tab: 'editor', plain: true, body: editorView() })}
+          ${pane({ name: 'api-pagination', c: 'red', body: term('c3') })}
+          ${pane({ name: 'search-index', c: 'blue', tab: 'changes', plain: true, body: changesView() })}
+        </div>
+        <div class="zone" id="zone"></div>
+        <div class="ghost" id="ghost">${ic('play', 'green')}saved-carts</div>
+      </div>`;
+
+    const attnScene = `
+      <div class="scene" data-s="3">
+        <div class="grid4" style="height:100%;grid-template-columns:1fr">
+          ${pane({ name: 'fix-flaky-tests', c: 'red', focus: true, body: term('e') })}
+        </div>
+        <div class="toast"><img src="boat.png" alt="" /><div><b>fix-flaky-tests needs you</b><span>Bash(npm test -- --runInBand)</span></div></div>
+      </div>`;
+
+    const shipScene = `
+      <div class="scene" data-s="4">
+        <div class="grid4" style="height:100%;grid-template-columns:1fr">
+          ${pane({ name: 'search-index', c: 'blue', tab: 'prs', focus: true, strip: prStrip('blue', '#418 Rebuild the search index incrementally'), body: `
+            <div class="prv" style="padding:22px 26px;display:grid;grid-template-columns:1fr 210px;gap:28px">
+              <div>
+                <h5 style="font-size:19px">Rebuild the search index incrementally<small>#418</small></h5>
+                <div class="sub" style="font-size:12px"><span class="chip" id="revChip" style="color:${C.sky}">Review required</span><span class="br">search-index</span>into main · 6 commits<span class="add">+214</span><span class="del">−38</span></div>
+                <div class="segtabs"><span>Conversation</span><span>Files (9)</span><span class="on">Checks (6)</span><span class="chip" id="ciChip" style="color:${C.blue};margin-left:auto">Checks running</span></div>
+                <div class="checks" id="shipChecks"></div>
+              </div>
+              <div class="prside">
+                <h6>REVIEWERS</h6><span id="reviewer">@river · pending</span>
+                <h6>LABELS</h6><span>search, performance</span>
+                <h6>MERGE</h6><span id="mergeState">Waiting on checks</span>
+                <div class="mergebtn">Merge pull request</div>
+              </div>
+            </div>` })}
+        </div>
+      </div>`;
+
+    document.getElementById('flowWin').innerHTML = appWindow(sidebar('saved-carts').replace('class="side"', 'class="side" id="flowSide"'),
+      `<div class="main">${sheetScene}${wtScene}${tileScene}${attnScene}${shipScene}</div>`);
+
+    // ---------- Fit scaled mockups to their containers ----------
+    const fits = [...document.querySelectorAll('.fit')];
+    const fit = () => fits.forEach(el => {
+      const w = +el.dataset.w, h = +el.dataset.h;
+      let s = el.clientWidth / w;
+      const stage = el.closest('.stage');
+      if (stage && innerWidth > 900) s = Math.min(s, (innerHeight * .7) / h);
+      if (stage && innerWidth <= 900) s = Math.min(s, (innerHeight * .42) / h);
+      el.style.height = (h * s) + 'px';
+      const inner = el.firstElementChild;
+      inner.style.transform = `scale(${s})`;
+      inner.style.left = Math.max(0, (el.clientWidth - w * s) / 2) + 'px';
+    });
+    new ResizeObserver(fit).observe(document.body);
+    fit();
+
+    // ---------- Terminal scripts (typed on a loop) ----------
+    const scripts = {
+      a: [
+        ['u', 'Let shoppers save their cart for later'],
+        ['t', 'Read(src/cart/CartSummary.tsx)'],
+        ['r', 'Read 84 lines'],
+        ['t', 'Update(src/cart/CartSummary.tsx)'],
+        ['r', 'Updated with 2 additions and 1 removal'],
+        ['add', '     + <SaveForLater items={cart.items} />'],
+        ['add', '     + const saved = useSavedCarts(user.id)'],
+        ['del', '     - // TODO: persist cart'],
+        ['t', 'Bash(npm run typecheck)'],
+        ['r', 'No errors (3.1s)'],
+        ['spin', '✻ Writing tests for saved carts… (esc to interrupt)'],
+      ],
+      b: [
+        ['u', 'SearchTests fails on CI about 1 in 5 runs. Find out why'],
+        ['t', 'Search(pattern: "setTimeout", path: "tests")'],
+        ['r', 'Found 14 matches in 6 files'],
+        ['t', 'Read(tests/search.test.ts)'],
+        ['r', 'Read 212 lines'],
+        ['m', ''],
+        ['m', 'The debounce races the assertion. Let me run the suite serially.'],
+        ['box', 'Bash command\n  npm test -- --runInBand\n\nDo you want to proceed?\n❯ 1. Yes\n  2. Yes, and don\'t ask again for npm test\n  3. No'],
+      ],
+      c: [
+        ['u', 'Add pagination to GET /orders'],
+        ['t', 'Read(api/routes/orders.ts)'],
+        ['r', 'Read 131 lines'],
+        ['t', 'Read(api/db/queries.ts)'],
+        ['r', 'Read 96 lines'],
+        ['q', 'Which cursor format should the API return?'],
+        ['sel', '  ❯ 1. Opaque cursor (recommended)'],
+        ['m', '    2. Offset and limit'],
+        ['m', '    3. Keyset on created_at'],
+      ],
+      d: [
+        ['u', 'Add a gift message field to checkout'],
+        ['t', 'Read(src/checkout/CheckoutForm.tsx)'],
+        ['r', 'Read 158 lines'],
+        ['t', 'Update(src/checkout/CheckoutForm.tsx)'],
+        ['add', '     + <GiftMessage maxLength={200} />'],
+        ['spin', '✻ Updating the order confirmation… (esc to interrupt)'],
+      ],
+      e: [
+        ['u', 'SearchTests fails on CI about 1 in 5 runs. Find out why'],
+        ['t', 'Read(tests/search.test.ts)'],
+        ['r', 'Read 212 lines'],
+        ['m', ''],
+        ['m', 'Found it: the debounce races the assertion.'],
+        ['t', 'Update(tests/search.test.ts)'],
+        ['add', '     + await vi.advanceTimersByTimeAsync(300)'],
+        ['del', '     - await sleep(250)'],
+        ['box', 'Bash command\n  npm test -- --runInBand\n  Run the suite serially to confirm the fix\n\nDo you want to proceed?\n❯ 1. Yes\n  2. Yes, and don\'t ask again for npm test\n  3. No'],
+      ],
+      f: [
+        ['u', 'Make the search index rebuild incrementally'],
+        ['t', 'Bash(git push -u origin HEAD)'],
+        ['t', 'Bash(gh pr create --draft)'],
+        ['r', 'https://github.com/acme/storefront/pull/418'],
+        ['m', ''],
+        ['m', 'Opened #418 as a draft. CI is running.'],
+      ],
+    };
+    Object.assign(scripts, {
+      w1: [
+        ['u', 'Let shoppers save their cart for later'],
+        ['t', 'Bash(git branch --show-current)'],
+        ['r', 'saved-carts'],
+        ['t', 'Update(src/cart/CartSummary.tsx)'],
+        ['r', 'Updated with 2 additions'],
+        ['add', '     + <SaveForLater items={cart.items} />'],
+        ['spin', '✻ Wiring up the saved list… (esc to interrupt)'],
+      ],
+      w2: [
+        ['u', 'Add a gift message field to checkout'],
+        ['t', 'Bash(git branch --show-current)'],
+        ['r', 'gift-message'],
+        ['t', 'Update(src/cart/CartSummary.tsx)'],
+        ['r', 'Updated with 3 additions'],
+        ['add', '     + <GiftMessagePreview text={cart.giftMessage} />'],
+        ['spin', '✻ Updating the order confirmation… (esc to interrupt)'],
+      ],
+      w3: [
+        ['u', 'SearchTests fails on CI about 1 in 5 runs. Find out why'],
+        ['t', 'Bash(npm test -- --runInBand)'],
+        ['r', '212 passed (41s)'],
+        ['t', 'Bash(git commit -am "Fix debounce race in search tests")'],
+        ['r', '[fix-flaky-tests 3e1c9a2] 1 file changed'],
+      ],
+      w4: [
+        ['u', 'Rebuild the search index incrementally'],
+        ['t', 'Bash(git worktree add ../storefront-index)'],
+        ['r', 'Error:'],
+        ['guard', "Flotilla: git worktree add is not allowed inside agent 'search-index'. Every Flotilla agent works in exactly one checkout."],
+        ['m', ''],
+        ['m', 'Understood, I\'ll stay in this checkout and commit here.'],
+        ['t', 'Update(src/search/indexer.ts)'],
+      ],
+    });
+    Object.assign(scripts, { a2: scripts.a, b2: scripts.b, c2: scripts.c, c3: scripts.c });
+
+    const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
+    const line = (k, t) => `<div class="${k}">${esc(t)}</div>`;
+
+    // Types each prompt into the input at the bottom, then plays the transcript above it.
+    function runTerm(el, lines) {
+      const log = el.querySelector('.log'), pr = el.querySelector('.pr');
+      const setInput = t => { pr.innerHTML = esc(t) + '<span class="caret"></span>'; };
+      if (reduced) { log.innerHTML = lines.map(([k, t]) => line(k, t)).join(''); el.classList.toggle('asking', lines.some(([k]) => k === 'box')); return; }
+      let i = 0;
+      const step = () => {
+        if (i === 0) { log.innerHTML = ''; el.classList.remove('asking'); }
+        if (i >= lines.length) { i = 0; setTimeout(step, 5000); return; }
+        const [k, t] = lines[i++];
+        if (k === 'u') {
+          let c = 0;
+          const type = () => {
+            setInput(t.slice(0, ++c));
+            if (c < t.length) setTimeout(type, 28 + Math.random() * 30);
+            else setTimeout(() => { setInput(''); log.insertAdjacentHTML('beforeend', line(k, t)); setTimeout(step, 700); }, 350);
+          };
+          type();
+          return;
+        }
+        log.insertAdjacentHTML('beforeend', line(k, t));
+        if (k === 'box') el.classList.add('asking');
+        setTimeout(step, 380 + Math.random() * 520);
+      };
+      setTimeout(step, 300 + Math.random() * 900);
+    }
+    document.querySelectorAll('[data-term]').forEach(el => scripts[el.dataset.term] && runTerm(el, scripts[el.dataset.term]));
+
+    // ---------- Marquee ----------
+    const tasks = ['saved-carts', 'fix-flaky-tests', 'api-pagination', 'gift-message', 'dark-mode', 'release-notes', 'search-index', 'widget-refresh', 'perf-audit', 'onboarding-copy'];
+    const glyphs = [['▸', 'green', 'working'], ['▲', 'red', 'blocked'], ['◆', 'red', 'waiting'], ['▸', 'green', 'working'], ['✓', 'yellow', 'done'], ['✓', 'green', 'approved'], ['◐', 'blue', 'in review'], ['▸', 'green', 'working'], ['●', 'mauve', 'merged'], ['▸', 'green', 'working']];
+    const items = tasks.map((t, i) => `<span><i style="color:${C[glyphs[i][1]]}">${glyphs[i][0]}</i><b>${t}</b>${glyphs[i][2]}</span>`).join('');
+    document.getElementById('marquee').innerHTML = items + items;
+
+    // ---------- Scroll: header, progress bar, hero tilt, reveals ----------
+    const header = document.getElementById('top');
+    const heroWin = document.querySelector('.hero-win');
+    const bar = document.querySelector('.progress');
+    let ticking = false;
+    const onScroll = () => {
+      ticking = false;
+      const y = scrollY;
+      header.classList.toggle('scrolled', y > 10);
+      const max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.setProperty('--sp', max > 0 ? (y / max).toFixed(4) : 0);
+      if (!reduced) {
+        const r = heroWin.getBoundingClientRect();
+        const p = Math.min(1, Math.max(0, 1 - (r.top - innerHeight * .15) / (innerHeight * .6)));
+        heroWin.style.setProperty('--hero', p.toFixed(3));
+      }
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+    onScroll();
+
+    const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { threshold: .12, rootMargin: '0px 0px -40px 0px' });
+    document.querySelectorAll('.rv').forEach(el => io.observe(el));
+
+    // Cursor glow on bento cards
+    document.querySelectorAll('.card').forEach(card => card.addEventListener('pointermove', e => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    }));
+
+    // ---------- Scrollytelling: the step in the middle of the viewport drives the scene ----------
+    const stage = document.getElementById('stage');
+    const steps = [...document.querySelectorAll('.step')];
+    const flowSide = document.getElementById('flowSide');
+    const sideRows = name => [...flowSide.querySelectorAll('.row')].find(r => r.querySelector('.nm').textContent === name);
+    let scene = -1, sceneTimers = [];
+    const later = (ms, fn) => sceneTimers.push(setTimeout(fn, reduced ? 0 : ms));
+
+    function enter(n) {
+      if (n === scene) return;
+      scene = n;
+      sceneTimers.forEach(clearTimeout); sceneTimers = [];
+      stage.dataset.scene = n;
+      steps.forEach((s, i) => s.classList.toggle('on', i === n));
+      flowSide.querySelectorAll('.row').forEach(r => r.classList.remove('alert', 'sel'));
+      sideRows('saved-carts').classList.add('sel');
+
+      if (n === 0) {
+        const area = stage.querySelector('[data-type]'), named = stage.querySelector('[data-named]');
+        const text = area.dataset.type;
+        area.textContent = ''; named.textContent = '…';
+        let i = 0;
+        const type = () => {
+          area.textContent = text.slice(0, ++i);
+          if (i < text.length) later(28, type); else later(400, () => { named.textContent = 'gift-message'; });
+        };
+        later(500, type);
+      }
+      if (n === 2) {
+        const tile = document.getElementById('tile'), zone = document.getElementById('zone'), ghost = document.getElementById('ghost');
+        tile.className = 'tile';
+        Object.assign(ghost.style, { opacity: 0, left: '-200px', top: '40px', transition: 'none' });
+        zone.style.opacity = 0;
+        later(600, () => {
+          Object.assign(ghost.style, { opacity: 1, transition: 'left .9s cubic-bezier(.2,.8,.2,1), top .9s cubic-bezier(.2,.8,.2,1), opacity .3s' });
+          Object.assign(zone.style, { left: '50%', top: '6px', right: '6px', bottom: '6px' });
+          requestAnimationFrame(() => { ghost.style.left = '62%'; ghost.style.top = '45%'; });
+        });
+        later(1300, () => { zone.style.opacity = 1; });
+        later(1900, () => { zone.style.opacity = 0; ghost.style.opacity = 0; tile.classList.add('s2'); });
+        later(2900, () => tile.classList.add('s3'));
+        later(3900, () => tile.classList.add('s4'));
+      }
+      if (n === 3) {
+        sideRows('saved-carts').classList.remove('sel');
+        sideRows('fix-flaky-tests').classList.add('alert', 'sel');
+      }
+      if (n === 4) {
+        sideRows('saved-carts').classList.remove('sel');
+        sideRows('search-index').classList.add('sel');
+        const box = document.getElementById('shipChecks'), ci = document.getElementById('ciChip'), rev = document.getElementById('revChip');
+        const names = ['build (macOS)', 'build (linux)', 'unit tests', 'integration tests', 'lint', 'preview deploy'];
+        const reviewer = document.getElementById('reviewer'), merge = document.getElementById('mergeState');
+        box.innerHTML = checkRows(names, false);
+        ci.textContent = 'Checks running'; ci.style.color = C.blue;
+        rev.textContent = 'Review required'; rev.style.color = C.sky;
+        reviewer.textContent = '@river · pending'; merge.textContent = 'Waiting on checks';
+        [...box.children].forEach((row, i) => later(500 + i * 380, () => {
+          row.querySelector('.s').textContent = '✓'; row.querySelector('.s').style.color = C.green;
+          row.querySelector('.tm').textContent = (20 + i * 17) + 's';
+        }));
+        later(500 + names.length * 380, () => { ci.textContent = `${names.length} checks passed`; ci.style.color = C.green; merge.textContent = 'Waiting on review'; });
+        later(900 + names.length * 380, () => { rev.textContent = 'Approved'; rev.style.color = C.green; reviewer.textContent = '@river · approved'; merge.textContent = 'Ready to merge'; });
+        later(1900 + names.length * 380, () => { rev.textContent = 'Merged'; rev.style.color = C.mauve; merge.textContent = 'Merged into main'; });
+      }
+    }
+    const stepIO = new IntersectionObserver(es => es.forEach(e => e.isIntersecting && enter(+e.target.dataset.step)), { rootMargin: '-45% 0px -45% 0px' });
+    steps.forEach(s => stepIO.observe(s));
+    enter(0);
+
+    // ---------- Keycaps press in sequence while the section is on screen ----------
+    const combos = [...document.querySelectorAll('#keys-grid .combo')];
+    let keyIdx = 0, keyTimer = null;
+    const pressNext = () => {
+      const keys = [...combos[keyIdx % combos.length].querySelectorAll('kbd')];
+      keys.forEach((k, i) => setTimeout(() => k.classList.add('press'), i * 90));
+      setTimeout(() => keys.forEach(k => k.classList.remove('press')), 520);
+      keyIdx++;
+    };
+    if (!reduced) new IntersectionObserver(([e]) => {
+      clearInterval(keyTimer);
+      if (e.isIntersecting) keyTimer = setInterval(pressNext, 700);
+    }).observe(document.getElementById('keys-grid'));
+
+    // ---------- CLI typing, started when visible ----------
+    const cli = [
+      ['p', '$ flotilla agents'],
+      ['o', 'saved-carts       working   Edit CartSummary.tsx'],
+      ['o', 'fix-flaky-tests   blocked   Bash(npm test)'],
+      ['o', 'search-index      idle      #418 approved'],
+      ['', ''],
+      ['p', '$ flotilla new gift-message --prompt "Add a gift message field to checkout"'],
+      ['ok', '✓ Started gift-message in storefront (slot 4)'],
+      ['', ''],
+      ['p', '$ flotilla send search-index "Rebase on main once #431 merges"'],
+      ['ok', '✓ Sent'],
+      ['', ''],
+      ['p', '$ flotilla routine add deps --schedule "weekdays 9:00" --prompt "Check for dependency updates"'],
+      ['ok', '✓ Routine deps runs weekdays at 9:00'],
+    ];
+    const cliOut = document.getElementById('cliOut');
+    const cls = { p: 'p', ok: 'ok', o: '', '': '' };
+    let cliStarted = false;
+    function typeCli() {
+      cliOut.innerHTML = '';
+      let li = 0;
+      const nextLine = () => {
+        if (li >= cli.length) { setTimeout(typeCli, 6000); return; }
+        const [k, text] = cli[li++];
+        const span = document.createElement('span');
+        if (cls[k]) span.className = cls[k];
+        cliOut.appendChild(span);
+        if (k === 'p') {
+          let c = 0;
+          const tick = () => {
+            span.textContent = text.slice(0, ++c);
+            if (c < text.length) setTimeout(tick, 22); else { cliOut.append('\n'); setTimeout(nextLine, 350); }
+          };
+          tick();
+        } else { span.textContent = text; cliOut.append('\n'); setTimeout(nextLine, 160); }
+      };
+      nextLine();
+    }
+    if (reduced) cliOut.innerHTML = cli.map(([k, t]) => `<span class="${cls[k]}">${esc(t)}</span>`).join('\n');
+    else new IntersectionObserver(([e], obs) => {
+      if (e.isIntersecting && !cliStarted) { cliStarted = true; typeCli(); obs.disconnect(); }
+    }, { threshold: .3 }).observe(cliOut);
+  })();
+  </script>
+</body>
+</html>
