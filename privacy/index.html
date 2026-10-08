@@ -20,7 +20,7 @@
     <h1>Privacy Policy</h1>
     <p class="updated">Effective October 8, 2026</p>
 
-    <div class="summary"><p>In short: your code, projects and agent conversations stay on your Mac. We only keep what an account needs (an email address or Apple sign-in ID, and your plan), Paddle handles payments, and the app's crash reports are anonymous and can be turned off. We don't sell data or use ads.</p></div>
+    <div class="summary"><p>In short: your code, projects and agent conversations stay on your Mac. We only keep what an account needs (an email address or Apple sign-in ID, and your plan), Paddle handles payments, and the app sends crash reports and usage analytics to Sentry that contain nothing about your work and can be turned off. We don't sell data or use ads.</p></div>
 
     <h2>Who we are</h2>
     <p>Tiny Penguin LLC ("we", "us") makes Flotilla and runs tinypenguin.com. Reach us at <a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a> about anything in this policy.</p>
@@ -39,14 +39,17 @@
     <h2>Payments</h2>
     <p>Paddle.com is the Merchant of Record for our orders, so Paddle collects your payment details, billing address and tax information and handles them under its own <a href="https://www.paddle.com/legal/privacy">privacy policy</a>. We receive order and subscription details from Paddle, such as your email, plan and country, but never your full card number.</p>
 
-    <h2>Diagnostics</h2>
-    <p>Release builds of Flotilla send crash reports, the app's own errors and simple usage counts to Sentry, our error-reporting provider. They're built to say nothing about you or your work:</p>
+    <h2>Crash reports and usage analytics (Sentry)</h2>
+    <p>Flotilla uses <a href="https://sentry.io">Sentry</a>, run by Functional Software, Inc. in the United States, for crash reporting and usage analytics. Sentry processes this data for us under its <a href="https://sentry.io/privacy/">privacy policy</a>. It's on by default in released versions of Flotilla, and you can turn it off at any time in Settings with "Send crash reports and usage data". Sending stops as soon as you do.</p>
+    <p>What Flotilla sends:</p>
     <ul>
-      <li>errors are identified by where they happened in our code, not by their message;</li>
-      <li>usage counts are fixed choices, such as which kind of pane was opened, plus a random ID for this install;</li>
-      <li>crash reports drop your home folder path and the trail of recent actions.</li>
+      <li><strong>Crash reports:</strong> the stack trace of Flotilla's code when it crashes, with device details such as your Mac model, macOS version and memory, and Flotilla's version. Your home folder path is replaced with <code>~</code>, and the trail of recent actions is removed before sending.</li>
+      <li><strong>Error reports:</strong> which place in Flotilla's code showed you an error, not the error's message.</li>
+      <li><strong>Usage metrics:</strong> counts such as app launches (with how many projects and sessions you have, your default agent and which of a few settings are on), new sessions (which agent, which checkout mode, where it was started, whether it was forked), how many agents are running, and which kinds of pane tabs get opened.</li>
+      <li><strong>An install ID:</strong> a random ID created on your Mac so we can tell installs apart. It isn't linked to your account or email.</li>
     </ul>
-    <p>You can turn diagnostics off in Flotilla's Settings, and sending stops at once.</p>
+    <p>Flotilla never sends your code, file contents, prompts, messages, agent transcripts, or the names of your projects, sessions, repos or branches. Like any web service, Sentry sees the IP address a report comes from.</p>
+    <p>We use this only to find and fix crashes and bugs and to learn which features people use. We don't combine it with your account, use it for advertising or sell it. Sentry keeps it for a limited period under our plan's retention settings and then deletes it. Where the GDPR applies, we rely on our legitimate interest in keeping Flotilla working, and you can object at any time by turning it off.</p>
 
     <h2>Updates</h2>
     <p>Flotilla checks for and downloads updates from GitHub, where our releases are hosted. Like any download, GitHub sees your IP address when that happens.</p>
