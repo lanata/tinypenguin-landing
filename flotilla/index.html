@@ -218,7 +218,7 @@
       width: 1180px; height: 720px; border-radius: 14px; overflow: hidden;
       background: #0b0b0c; border: 1px solid rgba(255,255,255,.14);
       box-shadow: 0 0 0 1px rgba(0,0,0,.6), 0 50px 120px -30px rgba(0,0,0,.9), 0 0 80px -20px rgba(79,190,250,.25);
-      display: grid; grid-template-columns: 236px 1fr; text-align: left;
+      display: grid; grid-template-columns: 256px 1fr; text-align: left;
       font-family: var(--font); color: #dcdcdf; font-size: 13px;
     }
     .lights { display: flex; gap: 8px; }
@@ -226,11 +226,12 @@
     .lights i:nth-child(1) { background: #ff5f57; } .lights i:nth-child(2) { background: #febc2e; } .lights i:nth-child(3) { background: #28c840; }
 
     .side { background: #1c1c1f; border-right: 1px solid rgba(255,255,255,.06); padding: 12px 8px 8px; display: flex; flex-direction: column; gap: 2px; overflow: hidden; min-height: 0; }
-    .side .bar { display: flex; align-items: center; gap: 6px; padding: 0 6px 12px; color: #8e8e93; }
-    .side .bar .lights { margin-right: 10px; }
-    .side .bar .picker { display: flex; padding: 2px; border-radius: 7px; background: rgba(255,255,255,.07); }
-    .side .bar .picker i, .side .bar > i { width: 28px; height: 20px; border-radius: 5px; display: grid; place-items: center; }
-    .side .bar .picker i.on { background: rgba(255,255,255,.16); color: #f2f2f4; }
+    .side .bar { display: flex; align-items: center; gap: 4px; padding: 0 2px 12px 6px; color: #8e8e93; }
+    .side .bar .lights { margin-right: 6px; }
+    .side .bar .picker { display: flex; padding: 2px; border-radius: 999px; background: rgba(255,255,255,.08); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
+    .side .bar .picker i { font: 600 10px var(--font); font-style: normal; padding: 3px 5px; border-radius: 999px; color: #c7c7cc; }
+    .side .bar .picker i.on { background: rgba(255,255,255,.18); color: #fff; }
+    .side .bar > i { width: 24px; height: 20px; border-radius: 5px; display: grid; place-items: center; }
     .side .bar > i:last-child { margin-left: auto; }
     .side svg { width: 14px; height: 14px; }
     .grp { display: flex; align-items: center; gap: 8px; padding: 10px 8px 4px; font-size: 11px; font-weight: 700; color: #a1a1a6; letter-spacing: .06em; text-transform: uppercase; }
@@ -252,28 +253,30 @@
     .side .foot { margin-top: auto; padding: 8px 6px 0; color: #8e8e93; display: flex; gap: 12px; align-items: center; }
     .side .foot span:last-child { margin-left: auto; }
 
-    .grid4 { display: grid; gap: 5px; padding: 5px; background: #0b0b0c; min-height: 0; position: relative; }
+    .grid4 { display: grid; gap: 6px; padding: 8px; background: #0b0b0c; min-height: 0; position: relative; }
     .grid4.n4 { grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; }
+    /* The bar and the 2px border are one piece in the status tint; unfocused
+       panes fade both to an opaque, darker shade and dim what they show. */
     .pane {
       --c: #8e8e93;
-      --bar: color-mix(in srgb, #2b2b2e 40%, var(--c));
+      --tint: color-mix(in srgb, #333336 40%, var(--c));
+      --bar: var(--tint);
       background: color-mix(in srgb, #141416 86%, var(--c));
-      border: 1px solid color-mix(in srgb, #515154 45%, var(--c)); border-radius: 6px;
+      border: 2px solid var(--bar); border-radius: 10px;
       display: grid; grid-template-rows: 1fr 24px; min-height: 0; min-width: 0; overflow: hidden;
-      transition: border-color .4s ease, box-shadow .4s ease;
+      transition: border-color .4s ease;
     }
     .pane.has-strip { grid-template-rows: 26px 1fr 24px; }
-    .pane.neutral { --bar: #2b2b2e; background: #141416; border-color: #3a3a3d; }
-    .pane.focus { border: 2px solid var(--bar); }
-    .pane:not(.focus) > :not(.pf) { opacity: .75; }
-    .pane:not(.focus) > .pf { opacity: .55; }
-    .pf { display: flex; align-items: center; gap: 6px; padding: 0 6px 0 10px; background: var(--bar); color: #121214; font-size: 11.5px; font-weight: 600; white-space: nowrap; min-width: 0; }
-    .pane.neutral .pf { color: #c7c7cc; }
-    .pf .lbl { overflow: hidden; text-overflow: ellipsis; }
-    .pf .tabs { margin-left: auto; display: flex; gap: 1px; flex-shrink: 0; }
-    .pf .tabs i { width: 22px; height: 18px; border-radius: 4px; display: grid; place-items: center; opacity: .7; }
-    .pf .tabs i.on { background: rgba(0,0,0,.22); opacity: 1; }
-    .pane.neutral .pf .tabs i.on { background: rgba(255,255,255,.12); }
+    .pane:not(.focus) { --bar: color-mix(in srgb, var(--tint) 50%, #0e0e10); background: color-mix(in srgb, #08080a 93%, var(--c)); }
+    .pane:not(.focus) > :not(.pf) { opacity: .7; }
+    .pane:not(.focus) > .pf > * { opacity: .5; }
+    .pf { display: flex; align-items: center; gap: 4px; padding: 0 4px 0 6px; background: var(--bar); color: #fff; font-size: 11.5px; font-weight: 600; white-space: nowrap; min-width: 0; }
+    .pf .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .pf .lbl { overflow: hidden; text-overflow: ellipsis; padding: 0 5px; }
+    .pf .tabs { margin-left: auto; display: flex; gap: 2px; flex-shrink: 0; }
+    .pf .tabs i { width: 24px; height: 18px; border-radius: 4px; display: grid; place-items: center; color: #fff; }
+    .pf .tabs i.open { background: rgba(255,255,255,.06); }
+    .pf .tabs i.on { background: rgba(0,0,0,.38); }
     .pf .tabs svg { width: 12px; height: 12px; }
     .prstrip { display: flex; gap: 6px; align-items: center; padding: 0 6px; background: color-mix(in srgb, #080809 88%, var(--c)); overflow: hidden; }
     .prstrip span { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 5px; font-size: 10.5px; color: #d1d1d6; background: rgba(255,255,255,.06); white-space: nowrap; }
@@ -777,7 +780,7 @@
 
           <div class="card rv" style="--d:.08s">
             <h3>Approvals your way <span class="pro">Pro</span></h3>
-            <p>Keep one list of the commands and tools every agent may run, and Flotilla answers those prompts for you. Chained commands must match piece by piece, so a rule never lets through more than you meant.</p>
+            <p>One list of commands every agent may run. Flotilla answers those prompts for you.</p>
             <div class="vis">
               <div class="rule">Bash(npm test)<span class="ok">allowed</span></div>
               <div class="rule">Bash(git status)<span class="ok">allowed</span></div>
@@ -1059,11 +1062,13 @@
       grid:    '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="12" height="12" rx="1.5"/><path d="M8 2v12M2 8h12"/></svg>',
       more:    '<svg viewBox="0 0 16 16" fill="currentColor"><circle cx="3.5" cy="8" r="1.3"/><circle cx="8" cy="8" r="1.3"/><circle cx="12.5" cy="8" r="1.3"/></svg>',
     };
-    const tabs = (on) => `<span class="tabs">${['agent', 'editor', 'changes', 'prs', 'shell'].map(k => `<i class="${k === on ? 'on' : ''}">${icon[k]}</i>`).join('')}<i>${ui.more}</i></span>`;
+    // The shown tab sits in a dark well; the agent's own tab stays lit while a tool covers it.
+    const tabs = (on) => `<span class="tabs">${['agent', 'editor', 'changes', 'prs', 'shell'].map(k =>
+      `<i class="${k === on ? 'on' : k === 'agent' ? 'open' : ''}">${icon[k]}</i>`).join('')}<i>${ui.more}</i></span>`;
 
     const sidebar = (sel) => `
       <aside class="side">
-        <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span class="picker"><i class="on">${ui.folder}</i><i>${icon.prs}</i><i>${ui.clock}</i></span><i>${ui.sidebar}</i></div>
+        <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span class="picker"><i class="on">Projects</i><i>PRs</i><i>Routines</i></span><i>${ui.sidebar}</i></div>
         ${projects.map(p => `
           <div class="grp"><span class="dot" style="background:${p.dot}"></span>${p.name}<span class="plus"><svg viewBox="0 0 10 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M5 2v6M2 5h6"/></svg></span></div>
           ${p.agents.map(a => `
@@ -1081,7 +1086,7 @@
     const pane = ({ name, proj = 'storefront', c, tab = 'agent', focus, body, strip, extra = '', plain }) => `
       <div class="pane ${focus ? 'focus' : ''} ${strip ? 'has-strip' : ''}" style="--c:${C[c]}${plain ? ';background:#141416' : ''}">
         ${strip ? `<div class="prstrip">${strip}</div>` : ''}${body}
-        <div class="pf"><span class="lbl">${proj}/${name}</span>${extra}${tabs(tab)}</div>
+        <div class="pf"><span class="dot" style="background:${projects.find(p => p.name === proj).dot}"></span><span class="lbl">${proj}/${name}</span>${extra}${tabs(tab)}</div>
       </div>`;
 
     const promptLine = '⏵⏵ accept edits on (shift+tab to cycle)';
