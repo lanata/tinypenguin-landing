@@ -275,8 +275,6 @@
     .pf .tabs i.on { background: rgba(0,0,0,.22); opacity: 1; }
     .pane.neutral .pf .tabs i.on { background: rgba(255,255,255,.12); }
     .pf .tabs svg { width: 12px; height: 12px; }
-    .pill { font-size: 10px; font-weight: 700; padding: 1px 7px; border-radius: 999px; white-space: nowrap; flex-shrink: 0; }
-    .pill.peach { color: #1a0f08; background: var(--peach); box-shadow: 0 0 0 1px rgba(0,0,0,.25); }
     .prstrip { display: flex; gap: 6px; align-items: center; padding: 0 6px; background: color-mix(in srgb, #080809 88%, var(--c)); overflow: hidden; }
     .prstrip span { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px; border-radius: 5px; font-size: 10.5px; color: #d1d1d6; background: rgba(255,255,255,.06); white-space: nowrap; }
     .prstrip span.on { background: rgba(255,255,255,.14); color: #fff; }
@@ -721,7 +719,7 @@
             <div class="step" data-step="3">
               <div class="k"><span class="num">4</span> Respond</div>
               <h3>Know the moment someone needs you.</h3>
-              <p>Blocked agents light up in the sidebar and send a notification. Approve once, or turn on auto-approve for agents you trust.</p>
+              <p>Blocked agents light up in the sidebar and send a notification. Approve it once, or add an allowed rule so no agent asks about it again.</p>
               <p>Walk away for lunch: Flotilla keeps your Mac awake while agents are working.</p>
             </div>
             <div class="step" data-step="4">
@@ -779,9 +777,10 @@
 
           <div class="card rv" style="--d:.08s">
             <h3>Approvals your way <span class="pro">Pro</span></h3>
-            <p>Auto-approve one agent, or allow rules for all of them.</p>
+            <p>Keep one list of the commands and tools every agent may run, and Flotilla answers those prompts for you. Chained commands must match piece by piece, so a rule never lets through more than you meant.</p>
             <div class="vis">
               <div class="rule">Bash(npm test)<span class="ok">allowed</span></div>
+              <div class="rule">Bash(git status)<span class="ok">allowed</span></div>
               <div class="rule">WebSearch<span class="ok">allowed</span></div>
             </div>
           </div>
@@ -948,7 +947,7 @@
               <li><b>Everything in Free, plus:</b></li>
               <li>Unlimited agents, projects and routines</li>
               <li>Agents that survive quitting Flotilla</li>
-              <li>Auto-approve and allowed rules</li>
+              <li>Allowed rules that answer permission prompts for you</li>
               <li>Review comments for agents and on GitHub PRs</li>
               <li>Multi-repo projects and ready worktrees</li>
               <li>Keep the Mac awake, session history, cleanup commands and the lean agent shell</li>
@@ -1127,7 +1126,7 @@
 
     const grid4 = `
       <div class="grid4 n4">
-        ${pane({ name: 'saved-carts', c: 'green', focus: true, body: term('a'), extra: '<span class="pill peach">Auto-approve</span>' })}
+        ${pane({ name: 'saved-carts', c: 'green', focus: true, body: term('a') })}
         ${pane({ name: 'fix-flaky-tests', c: 'red', body: term('b') })}
         ${pane({ name: 'api-pagination', c: 'red', body: term('c') })}
         ${pane({ name: 'release-notes', proj: 'docs', c: 'green', tab: 'prs', strip: prStrip('green', '#412 Write release notes for 2.4'), body: prView() })}
