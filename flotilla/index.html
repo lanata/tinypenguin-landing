@@ -277,9 +277,15 @@
       transition: border-color .4s ease;
     }
     .pane.has-strip { grid-template-rows: 26px 1fr 24px; }
-    .pane:not(.focus) { --bar: color-mix(in srgb, var(--tint) 50%, #0e0e10); background: color-mix(in srgb, #08080a 93%, var(--c)); }
-    .pane:not(.focus) > :not(.pf) { opacity: .7; }
-    .pane:not(.focus) > .pf > * { opacity: .5; }
+    .pane:not(.focus) { --bar: color-mix(in srgb, var(--tint) 72%, #0e0e10); background: color-mix(in srgb, #0d0d0f 89%, var(--c)); }
+    .pane:not(.focus) > :not(.pf) { opacity: .85; }
+    .pane:not(.focus) > .pf > * { opacity: .72; }
+    .pane, .pane > *, .pane > .pf > * { transition: border-color .4s ease, background-color .4s ease, opacity .4s ease; }
+    /* Flotilla's alert flash: the border thickens and a dimmed pane brightens, twice. */
+    .pane.attn { animation: attnBorder 1.4s ease-in-out; }
+    .pane.attn > :not(.pf), .pane.attn > .pf > * { animation: attnLift 1.4s ease-in-out; }
+    @keyframes attnBorder { 20%, 65% { border-width: 4px; } }
+    @keyframes attnLift { 20%, 65% { opacity: 1; } }
     .pf { display: flex; align-items: center; gap: 4px; padding: 0 4px 0 6px; background: var(--bar); color: #fff; font-size: 11.5px; font-weight: 600; white-space: nowrap; min-width: 0; }
     .pf .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
     .pf .lbl { overflow: hidden; text-overflow: ellipsis; padding: 0 5px; }
@@ -1149,6 +1155,26 @@
 
     document.getElementById('heroWin').innerHTML = appWindow(sidebar('saved-carts'), grid4);
 
+    // The hero moves focus around the grid the way you would, and the sidebar follows.
+    if (!reduced) {
+      const win = document.getElementById('heroWin');
+      const heroPanes = [...win.querySelectorAll('.pane')];
+      const rowFor = pane => {
+        const name = pane.querySelector('.lbl').textContent.split('/')[1];
+        return [...win.querySelectorAll('.row')].find(r => r.querySelector('.nm').textContent === name);
+      };
+      const order = [0, 2, 3, 1];
+      let step = 0;
+      setInterval(() => {
+        const pane = heroPanes[order[++step % order.length]];
+        heroPanes.forEach(p => p.classList.toggle('focus', p === pane));
+        win.querySelectorAll('.row.sel').forEach(r => r.classList.remove('sel'));
+        const row = rowFor(pane);
+        row?.classList.add('sel');
+        row?.classList.remove('alert');
+      }, 3200);
+    }
+
     // ---------- Flow window: one shared chrome, five scenes ----------
     const sheetScene = `
       <div class="scene" data-s="0">
@@ -1346,6 +1372,17 @@
     const esc = s => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
     const line = (k, t) => `<div class="${k}">${esc(t)}</div>`;
 
+    // A pane whose agent needs the user flashes, and its sidebar row pulses until it gets focus.
+    function flash(pane) {
+      if (!pane) return;
+      pane.classList.remove('attn');
+      void pane.offsetWidth;
+      pane.classList.add('attn');
+      const name = pane.querySelector('.lbl').textContent.split('/')[1];
+      const row = [...pane.closest('.win').querySelectorAll('.row')].find(r => r.querySelector('.nm').textContent === name);
+      if (row && !pane.classList.contains('focus')) row.classList.add('alert');
+    }
+
     // Types each prompt into the input at the bottom, then plays the transcript above it.
     function runTerm(el, lines) {
       const log = el.querySelector('.log'), pr = el.querySelector('.pr');
@@ -1367,7 +1404,7 @@
           return;
         }
         log.insertAdjacentHTML('beforeend', line(k, t));
-        if (k === 'box') el.classList.add('asking');
+        if (k === 'box') { el.classList.add('asking'); flash(el.closest('.pane')); }
         setTimeout(step, 380 + Math.random() * 520);
       };
       setTimeout(step, 300 + Math.random() * 900);
