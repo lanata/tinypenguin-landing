@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Privacy Policy · Tiny Penguin</title>
-  <meta name="description" content="What Flotilla and tinypenguin.com collect, and what stays on your Mac." />
+  <meta name="description" content="What Flotilla and tinypenguin.com collect, why, and what stays on your Mac." />
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐧</text></svg>" />
   <link rel="stylesheet" href="/legal.css" />
 </head>
@@ -20,24 +20,27 @@
     <h1>Privacy Policy</h1>
     <p class="updated">Effective October 12, 2026</p>
 
-    <div class="summary"><p>In short: your code, projects and agent conversations stay on your Mac. We only keep what an account needs (an email address or Apple sign-in ID, and your plan), Paddle handles payments, and the app sends crash reports and usage analytics to Sentry that contain nothing about your work and can be turned off. We don't sell data or use ads.</p></div>
+    <div class="summary"><p>In short: your code, projects and agent conversations stay on your Mac. We only keep what an account needs (an email address or Apple sign-in ID, and your plan), Paddle handles payments, and the app sends crash reports and usage analytics to Sentry that contain nothing about your work and can be turned off. We don't sell or share your data for advertising, and you can ask us to see or delete it at any time.</p></div>
 
     <h2>Who we are</h2>
-    <p>Tiny Penguin LLC ("we", "us") makes Flotilla and runs tinypenguin.com. Reach us at <a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a> about anything in this policy.</p>
+    <p>Tiny Penguin LLC, a California company in the United States, makes Flotilla and runs tinypenguin.com. We're the controller of the personal data described here. Reach us at <a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a> about anything in this policy.</p>
 
     <h2>What stays on your Mac</h2>
     <p>Flotilla keeps your projects, sessions, settings, files, git checkouts and agent transcripts on your Mac. We never receive them. Pull request data comes from GitHub through the GitHub CLI you've signed in to, directly on your Mac.</p>
 
-    <h2>Your account</h2>
-    <p>If you sign in, our billing server stores:</p>
+    <h2>What we collect, and why</h2>
     <ul>
-      <li>your email address, or the identifier and email Apple shares when you use Sign in with Apple (which may be a private relay address);</li>
-      <li>your plan, trial and subscription status, and the dates they change.</li>
+      <li><strong>Your account.</strong> If you sign in, our billing server stores an account ID, your email address, and, with Sign in with Apple, the identifier Apple gives us (the email may be an Apple private relay address). We use it to sign you in and unlock Pro. Legal basis: performing our contract with you.</li>
+      <li><strong>Sign-in links.</strong> When you sign in by email, we send a one-time link to your address. Links expire after 15 minutes. Legal basis: contract.</li>
+      <li><strong>Your subscription.</strong> We store your Paddle customer ID and, for each subscription, its ID, product, plan, status, renewal date and any scheduled cancellation, so the app knows what you've paid for. Legal basis: contract.</li>
+      <li><strong>Sessions.</strong> Signing in creates a session token. We store only a one-way hash of it, with when it was created and last used, and delete it when you sign out. Legal basis: contract.</li>
+      <li><strong>Crash reports and usage analytics.</strong> Described in detail below. Legal basis: our legitimate interest in keeping Flotilla working and improving it.</li>
+      <li><strong>Messages you send us.</strong> If you email us, we keep the conversation to answer you and handle requests such as refunds. Legal basis: contract, or our legitimate interest in supporting users.</li>
     </ul>
-    <p>We use this to sign you in, unlock Pro and send the sign-in emails you ask for. We keep it while your account exists and delete it when you ask us to.</p>
+    <p>You don't have to create an account; Flotilla's free features work without one. Pro needs an account, since that's how the app knows you've subscribed. We don't make decisions about you by automated means that have legal or similarly significant effects.</p>
 
     <h2>Payments</h2>
-    <p>Paddle.com is the Merchant of Record for our orders, so Paddle collects your payment details, billing address and tax information and handles them under its own <a href="https://www.paddle.com/legal/privacy">privacy policy</a>. We receive order and subscription details from Paddle, such as your email, plan and country, but never your full card number.</p>
+    <p>Paddle.com is the Merchant of Record for our orders. Paddle collects your payment details, billing address and tax information and handles them as an independent controller under its own <a href="https://www.paddle.com/legal/privacy">privacy policy</a>, including keeping the records tax law requires. We never see your full card number. The checkout page at billing.tinypenguin.com loads Paddle's checkout, which may use cookies or similar technology for payments and fraud prevention.</p>
 
     <h2>Crash reports and usage analytics (Sentry)</h2>
     <p>Flotilla uses <a href="https://sentry.io">Sentry</a>, run by Functional Software, Inc. in the United States, for crash reporting and usage analytics. Sentry processes this data for us under its <a href="https://sentry.io/privacy/">privacy policy</a>. It's on by default in released versions of Flotilla, and you can turn it off at any time in Settings with "Send crash reports and usage data". Sending stops as soon as you do.</p>
@@ -49,7 +52,7 @@
       <li><strong>An install ID:</strong> a random ID created on your Mac so we can tell installs apart. It isn't linked to your account or email.</li>
     </ul>
     <p>Flotilla never sends your code, file contents, prompts, messages, agent transcripts, or the names of your projects, sessions, repos or branches. Like any web service, Sentry sees the IP address a report comes from.</p>
-    <p>We use this only to find and fix crashes and bugs and to learn which features people use. We don't combine it with your account, use it for advertising or sell it. Sentry keeps it for a limited period under our plan's retention settings and then deletes it. Where the GDPR applies, we rely on our legitimate interest in keeping Flotilla working, and you can object at any time by turning it off.</p>
+    <p>We use this only to find and fix crashes and bugs and to learn which features people use. We don't combine it with your account, use it for advertising or sell it. You can object at any time by turning it off.</p>
 
     <h2>Updates</h2>
     <p>Flotilla checks for and downloads updates from GitHub, where our releases are hosted. Like any download, GitHub sees your IP address when that happens.</p>
@@ -60,18 +63,57 @@
 
     <h2>This website</h2>
     <p>tinypenguin.com uses no cookies, analytics or trackers. It's hosted on GitHub Pages, and the Flotilla page asks GitHub's API for the latest download link, so GitHub may log your IP address as part of serving those requests.</p>
+    <p>We don't track you across other websites, so there's nothing for a browser's Do Not Track or Global Privacy Control signal to switch off. We treat a Global Privacy Control signal as a request to opt out of any sale or sharing anyway.</p>
 
-    <h2>Sharing</h2>
-    <p>We don't sell or rent personal information, and we don't use it for advertising. We share it only with the providers named here (Paddle, Sentry, our email delivery and hosting providers) to run the Services, or when the law requires it.</p>
+    <h2>Who we share it with</h2>
+    <p>We don't sell or rent personal information, and we don't share it for cross-context behavioral advertising. We share it only with these providers, to run the Services, or when the law requires it:</p>
+    <ul>
+      <li><strong>Cloudflare</strong> hosts our billing server and its database (service provider).</li>
+      <li><strong>Resend</strong> delivers sign-in emails (service provider).</li>
+      <li><strong>Sentry</strong> receives crash reports and usage analytics (service provider).</li>
+      <li><strong>Paddle</strong> sells and bills subscriptions as Merchant of Record (independent controller).</li>
+      <li><strong>Apple</strong> provides Sign in with Apple, if you use it (independent controller).</li>
+      <li><strong>GitHub</strong> hosts this website and Flotilla's downloads (independent controller).</li>
+    </ul>
+
+    <h2>International transfers</h2>
+    <p>We're based in the United States, and our providers process data in the United States and other countries. When we transfer personal data from the European Economic Area, the UK or Switzerland, we rely on the safeguards our providers offer, such as the European Commission's Standard Contractual Clauses (with the UK addendum) and, where a provider is certified, the EU-U.S. Data Privacy Framework and its UK and Swiss extensions.</p>
+
+    <h2>How long we keep it</h2>
+    <ul>
+      <li>Account and subscription data: while your account exists. If you ask us to delete your account, we delete it within 30 days, except anything we must keep to meet legal obligations.</li>
+      <li>Sign-in links expire after 15 minutes and sign-in codes after 5 minutes. Sessions are deleted when you sign out.</li>
+      <li>Crash reports and usage analytics: for the limited retention period of our Sentry plan, after which Sentry deletes them.</li>
+      <li>Emails with us: as long as needed to help you, and up to the period tax or consumer law requires for refund and billing questions.</li>
+    </ul>
+
+    <h2>How we protect it</h2>
+    <p>Data travels over encrypted connections. Session tokens and sign-in links are stored only as one-way hashes, and the passes that unlock Pro are cryptographically signed. No system is perfectly secure, but we keep what we collect small so there's less to protect.</p>
 
     <h2>Your rights</h2>
-    <p>Wherever you live, you can ask us for a copy of your data, to correct it or to delete it, and you can object to how we use it. Residents of the EU, UK and California have these rights by law. Email <a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a> and we'll answer within 30 days.</p>
+    <p>Wherever you live, you can ask us to:</p>
+    <ul>
+      <li>tell you what personal data we hold about you and give you a copy, including in a portable, machine-readable form;</li>
+      <li>correct it if it's wrong;</li>
+      <li>delete it;</li>
+      <li>restrict how we use it, or object to our use of it, including diagnostics based on our legitimate interest.</li>
+    </ul>
+    <p>Email <a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a> from the address on your account so we can confirm it's you. We answer within 30 days (one month under the GDPR). You won't be treated differently for exercising these rights. If you're in the EEA or UK and think we've mishandled your data, you can also complain to your local data protection authority.</p>
+
+    <h2>California residents</h2>
+    <p>This section adds the notice California law asks for. In the past 12 months we've collected these categories of personal information, from you, your device, Apple and Paddle, for the purposes described above:</p>
+    <ul>
+      <li><strong>Identifiers:</strong> email address, account ID, Apple sign-in identifier, Paddle customer ID, Flotilla install ID and IP address.</li>
+      <li><strong>Commercial information:</strong> your plan and subscription history.</li>
+      <li><strong>Internet or other electronic network activity:</strong> crash reports, error reports and usage metrics from Flotilla.</li>
+    </ul>
+    <p>We disclose these only to the providers listed above, for business purposes. We don't sell or share personal information, haven't in the past 12 months, don't knowingly sell or share data of anyone under 16, and don't collect sensitive personal information. You have the right to know, delete and correct your personal information and to not be discriminated against for using these rights. You can use them yourself by email, or through an authorized agent with your signed permission; we'll verify the request against your account email. We don't share personal information with third parties for their direct marketing.</p>
 
     <h2>Children</h2>
-    <p>The Services aren't meant for children under 13, or under 16 in the EU and UK, and we don't knowingly collect their data.</p>
+    <p>The Services aren't meant for children under 13, or under 16 in the EEA and UK, and we don't knowingly collect their data. If you think we have, email us and we'll delete it.</p>
 
     <h2>Changes</h2>
-    <p>If we change this policy, we'll update the date above, and for material changes we'll let you know in the app or by email.</p>
+    <p>If we change this policy, we'll update the date above, and for material changes we'll let you know in the app or by email before they take effect.</p>
   </main>
 
   <footer>
