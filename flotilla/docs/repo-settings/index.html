@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Repo settings · Flotilla Docs</title>
+  <meta name="description" content="Set up each worktree Flotilla checks out: commands to run, files to copy, and what the editor leaves out, from .flotilla/settings.json in your repo." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/repo-settings/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+</head>
+<body>
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <main>
+    <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Repo settings</p>
+    <h1>Repo settings</h1>
+    <p class="lede">Tell Flotilla how to get each new worktree of a repo ready: what to run, what to copy in, and what the editor leaves out.</p>
+
+    <nav class="toc">
+      <h2>On this page</h2>
+      <ol>
+        <li><a href="#files">The two files</a></li>
+        <li><a href="#example">An example</a></li>
+        <li><a href="#keys">Keys</a></li>
+        <li><a href="#when">When commands run</a></li>
+        <li><a href="#variables">Variables</a></li>
+        <li><a href="#approval">Approving committed commands</a></li>
+        <li><a href="#schema">Editor help with $schema</a></li>
+      </ol>
+    </nav>
+
+    <h2 id="files">The two files</h2>
+    <p>Each repo can have two settings files in a <code>.flotilla</code> folder at its top:</p>
+    <ul>
+      <li><code>.flotilla/settings.json</code> is committed and shared with everyone who works on the repo.</li>
+      <li><code>.flotilla/settings.local.json</code> is yours alone. Flotilla writes a <code>.flotilla/.gitignore</code> that keeps it, and everything else in the folder, out of git.</li>
+    </ul>
+    <p>Both files apply; neither replaces the other. Commands from both run, the shared file's first. Lists from both are combined.</p>
+    <p>Each file is read from the worktree at hand when it has one, else from the repo's main checkout. So a branch that changes <code>settings.json</code> uses its own version in its worktree, and a <code>settings.local.json</code> in the main checkout covers every worktree.</p>
+    <p>To start one, open Edit Project in Flotilla, unfold Ready worktrees, sleeping agents, repo settings, and click Create Settings File. Flotilla writes a starter <code>settings.json</code> in each of the project's repos that has none and opens it in the editor.</p>
+
+    <h2 id="example">An example</h2>
+<pre><code>{
+  "$schema": "https://tinypenguin.com/flotilla/settings.schema.json",
+  "worktree": {
+    "setup": "npm install",
+    "copy": [".env.local", "config/master.key"],
+    "cleanup": "./scripts/cleanup-checkout.sh \"$FLOTILLA_CHECKOUT\""
+  },
+  "editor": { "exclude": ["node_modules", "/build"] }
+}</code></pre>
+    <p>Every key is optional, and Flotilla ignores keys it does not know.</p>
+
+    <h2 id="keys">Keys</h2>
+
+    <h3 id="worktree-setup"><code>worktree.setup</code></h3>
+    <p>A command to run in each new worktree before an agent works in it: installing dependencies, generating a project, preparing a database.</p>
+<pre><code>"setup": "bundle install &amp;&amp; bin/rails db:prepare"</code></pre>
+    <p>If the shared file's setup fails, or you choose not to run it, the local file's setup does not run either. A failure shows in Flotilla's status line, and the agent starts anyway.</p>
+
+    <h3 id="worktree-copy"><code>worktree.copy</code></h3>
+    <p>Files and folders to copy from the repo's main checkout into each new worktree. Use it for what git does not track but the code needs, such as secrets and local config.</p>
+<pre><code>"copy": [".env.local", "config/master.key", "certs/*.pem"]</code></pre>
+    <ul>
+      <li>Paths are relative to the top of the checkout. The last part may use <code>*</code>, <code>?</code> and <code>[...]</code> wildcards; the folders before it are matched exactly.</li>
+      <li>A folder is copied with everything in it. Files already in the worktree are never overwritten.</li>
+      <li>On APFS the copies are clones, so even large folders copy quickly and take no extra space until they change.</li>
+    </ul>
+
+    <h3 id="worktree-cleanup"><code>worktree.cleanup</code></h3>
+    <p>A command to run when a worktree or a session goes away, so whatever was made for it can go too: a simulator, a dev server's port, a database, a cache. Flotilla knows nothing of these; the command gets the <a href="#variables">variables</a> below and decides what to do.</p>
+<pre><code>"cleanup": "./scripts/cleanup-checkout.sh \"$FLOTILLA_CHECKOUT\""</code></pre>
+
+    <h3 id="editor-exclude"><code>editor.exclude</code></h3>
+    <p>Files and folders that Flotilla's editor leaves out of its file tree, Quick Open and Find in Files. They add to the list in Settings, under Editor.</p>
+<pre><code>"exclude": ["node_modules", "/build", "src/generated"]</code></pre>
+    <ul>
+      <li>A bare name, like <code>node_modules</code>, matches a file or folder of that name at any depth.</li>
+      <li>A path with a slash, like <code>src/generated</code>, or a leading <code>/</code>, like <code>/build</code>, matches from the top of the checkout only.</li>
+    </ul>
+
+    <h2 id="when">When commands run</h2>
+    <table>
+      <thead><tr><th>Command</th><th>Runs</th><th>In</th></tr></thead>
+      <tbody>
+        <tr><td><code>setup</code></td><td>When Flotilla checks out a worktree: for a new agent, for a ready worktree Flotilla keeps waiting in the pool, or when it recreates a missing one. It runs after the copy and before an agent starts in the worktree. An agent on the repo's main checkout gets no new worktree, so no setup.</td><td>The new worktree</td></tr>
+        <tr><td><code>cleanup</code></td><td>When a worktree is deleted from disk (a ready worktree trimmed from the pool, or an agent's own worktree removed), and when an agent's session is deleted, even if its worktree is kept for the next agent. It runs in the background, so nothing waits on it.</td><td>The repo's main checkout</td></tr>
+      </tbody>
+    </table>
+    <p>Because ready worktrees are set up ahead of time, a slow setup does not hold up a new agent when Flotilla keeps worktrees ready for the project.</p>
+    <p>Commands run in <code>bash</code>, with the same environment as your agents: what your shell's startup files set, such as <code>PATH</code> from <code>~/.zshrc</code>. A command can span several lines.</p>
+
+    <h2 id="variables">Variables</h2>
+    <p>Setup and cleanup commands get these environment variables:</p>
+    <table>
+      <thead><tr><th>Variable</th><th>Holds</th></tr></thead>
+      <tbody>
+        <tr><td><code>FLOTILLA_EVENT</code></td><td>What happened: <code>worktree-created</code> for setup; <code>checkout-removed</code> or <code>session-deleted</code> for cleanup.</td></tr>
+        <tr><td><code>FLOTILLA_PROJECT</code></td><td>The name of the Flotilla project the repo belongs to.</td></tr>
+        <tr><td><code>FLOTILLA_REPO</code></td><td>The path of the repo's main checkout.</td></tr>
+        <tr><td><code>FLOTILLA_WORKTREE</code></td><td>The path of the worktree. For <code>checkout-removed</code> it is already gone.</td></tr>
+        <tr><td><code>FLOTILLA_CHECKOUT</code></td><td>A short, stable name for the worktree, like <code>myapp-3</code>, or the repo's name for its main checkout. Worktrees are reused by later agents, so key anything shared, such as a simulator, port or build folder, by this name.</td></tr>
+        <tr><td><code>FLOTILLA_SESSION</code></td><td>The deleted session's id. Set for <code>session-deleted</code> only.</td></tr>
+      </tbody>
+    </table>
+    <p>A cleanup script can branch on the event:</p>
+<pre><code>#!/bin/bash
+case "$FLOTILLA_EVENT" in
+  checkout-removed) xcrun simctl delete "$FLOTILLA_CHECKOUT" 2&gt;/dev/null ;;
+  session-deleted)  rm -rf "/tmp/logs/$FLOTILLA_SESSION" ;;
+esac</code></pre>
+
+    <h2 id="approval">Approving committed commands</h2>
+    <p>Anyone who can commit to a repo can change its <code>settings.json</code>, so Flotilla does not run a command from it until you have seen it. The first time, it shows the command's exact text and asks whether to run it. Flotilla remembers your answer for that repo and that text, and asks again whenever the command changes. If you choose Don't Run, it is skipped and Flotilla asks again next time.</p>
+    <p>Commands in <code>settings.local.json</code> are your own and run without asking.</p>
+
+    <h2 id="schema">Editor help with $schema</h2>
+    <p>Put this line first in either file, and editors such as VS Code and Zed check the file as you type, complete its keys and explain each one on hover:</p>
+<pre><code>"$schema": "https://tinypenguin.com/flotilla/settings.schema.json"</code></pre>
+    <p>The starter file Flotilla writes already has it.</p>
+    <div class="note"><p>If <code>git status</code> does not show a new <code>.flotilla/settings.json</code>, a global gitignore may be hiding the <code>.flotilla</code> folder. Add the file with <code>git add -f .flotilla/settings.json</code>.</p></div>
+  </main>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

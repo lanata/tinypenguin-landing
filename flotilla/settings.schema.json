@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://tinypenguin.com/flotilla/settings.schema.json",
+  "title": "Flotilla repo settings",
+  "description": "What a repo tells Flotilla about itself. .flotilla/settings.json is committed and shared with the team; .flotilla/settings.local.json is your own and stays out of git. Docs: https://tinypenguin.com/flotilla/docs/repo-settings",
+  "type": "object",
+  "properties": {
+    "$schema": {
+      "description": "This schema, so your editor can check the file and explain each key.",
+      "type": "string"
+    },
+    "worktree": {
+      "description": "What happens when Flotilla checks out a worktree for an agent, and when one goes away.",
+      "type": "object",
+      "properties": {
+        "setup": {
+          "description": "A command to run in each new worktree, after the copy and before an agent starts in it. Runs in bash, in the worktree, with your shell's environment. The committed file's setup runs first and asks for your approval; the local file's runs after it.",
+          "type": "string",
+          "examples": ["npm install", "bundle install && bin/rails db:prepare"]
+        },
+        "copy": {
+          "description": "Files or folders to copy from the repo's main checkout into each new worktree, such as untracked secrets and local config. Paths are relative to the checkout's top; the last part may be a wildcard. Existing files are never overwritten. Both files' lists are combined.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "examples": [".env.local", "config/master.key", ".env.*"]
+          },
+          "uniqueItems": true
+        },
+        "cleanup": {
+          "description": "A command to run when a worktree is deleted or a session is deleted, so whatever was made for it (simulators, ports, databases) can go too. Runs in bash, in the repo's main checkout, with your shell's environment; FLOTILLA_EVENT says which happened.",
+          "type": "string",
+          "examples": ["./scripts/cleanup-checkout.sh \"$FLOTILLA_CHECKOUT\""]
+        }
+      },
+      "additionalProperties": true
+    },
+    "editor": {
+      "description": "Flotilla's built-in editor.",
+      "type": "object",
+      "properties": {
+        "exclude": {
+          "description": "Files and folders the editor leaves out of its file tree, Quick Open and Find in Files. A bare name, like node_modules, matches at any depth; a path with a slash, like /build or src/generated, matches from the checkout's top. Both files' lists are combined, and added to the list in Settings.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "examples": ["node_modules", "/build", "/DerivedData"]
+          },
+          "uniqueItems": true
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": true
+}
