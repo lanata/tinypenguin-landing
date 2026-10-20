@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reviewing the work · Flotilla Docs</title>
+  <meta name="description" content="Review an agent's changes in Flotilla, browse its code in the editor and send it comments." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/reviewing/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Everyday work</p>
+      <h1>Reviewing the work</h1>
+      <p class="lede">When an agent says it's done, see exactly what it changed, read the code around it, and send it notes without leaving its pane.</p>
+
+      <h2 id="changes">See what changed</h2>
+      <p>Open the agent's <b>Changes</b> tab (<kbd>⌃3</kbd>). At the top, choose what to look at:</p>
+      <ul>
+        <li><strong>Uncommitted:</strong> what the agent has changed since its last commit.</li>
+        <li><strong>Whole branch:</strong> everything on its branch compared with your main branch, commits included.</li>
+      </ul>
+      <p>Pick a file on the left to read its diff, or <b>All files</b> to scroll through them all. The header shows the branch, how far it is ahead or behind, and whether it's been pushed.</p>
+      <div class="tip"><p>Split the Changes tab beside the agent with <kbd>⌃⇧3</kbd> and watch the diff grow as it works.</p></div>
+
+      <h2 id="notes">Send the agent notes <span class="badge">PRO</span></h2>
+      <p>Spotted something? Hover over a line in the diff and click to comment on it, or comment on a whole file.</p>
+      <ol class="steps">
+        <li>Write what you'd like changed, like "use the existing date formatter here".</li>
+        <li>Press <kbd>↩</kbd> to add the comment and keep reviewing.</li>
+        <li>When you're through, click <b>Send to Agent</b>. All your comments go to the agent as one message, each pointing at its line.</li>
+      </ol>
+      <p>In a hurry? <kbd>⌘↩</kbd> sends a single comment straight away.</p>
+
+      <h2 id="commit">Commit it yourself</h2>
+      <p>Usually the agent commits its own work. If you'd rather, <b>Commit &amp; Push</b> in the Changes tab commits every change with your message and pushes it. Hold <kbd>⌘</kbd> to commit without pushing.</p>
+
+      <h2 id="editor">Read the code</h2>
+      <p>The <b>Editor</b> tab (<kbd>⌃2</kbd>) opens the agent's checkout in a proper code editor, with a file tree, syntax highlighting and saving as you type.</p>
+      <table>
+        <tbody>
+          <tr><td><kbd>⌘P</kbd></td><td>Open a file by typing part of its name.</td></tr>
+          <tr><td><kbd>⇧⌘F</kbd></td><td>Search every file.</td></tr>
+          <tr><td><kbd>⇧⌘P</kbd></td><td>Find a function, type or property by name.</td></tr>
+          <tr><td><kbd>⌘</kbd>-click</td><td>Jump to where a name is declared.</td></tr>
+          <tr><td><kbd>⌘L</kbd></td><td>Go to a line.</td></tr>
+        </tbody>
+      </table>
+      <p>When an agent mentions a file in its terminal, like <code>src/app.ts:42</code>, <kbd>⌘</kbd>-click it to open the file at that line.</p>
+
+      <h2 id="ask">Ask the agent about code</h2>
+      <p>Select some code, or just put the cursor on a line, and press <kbd>⇧⌘A</kbd> (<b>Ask Agent</b>). Write your question or request; <kbd>⌘↩</kbd> sends it to the agent along with exactly where in the code you mean. Press <kbd>↩</kbd> instead to collect several comments and send them together.</p>
+      <p>From the agent's own tab, <kbd>⌘P</kbd> and <kbd>⇧⌘P</kbd> drop a reference to a file or function into the agent's prompt, ready for you to finish the sentence.</p>
+      <div class="note"><p>Prefer Neovim? Choose it under Settings › Editor and it takes the editor's place in every pane.</p></div>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

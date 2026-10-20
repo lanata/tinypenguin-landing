@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Install and set up · Flotilla Docs</title>
+  <meta name="description" content="Download Flotilla for Mac and get the coding agents and tools it needs ready." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/install/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Getting started</p>
+      <h1>Install and set up</h1>
+      <p class="lede">A few minutes from download to your first agent. Flotilla checks what's missing and tells you how to fix it.</p>
+
+      <h2 id="download">Download Flotilla</h2>
+      <p>Flotilla runs on macOS 26 Tahoe or later.</p>
+      <ol class="steps">
+        <li><a href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest">Download the latest release</a> and drag Flotilla into your Applications folder.</li>
+        <li>Open it. Flotilla is notarized by Apple, so it opens like any other app.</li>
+        <li>Choose whether to share crash reports and usage data. They never include your code or conversations, and you can change your mind in Settings at any time.</li>
+      </ol>
+      <p>Flotilla keeps itself up to date. When there's a new version it shows you what changed; you can also pick <b>Check for Updates…</b> from the Flotilla menu.</p>
+
+      <h2 id="setup">Let Setup check your Mac</h2>
+      <p>Flotilla doesn't replace your coding agent. It runs the agents you already use, so it needs a few tools on your Mac. The first time you open it, Settings opens on the <b>Setup</b> tab and checks for them:</p>
+      <table>
+        <thead><tr><th>Tool</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>git</td><td>Every agent works in its own git checkout. Required.</td></tr>
+          <tr><td>Flotilla hook and CLI</td><td>How agents tell Flotilla what they're doing. Flotilla installs this itself. Required.</td></tr>
+          <tr><td>Claude Code, Codex or Cursor</td><td>The agents. You need at least one.</td></tr>
+          <tr><td>GitHub CLI</td><td>Shows each agent's pull requests. Optional, but you'll want it.</td></tr>
+          <tr><td>Neovim or Vim</td><td>Only if you'd rather edit in Vim than in Flotilla's editor.</td></tr>
+        </tbody>
+      </table>
+      <p>Anything missing gets an <b>Install</b> button or a command to copy into Terminal. Once everything is green you'll see "Everything Flotilla needs is in place." Click <b>Check Again</b> after installing something.</p>
+      <div class="tip"><p>For pull requests, sign the GitHub CLI in once with <code>gh auth login</code>. Flotilla uses your login and never sees your password.</p></div>
+
+      <h2 id="terminal">Your terminal, as you like it</h2>
+      <p>Flotilla's terminals are drawn by Ghostty and read your Ghostty config, so if you use Ghostty your font and theme already match. Agents also get everything your <code>~/.zshrc</code> sets up, like your <code>PATH</code>, so they find the same tools you do.</p>
+
+      <p>That's it. Next, add a project and start your first agent.</p>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

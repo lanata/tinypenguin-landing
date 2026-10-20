@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Arranging your workspace · Flotilla Docs</title>
+  <meta name="description" content="Split, zoom and arrange panes in Flotilla, use each agent's tabs, and work with several windows." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/workspace/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Everyday work</p>
+      <h1>Arranging your workspace</h1>
+      <p class="lede">Lay agents out side by side, zoom in on the one that matters, and keep each agent's tools one key away.</p>
+
+      <h2 id="grid">The grid</h2>
+      <p>Agents show up in panes, tiled across the window. You'll mostly use four keys:</p>
+      <table>
+        <tbody>
+          <tr><td><kbd>⌥D</kbd> <kbd>⌥R</kbd></td><td>Split the pane down or to the right. Add <kbd>⇧</kbd> to split up or to the left.</td></tr>
+          <tr><td><kbd>⌥↩</kbd></td><td>Zoom the pane to fill the window, and press again to put it back. Double-clicking a pane's header does the same.</td></tr>
+          <tr><td><kbd>⌥S</kbd></td><td>Smart Organize: lay every open pane out evenly in one go.</td></tr>
+          <tr><td><kbd>⌥⇧W</kbd></td><td>Close the pane. The agent keeps running and you can open it again from the sidebar.</td></tr>
+        </tbody>
+      </table>
+      <p>To move between panes, use <kbd>⌘⌥</kbd> with the arrow keys, or <kbd>⌥H</kbd> <kbd>⌥J</kbd> <kbd>⌥K</kbd> <kbd>⌥L</kbd> if you think in Vim.</p>
+      <p>Prefer the mouse? Drag an agent from the sidebar onto the edge of a pane to split there, or onto its middle to replace it. Drag a pane's header to move it.</p>
+
+      <h2 id="tabs">Each agent's tabs</h2>
+      <p>Every pane has a row of tabs in its header, all working in that agent's checkout:</p>
+      <ul>
+        <li><strong>The agent</strong> <kbd>⌃1</kbd>: its terminal.</li>
+        <li><strong>Editor</strong> <kbd>⌃2</kbd>: browse and edit the agent's files.</li>
+        <li><strong>Changes</strong> <kbd>⌃3</kbd>: what the agent changed, as a diff.</li>
+        <li><strong>Pull Requests</strong> <kbd>⌃4</kbd>: its pull requests, checks and reviews.</li>
+        <li><strong>Terminal</strong> <kbd>⌃5</kbd>: a shell of your own in the checkout, to run the app or poke around.</li>
+      </ul>
+      <p><kbd>⌃⇥</kbd> cycles through them and <kbd>⌃K</kbd> takes you back to the agent. Want to watch the agent and its changes at the same time? Add <kbd>⇧</kbd>, as in <kbd>⌃⇧3</kbd>, to open a tab beside the agent instead of over it. <kbd>⌃⇧W</kbd> closes that split.</p>
+
+      <h2 id="windows">Windows and tabs</h2>
+      <p>Press <kbd>⌘T</kbd> for a new window tab with a grid of its own, handy for keeping one project per tab. Each window has its own sidebar too. <kbd>⌘S</kbd> hides the sidebar when you want the room.</p>
+
+      <h2 id="small">Small things that help</h2>
+      <ul>
+        <li><kbd>⌘[</kbd> and <kbd>⌘]</kbd> go back and forward through the panes, tabs and files you've visited.</li>
+        <li><kbd>⌘=</kbd> and <kbd>⌘−</kbd> make the text bigger or smaller.</li>
+        <li>Click an agent's name in its pane header to see its project, branch, checkout path and how much context it has left.</li>
+        <li><kbd>⌥O</kbd> opens the agent's checkout in VS Code, and <kbd>⌥X</kbd> in Xcode.</li>
+        <li>Forgot a shortcut? Press <kbd>⌘/</kbd>, or hold it to peek. Every shortcut is also in the menu bar.</li>
+      </ul>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reading the sidebar · Flotilla Docs</title>
+  <meta name="description" content="What the icons and lines in Flotilla's sidebar mean, and how to open agents from it." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/sidebar/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Getting started</p>
+      <h1>Reading the sidebar</h1>
+      <p class="lede">The sidebar is your whole fleet in one column. A glance tells you who's busy, who's done and who's waiting on you.</p>
+
+      <h2 id="states">What each agent is doing</h2>
+      <p>Every agent has a row under its project, with an icon and a short line about what it's doing. These come straight from the agent itself, so they're always accurate.</p>
+      <table>
+        <thead><tr><th></th><th>State</th><th>What it means</th></tr></thead>
+        <tbody>
+          <tr><td class="glyph" style="color:#a6e3a1">▶</td><td>Working</td><td>Busy. The line shows what it's running right now, or how long it's been at it.</td></tr>
+          <tr><td class="glyph" style="color:#f28ca8">▲</td><td>Blocked</td><td>Needs your permission to run something. "needs: approval"</td></tr>
+          <tr><td class="glyph" style="color:#f28ca8">✋</td><td>Waiting</td><td>Asked you a question, or wants you to approve its plan.</td></tr>
+          <tr><td class="glyph" style="color:#f2cc73">✓</td><td>Done</td><td>Finished its turn. Time to look at what it did.</td></tr>
+          <tr><td class="glyph" style="color:#8ab5fa">◷</td><td>In review</td><td>Its pull request is open. The line shows checks and reviews, like "#42 · 2 pending" or "#42 approved".</td></tr>
+          <tr><td class="glyph" style="color:#cca6f7">●</td><td>Merged</td><td>Its pull request is merged. You can clean it up.</td></tr>
+          <tr><td class="glyph" style="color:#8f9abb">☾</td><td>Asleep</td><td>Put to sleep to save memory. It wakes up right where it left off.</td></tr>
+          <tr><td class="glyph" style="color:#8f9abb">◌</td><td>Stopped</td><td>Not running. Its conversation is saved, and opening it picks up again.</td></tr>
+        </tbody>
+      </table>
+      <p>Red means it's your turn. If nothing in the sidebar is red, every agent is either working or done.</p>
+      <div class="tip"><p>A yellow "ctx" figure on a row means the agent is running low on context. A good moment to wrap up its task or start a fresh one.</p></div>
+
+      <h2 id="open">Open an agent</h2>
+      <ul>
+        <li>Click a row to open the agent in a new pane.</li>
+        <li><kbd>⌘</kbd>-click to show it in the pane you're in instead.</li>
+        <li>Drag a row onto the grid to put it exactly where you want.</li>
+        <li>Right-click a row for everything else you can do with it.</li>
+      </ul>
+      <p>Closing an agent's pane doesn't stop it. It keeps working and its row keeps updating.</p>
+
+      <h2 id="tabs">Projects, PRs and Routines</h2>
+      <p>The bar at the top of the sidebar switches between three lists:</p>
+      <ul>
+        <li><strong>Projects</strong> <kbd>⌘1</kbd>: your agents, by project. Click a project's name to fold it away.</li>
+        <li><strong>PRs</strong> <kbd>⌘2</kbd>: your open, draft and recently closed pull requests, whichever agent made them.</li>
+        <li><strong>Routines</strong> <kbd>⌘3</kbd>: agents that run on a schedule. More on these in <a href="/flotilla/docs/routines/">Routines</a>.</li>
+      </ul>
+
+      <h2 id="footer">The footer</h2>
+      <p>The row at the bottom of the sidebar has a few small helpers: whether GitHub is up to date, whether Flotilla is keeping your Mac awake, how much of your Claude plan's limits you've used, and a history of recent activity and errors. Hover over any of them for details.</p>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

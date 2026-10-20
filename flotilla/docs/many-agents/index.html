@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Running many agents · Flotilla Docs</title>
+  <meta name="description" content="Choose where Flotilla agents work, fork sessions, and keep many agents fast with ready worktrees and sleep." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/many-agents/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Going further</p>
+      <h1>Running many agents</h1>
+      <p class="lede">Once a few agents feel natural, here's how to choose where each one works, try two approaches at once, and keep a big fleet light.</p>
+
+      <h2 id="where">Choose where an agent works</h2>
+      <p>New agents start on a fresh branch from the latest main branch. That's right most of the time, but the New Agent sheet (<kbd>⌘N</kbd>) has other options under <b>From</b>:</p>
+      <ul>
+        <li><strong>New branch from</strong> another branch, to build on work that isn't merged yet.</li>
+        <li><strong>Work in</strong> an existing branch, to pick up where someone left off.</li>
+        <li><strong>Work in</strong> the main checkout, your own copy of the repo, when you want to see the agent's edits there directly.</li>
+        <li><strong>Work in</strong> another agent's checkout, to have a second agent help on the same branch.</li>
+      </ul>
+      <p>If a project's agents should always use the main checkout, set that once under <b>New agents</b> in Edit Project.</p>
+
+      <h2 id="fork">Try two approaches</h2>
+      <p>Not sure which way to go? Right-click an agent and choose <b>Fork Session…</b>. The fork starts with the whole conversation so far, in its own checkout, so you can send each one down a different path and keep the better result.</p>
+
+      <h2 id="find">Find any agent</h2>
+      <p>With a dozen agents running, press <kbd>⌘O</kbd> and type. Flotilla finds agents by name, branch, pull request, task, a file they touched, or even something said in their conversation. Deleted agents show up too.</p>
+      <p>Holding <kbd>⌥</kbd> shows a number next to the first nine agents in the sidebar; <kbd>⌥1</kbd> to <kbd>⌥9</kbd> opens them.</p>
+
+      <h2 id="ready">Start agents instantly <span class="badge">PRO</span></h2>
+      <p>Checking out a big repo takes a moment. In Edit Project, unfold <b>Ready worktrees, sleeping agents, repo settings</b> and choose how many worktrees to keep ready. New agents then start in one straight away, and each deleted agent's worktree is replaced with a fresh one.</p>
+      <p>If every new worktree needs the same setup, like installing dependencies or copying a <code>.env</code> file, put it in the repo's settings and Flotilla does it before an agent arrives. See <a href="/flotilla/docs/repo-settings/">Repo settings</a>.</p>
+
+      <h2 id="sleep">Let idle agents sleep <span class="badge">PRO</span></h2>
+      <p>An agent that's done and waiting still uses memory. Flotilla can put idle agents to sleep after a while (30 minutes, unless you change it in Settings › Agents). A sleeping agent keeps its last screen; press <kbd>↩</kbd> in its pane or click <b>Resume</b> and it carries on with its conversation.</p>
+      <p>You can change this for a project in Edit Project, or for a single agent by right-clicking it and choosing <b>Sleep When Idle</b> or <b>Sleep Now</b>. When your Mac runs low on memory, Flotilla puts idle agents to sleep sooner.</p>
+
+      <h2 id="persist">Keep agents running when you quit <span class="badge">PRO</span></h2>
+      <p>Turn on <b>Keep agents running across restarts</b> in Settings › Agents, and agents carry on in the background when you quit, update or restart Flotilla. Open it again and every pane is right where you left it.</p>
+      <p>Without it, quitting stops the agents. Their conversations are saved, and each one resumes when you open it next time.</p>
+
+      <h2 id="repos">Projects with several repos <span class="badge">PRO</span></h2>
+      <p>If your work spans repositories, like an app and its API, add them all to one project. Each agent gets a checkout of every repo and starts in the first one.</p>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

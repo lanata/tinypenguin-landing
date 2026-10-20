@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Routines · Flotilla Docs</title>
+  <meta name="description" content="Run Flotilla agents on a schedule with routines: create one, read its results and answer its questions." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/routines/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Going further</p>
+      <h1>Routines</h1>
+      <p class="lede">Some work comes round again and again: triaging new issues, checking dependencies, summing up the day. A routine starts an agent for it on a schedule.</p>
+
+      <h2 id="create">Create a routine</h2>
+      <ol class="steps">
+        <li>Open the <b>Routines</b> list in the sidebar (<kbd>⌘3</kbd>) and click <b>New Routine…</b>.</li>
+        <li>Name it, like "Dependency check".</li>
+        <li>Describe what it should do each time, what's worth your attention, and how much it may do on its own. For example: "Check for outdated dependencies. Open a pull request for patch updates if the tests pass. Ask me before any major version upgrade."</li>
+        <li>Choose <b>When</b> it runs. Pick a schedule with the controls, or type one in plain words.</li>
+        <li>Choose where it <b>Runs in</b>: one of your projects, or <b>No repository</b> for work that doesn't need code, like summarizing your inbox.</li>
+        <li>Click <b>Create Routine</b>.</li>
+      </ol>
+      <p>Schedules you can type:</p>
+      <table>
+        <tbody>
+          <tr><td><code>every 4h</code></td><td>Every four hours.</td></tr>
+          <tr><td><code>hourly weekdays 9-18</code></td><td>Every hour during the work day.</td></tr>
+          <tr><td><code>daily 8:30</code></td><td>Every morning at 8:30.</td></tr>
+          <tr><td><code>wed 10am</code></td><td>Wednesdays at 10.</td></tr>
+        </tbody>
+      </table>
+      <p>Routines run while Flotilla is open. If your Mac was asleep or Flotilla was closed at run time, the routine runs once when it can.</p>
+
+      <h2 id="runs">Each run is an agent</h2>
+      <p>When a routine runs, it starts an ordinary agent, so you can open it and watch, or talk to it, like any other. A run that finds nothing to do quietly removes itself. One that runs past its time limit (10 minutes, unless you change it) is stopped, unless it's waiting on you.</p>
+      <p>Click a routine to see its page: a <b>Briefing</b> the routine writes as it goes, its current run, and a history of past runs, each with a one-line result like "Bumped 3 patch versions, opened #431."</p>
+      <div class="tip"><p>Click <b>Run Now</b> on a new routine to see how it does before its first scheduled run.</p></div>
+
+      <h2 id="ask">When a routine needs a decision</h2>
+      <p>A routine can stop and ask you, for example to approve a risky change. Its row in the sidebar shows a bell, you get a notification, and its page shows the question with buttons to answer, plus room for a note. Your answer goes straight back to the agent and it carries on.</p>
+
+      <h2 id="manage">Pause, edit and more</h2>
+      <ul>
+        <li>Switch a routine's toggle in the sidebar off to pause it, or right-click it for <b>Pause</b>, <b>Run Now</b> and <b>Edit Routine…</b>.</li>
+        <li>Already have an agent doing something you'd like to repeat? Right-click it and choose <b>Make Recurring…</b>.</li>
+        <li>Keep a to-do list in Markdown? Under <b>Briefing file</b> in the routine's settings, choose that file and the routine uses it as its page.</li>
+        <li>You can also just ask an agent: "set up a routine that checks for new Sentry issues every morning".</li>
+      </ul>
+      <div class="note"><p>Flotilla Free includes one routine. <a href="/flotilla/docs/pro/">Pro</a> has no limit.</p></div>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

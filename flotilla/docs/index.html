@@ -4,13 +4,14 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Flotilla Docs</title>
-  <meta name="description" content="Guides for Flotilla, the Mac app for running many coding agents side by side." />
+  <meta name="description" content="Friendly guides to Flotilla, the Mac app for running many coding agents side by side, from your first agent to a whole fleet." />
   <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/" />
   <link rel="icon" type="image/png" href="/flotilla/boat.png" />
   <link rel="stylesheet" href="/legal.css" />
   <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
 </head>
-<body>
+<body class="docs">
   <header>
     <div class="bar">
       <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
@@ -18,13 +19,16 @@
     </div>
   </header>
 
-  <main>
-    <h1>Flotilla Docs</h1>
-    <p class="lede">How to set Flotilla up for your repos and team.</p>
-    <ul class="pages">
-      <li><a href="/flotilla/docs/repo-settings/">Repo settings</a><p>Commands to run, files to copy and what the editor leaves out for each worktree, from <code>.flotilla/settings.json</code>.</p></li>
-    </ul>
-  </main>
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <h1>Flotilla Docs</h1>
+      <p class="lede">Flotilla runs your coding agents side by side, each in its own checkout, and tells you when one needs you. These guides take you from your first agent to a whole fleet, one step at a time.</p>
+      <p>New here? Read the first three guides in order. They take about ten minutes, and that's all you need to get going. Come back to the rest whenever you want more.</p>
+      <a class="start" href="/flotilla/docs/install/">Start with Install and set up →</a>
+      <div id="docs-index"></div>
+    </main>
+  </div>
 
   <footer>
     <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>

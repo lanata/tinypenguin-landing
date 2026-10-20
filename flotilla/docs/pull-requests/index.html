@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pull requests and wrapping up · Flotilla Docs</title>
+  <meta name="description" content="Follow pull requests in Flotilla, review and merge them, and delete finished agents safely." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/pull-requests/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Everyday work</p>
+      <h1>Pull requests and wrapping up</h1>
+      <p class="lede">Follow each agent's pull request from draft to merged without leaving Flotilla, then clear the agent away in one step.</p>
+
+      <h2 id="follow">Follow the pull request</h2>
+      <p>When an agent opens a pull request, Flotilla picks it up on its own. It shows up in three places:</p>
+      <ul>
+        <li>The agent's row in the sidebar, with its checks and review status: "#42 · 2 pending", "#42 approved".</li>
+        <li>A chip under the agent's terminal. Click it to open the pull request, or <kbd>⌘</kbd>-click to open it on GitHub.</li>
+        <li>The <b>PRs</b> list in the sidebar (<kbd>⌘2</kbd>), with all your open, draft and recently closed pull requests.</li>
+      </ul>
+      <p>This needs the GitHub CLI signed in. See <a href="/flotilla/docs/install/">Install and set up</a>.</p>
+
+      <h2 id="tab">Everything in one tab</h2>
+      <p>The agent's <b>Pull Requests</b> tab (<kbd>⌃4</kbd>) has what you'd go to GitHub for:</p>
+      <ul>
+        <li><strong>Conversation:</strong> the description, comments and review threads. Reply and resolve threads right there.</li>
+        <li><strong>Files:</strong> the diff, where you can leave comments on lines.</li>
+        <li><strong>Checks:</strong> CI results. Re-run failed checks or open a check's log.</li>
+      </ul>
+      <p>Below that are the reviewers, labels and assignees, and the merge box. When it says "Ready to merge", click <b>Merge pull request</b>, or <b>Enable auto-merge</b> to merge once checks pass. From the <b>⋯</b> menu you can also mark a draft ready for review, or close the pull request.</p>
+      <div class="pro"><p>Writing comments, replies and reviews with a message needs Pro. Reading everything, approving and merging are free.</p></div>
+      <div class="tip"><p>Got review feedback? Just tell the agent "address the review comments on the PR". It can read them itself.</p></div>
+
+      <h2 id="pick-up">Pick up any pull request</h2>
+      <p>In the <b>PRs</b> list, right-click a pull request and choose <b>Start Agent on…</b> to start an agent on its branch, for example to fix a failing check on a teammate's pull request.</p>
+
+      <h2 id="done">Done with an agent?</h2>
+      <p>Once its work is merged, delete the agent: press <kbd>⌥Q</kbd>, or right-click its row and choose <b>Delete Session</b>. That stops it and removes its checkout. Its branch stays.</p>
+      <p>Before deleting, Flotilla checks that nothing would be lost. If the agent is mid-task, has a pull request still open, or has changes that aren't committed or pushed, it tells you exactly what, and you can still choose <b>Delete Anyway</b>.</p>
+      <p>To clear out a whole batch at once, press <kbd>⌥⇧Q</kbd> (<b>Delete All Completed Sessions</b>). It deletes every agent whose pull requests are merged or closed and that has nothing left to lose, and leaves the rest alone.</p>
+
+      <h2 id="stop">Stop, without deleting</h2>
+      <p>Not finished, but want an agent out of the way? <kbd>⌥W</kbd> stops it. Its checkout and conversation are kept, and opening it again picks up the conversation where it left off.</p>
+
+      <h2 id="history">Bring one back <span class="badge">PRO</span></h2>
+      <p>Deleted something too soon? Right-click the project's name and choose <b>Session History…</b>. Click <b>Resume</b> to bring an agent back with its branch and its conversation.</p>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agents that work together · Flotilla Docs</title>
+  <meta name="description" content="Flotilla agents can start other agents, message each other and schedule routines with the flotilla command." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/teamwork/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Going further</p>
+      <h1>Agents that work together</h1>
+      <p class="lede">Every agent knows it's running inside Flotilla. Ask it to hand off a side task, start a helper or message another agent, and you'll see it all happen in the sidebar.</p>
+
+      <h2 id="ask">Just ask</h2>
+      <p>You don't need to learn anything new. Ask an agent in plain words:</p>
+      <ul>
+        <li>"Hand off the flaky test fix to a new agent and keep going on the feature."</li>
+        <li>"Start an agent to write tests for this once you're done."</li>
+        <li>"Tell the api-auth agent that the endpoint name changed."</li>
+        <li>"Let me know when the build is green." The agent sends you a notification.</li>
+        <li>"Set up a routine that runs the full test suite every night."</li>
+      </ul>
+      <p>New agents appear in the sidebar like any other, so you stay in charge. You can open, redirect or stop any of them.</p>
+
+      <h2 id="how">How agents do it</h2>
+      <p>Agents use a command called <code>flotilla</code> that comes with the app. You can use it too, from any agent's <b>Terminal</b> tab:</p>
+      <table>
+        <tbody>
+          <tr><td><code>flotilla agents</code></td><td>List every agent and what it's doing.</td></tr>
+          <tr><td><code>flotilla new fix-login --prompt "…"</code></td><td>Start a new agent on a task.</td></tr>
+          <tr><td><code>flotilla fork</code></td><td>Start a copy of this agent, conversation included.</td></tr>
+          <tr><td><code>flotilla send api-auth "…"</code></td><td>Message another agent.</td></tr>
+          <tr><td><code>flotilla notify "…"</code></td><td>Send yourself a notification.</td></tr>
+          <tr><td><code>flotilla routine add …</code></td><td>Schedule a routine.</td></tr>
+        </tbody>
+      </table>
+      <p>Run <code>flotilla</code> on its own to see everything it can do.</p>
+
+      <h2 id="guidance">What agents are told</h2>
+      <p>Each Claude Code and Codex agent starts with a few house rules from Flotilla: stay in its own checkout, keep one pull request going at a time, open pull requests as drafts, and lead its replies with the outcome. That's what keeps a fleet of agents tidy. You can add your own instructions in Settings › Prompt; see <a href="/flotilla/docs/fewer-interruptions/#prompt">Fewer interruptions</a>.</p>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

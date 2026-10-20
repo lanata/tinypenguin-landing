@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your first agent · Flotilla Docs</title>
+  <meta name="description" content="Add a project to Flotilla, start an agent on a task and watch it work." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/first-agent/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Getting started</p>
+      <h1>Your first agent</h1>
+      <p class="lede">Point Flotilla at a repository, describe a task, and watch an agent get to work in a checkout of its own.</p>
+
+      <h2 id="project">Add a project</h2>
+      <p>A project is a repository you want agents to work in. Agents never touch your own checkout of it: each one gets a fresh copy (a git worktree) on a branch of its own, so they can't trip over your work or each other's.</p>
+      <ol class="steps">
+        <li>Click <b>Add Project…</b> in the sidebar, or press <kbd>⇧⌘N</kbd>.</li>
+        <li>Click <b>Add a repository folder…</b> and pick the folder of a git repository.</li>
+        <li>Give the project a name and a color. The color shows next to each of its agents, which helps once you have a few projects.</li>
+        <li>Click <b>Add Project</b>.</li>
+      </ol>
+
+      <h2 id="start">Start an agent</h2>
+      <ol class="steps">
+        <li>Press <kbd>⌘N</kbd>, or click the <b>+</b> next to the project's name.</li>
+        <li>Describe the task, the way you'd ask the agent directly. For example: "Add a dark mode toggle to the settings page."</li>
+        <li>Leave the name empty and Flotilla names the agent after its task, using Apple Intelligence on your Mac. Or type a short name yourself.</li>
+        <li>Pick the agent to run: Claude, Codex or Cursor.</li>
+        <li>Press <kbd>↩</kbd> to create it.</li>
+      </ol>
+      <p>By default the agent starts on a new branch from the latest version of your main branch. Flotilla checks out its worktree, starts the agent in a pane, and hands it your task.</p>
+
+      <h2 id="watch">Watch it work</h2>
+      <p>The agent's pane is a real terminal running Claude Code, Codex or Cursor, exactly as you'd run it yourself. Type into it to talk to the agent, answer its questions or give it more to do.</p>
+      <p>Meanwhile, its row in the sidebar shows what it's up to: working, waiting on you, or done. You don't need to keep watching the pane; Flotilla tells you when the agent needs you.</p>
+
+      <h2 id="more">Start a few more</h2>
+      <p>This is where Flotilla shines. Press <kbd>⌘N</kbd> again and give a second agent a different task. Each gets its own checkout and its own pane, and the sidebar keeps track of all of them.</p>
+      <div class="tip"><p>Small, clear tasks work best. Three agents on three focused tasks usually beat one agent on a big vague one.</p></div>
+      <div class="note"><p>Flotilla Free runs up to three agents at a time, in one project. <a href="/flotilla/docs/pro/">Pro</a> lifts the limits.</p></div>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Fewer interruptions · Flotilla Docs</title>
+  <meta name="description" content="Let Flotilla agents run trusted commands without asking, keep your Mac awake, and give every agent your instructions." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/fewer-interruptions/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Going further</p>
+      <h1>Fewer interruptions</h1>
+      <p class="lede">Most permission prompts are for the same handful of commands. Tell Flotilla which ones you trust and spend your attention where it matters.</p>
+
+      <h2 id="rules">Always allow the commands you trust <span class="badge">PRO</span></h2>
+      <p>Go to Settings › Permissions and add a rule under <b>Always Allowed</b> for each thing agents may do without asking. Rules are written the way Claude Code writes them:</p>
+      <table>
+        <tbody>
+          <tr><td><code>Bash(npm test)</code></td><td>Run the tests.</td></tr>
+          <tr><td><code>Bash(git status)</code></td><td>Check git status.</td></tr>
+          <tr><td><code>Bash(npm run lint *)</code></td><td>Run the linter with any arguments.</td></tr>
+          <tr><td><code>WebSearch</code></td><td>Search the web.</td></tr>
+        </tbody>
+      </table>
+      <p>When an agent asks to do something on the list, Flotilla answers for you and the agent keeps going. Everything else still asks. Rules apply to every Claude Code and Codex agent.</p>
+      <div class="tip"><p>Start small. Add a rule the third time you find yourself approving the same thing.</p></div>
+
+      <h2 id="auto">Auto-approve one agent <span class="badge">PRO</span></h2>
+      <p>For a task you trust completely, you can let one agent approve every one of its own requests. First allow it in Settings › Permissions (you'll be asked to confirm that you understand the risk). Then right-click the agent and choose <b>Auto-Approve Permission Requests</b>.</p>
+      <p>A shield shows on its row and pane while it's on. Click the shield to turn it off.</p>
+      <div class="note"><p>An auto-approving agent can run any command and change any file it can reach. Use it for work you'd be happy to let run unattended, and keep an eye on it.</p></div>
+
+      <h2 id="awake">Walk away while agents work <span class="badge">PRO</span></h2>
+      <p>Flotilla keeps your Mac from sleeping while any agent is working, so you can step away from a long task. In Settings › Agents you can also keep the display on, and choose what happens on battery: stay awake, stay awake for an hour, or let the Mac sleep.</p>
+      <p>The cup in the sidebar's footer shows when it's keeping your Mac awake, and which agents are working.</p>
+
+      <h2 id="prompt">Tell every agent once <span class="badge">PRO</span></h2>
+      <p>Have instructions you give every agent, like "use pnpm, not npm" or "write tests first"? Put them in Settings › Prompt and they're added to every Claude Code and Codex agent's instructions.</p>
+
+      <h2 id="updates">Claude Code updates</h2>
+      <p>When Claude Code updates itself, agents still on the old version show an <b>Update</b> button in their pane's header. Click it to restart the agent on the new version; its conversation carries on. To have idle agents do this on their own, turn on <b>Restart idle agents onto Claude Code updates</b> in Settings › Agents.</p>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>

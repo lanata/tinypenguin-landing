@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Troubleshooting · Flotilla Docs</title>
+  <meta name="description" content="Fixes for common Flotilla problems: agent status, pull requests, sleeping agents, deleting sessions and more." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/troubleshooting/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Reference</p>
+      <h1>Troubleshooting</h1>
+      <p class="lede">Something not quite right? Start here. Most problems come down to a missing tool or a setting, and Flotilla can usually tell you which.</p>
+
+      <div class="tip"><p>First stop for almost anything: Settings › Setup. It checks every tool the way your agents see them and says what needs fixing.</p></div>
+
+      <h2 id="status">An agent's status never changes</h2>
+      <p>Flotilla learns what agents are doing from a hook each agent runs.</p>
+      <ul>
+        <li><strong>Codex:</strong> Codex only runs a hook you've trusted. Type <code>/hooks</code> in a Codex pane and trust Flotilla's.</li>
+        <li><strong>Cursor:</strong> turn on the Third-Party Imports setting in Cursor so it picks up the hook.</li>
+        <li><strong>Any agent:</strong> check that "Flotilla hook and CLI" is green in Settings › Setup.</li>
+      </ul>
+
+      <h2 id="prs">Pull requests don't show up</h2>
+      <ul>
+        <li>Check that "GitHub CLI" is green in Settings › Setup. If not, run <code>gh auth login</code> in Terminal.</li>
+        <li>Check that <b>GitHub integration</b> is on in Settings › GitHub.</li>
+        <li>The <b>PRs</b> list in the sidebar shows only pull requests you opened. An agent's own tab shows every pull request on the branches it worked on.</li>
+      </ul>
+
+      <h2 id="asleep">An agent says it's asleep</h2>
+      <p>It was put to sleep to save memory. Press <kbd>↩</kbd> in its pane or click <b>Resume</b>, and it carries on with its conversation. To stop it happening, see <a href="/flotilla/docs/many-agents/#sleep">Let idle agents sleep</a>.</p>
+
+      <h2 id="delete">Flotilla won't say it's safe to delete an agent</h2>
+      <p>It's protecting something: the agent is still working, its pull request is open, or it has changes that aren't committed or pushed. The alert lists exactly what. Deal with it, or choose <b>Delete Anyway</b> if you don't need it.</p>
+
+      <h2 id="missing">"Worktree missing"</h2>
+      <p>The agent's checkout was deleted outside Flotilla. Right-click the agent and choose <b>Recreate Worktree</b> to check its branch out again.</p>
+
+      <h2 id="cli">The <code>flotilla</code> command says "Flotilla is not running"</h2>
+      <p>The command talks to the app, so Flotilla needs to be open. Open it and try again.</p>
+
+      <h2 id="limit">"Part of Flotilla Pro" or a lock icon</h2>
+      <p>That feature or item is past the free plan's limits. See <a href="/flotilla/docs/pro/">Free and Pro</a>.</p>
+
+      <h2 id="quit">What happens to agents when I quit?</h2>
+      <p>Flotilla tells you before quitting. Without <a href="/flotilla/docs/many-agents/#persist">Keep agents running across restarts</a>, agents stop and each conversation resumes the next time you open it. With it, they keep working in the background.</p>
+
+      <h2 id="help">Still stuck?</h2>
+      <p>Choose <b>Send Feedback…</b> from the Help menu (it shows while crash reports and usage data are on) to send a note straight to the developer, with your email if you'd like a reply. You can include a screenshot of the window. Or email <a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a>.</p>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>
