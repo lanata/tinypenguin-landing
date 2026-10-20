@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Flagship · A to-do list for Mac with a helper on every task</title>
+  <meta name="description" content="Flagship is a to-do list for your Mac where every task gets an AI helper of its own, built on Claude Code. It does the legwork, keeps notes and checks in only when a decision is yours." />
+  <meta name="theme-color" content="#cfd3ff" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#16163d" media="(prefers-color-scheme: dark)" />
+  <meta name="color-scheme" content="light dark" />
+
+  <meta property="og:site_name" content="Tiny Penguin" />
+  <meta property="og:title" content="Flagship · Your to-do list, looked after" />
+  <meta property="og:description" content="A to-do list for your Mac where every task gets a helper of its own. It does the legwork and checks in only when a decision is yours." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tinypenguin.com/flagship/" />
+  <meta property="og:image" content="https://tinypenguin.com/flagship/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Flagship's icon, a yacht on a calm evening sea, above the words: Your to-do list, looked after." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Flagship · Your to-do list, looked after" />
+  <meta name="twitter:description" content="A to-do list for your Mac where every task gets a helper of its own." />
+  <meta name="twitter:image" content="https://tinypenguin.com/flagship/og.png" />
+  <link rel="canonical" href="https://tinypenguin.com/flagship/" />
+
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Flagship",
+        "url": "https://tinypenguin.com/flagship/",
+        "image": "https://tinypenguin.com/flagship/icon.png",
+        "description": "A to-do list for your Mac where every task gets an AI helper of its own, built on Claude Code.",
+        "applicationCategory": "ProductivityApplication",
+        "operatingSystem": "macOS 26 or later",
+        "publisher": { "@type": "Organization", "name": "Tiny Penguin", "url": "https://tinypenguin.com/" },
+        "offers": [
+          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+          { "@type": "Offer", "name": "Pro, monthly", "price": "8", "priceCurrency": "USD" },
+          { "@type": "Offer", "name": "Pro, yearly", "price": "80", "priceCurrency": "USD" }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          { "@type": "Question", "name": "What do I need to use Flagship?",
+            "acceptedAnswer": { "@type": "Answer", "text": "A Mac on macOS 26 or later, and Claude Code signed in to your Claude account. Flagship's helpers run on Claude Code, so they use your existing Claude plan." } },
+          { "@type": "Question", "name": "Will it do things without asking me?",
+            "acceptedAnswer": { "@type": "Answer", "text": "Reading and preparing are fine. Anything that leaves your Mac or speaks for you, like sending an email, posting, accepting an invite or buying something, waits for your go-ahead. When in doubt, it drafts and shows you first." } },
+          { "@type": "Question", "name": "Where does my list live?",
+            "acceptedAnswer": { "@type": "Answer", "text": "On your Mac. Your tasks, task notes, Knowledge and Notes are kept locally, and notes are plain Markdown files you can open in any editor. Flagship backs up your data before each update." } },
+          { "@type": "Question", "name": "What happens if I stop paying for Pro?",
+            "acceptedAnswer": { "@type": "Answer", "text": "You keep Flagship Free and nothing is deleted. One task's helper works at a time and one routine runs; the rest wait, untouched, until you upgrade again." } }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* ---- Tokens. The dusk palette comes from the app icon. ---- */
+    :root {
+      --sky:      #cfd3ff;
+      --sky-2:    #e4e3ff;
+      --sea:      #4d58d2;
+      --sea-deep: #2f3596;
+      --moon:     #fff3c4;
+      --ink:      #23245a;
+      --ink-2:    #4d4f86;
+      --page:     #f7f7fd;
+      --surface:  #ffffff;
+      --line:     rgba(35, 36, 90, 0.10);
+      --line-2:   rgba(35, 36, 90, 0.18);
+      --lilac:    #8c61f7;
+      --calm:     #2f9e75;
+      --btn:      #2f3596;
+      --btn-hover:#4d58d2;
+      --btn-ink:  #ffffff;
+      --ask:      #c9711f;
+      --shadow:   0 1px 2px rgba(35, 36, 90, .06), 0 18px 48px -18px rgba(35, 36, 90, .28);
+
+      --round: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif;
+      --font:  -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --maxw:  1120px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --sky:      #2a2b6e;
+        --sky-2:    #1f2056;
+        --sea:      #3b45b8;
+        --sea-deep: #1a1d5c;
+        --moon:     #f6ecc0;
+        --ink:      #eceafe;
+        --ink-2:    #a9aad6;
+        --page:     #16163d;
+        --surface:  #20214e;
+        --line:     rgba(220, 220, 255, 0.10);
+        --line-2:   rgba(220, 220, 255, 0.18);
+        --lilac:    #ab8cff;
+        --calm:     #6fd3a8;
+        --btn:      #f6ecc0;
+        --btn-hover:#fff6d6;
+        --btn-ink:  #1a1d5c;
+        --ask:      #f2b46b;
+        --shadow:   0 1px 2px rgba(0, 0, 0, .2), 0 22px 50px -20px rgba(0, 0, 0, .6);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; background: var(--page); color: var(--ink);
+      font: 17px/1.6 var(--font); -webkit-font-smoothing: antialiased;
+    }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--lilac); outline-offset: 3px; border-radius: 8px; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    h1, h2, h3 { font-family: var(--round); font-weight: 700; letter-spacing: -0.015em; line-height: 1.12; margin: 0; }
+    h2 { font-size: clamp(30px, 4vw, 42px); }
+    h3 { font-size: 21px; }
+    p { margin: 0; }
+    .lede { color: var(--ink-2); font-size: 19px; max-width: 34em; }
+    .skip { position: absolute; left: -999px; }
+    .skip:focus { left: 16px; top: 12px; z-index: 10; background: var(--surface); padding: 8px 14px; }
+
+    /* ---- Buttons ---- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+      font: 600 16px/1 var(--round); padding: 14px 22px; border-radius: 999px;
+      border: 1px solid transparent; transition: transform .15s, background .15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--btn); color: var(--btn-ink); }
+    .btn-primary:hover { background: var(--btn-hover); }
+    .btn-quiet { background: transparent; border-color: var(--line-2); color: var(--ink); }
+    .btn-sm { padding: 10px 16px; font-size: 14px; }
+    .btn svg { width: 16px; height: 16px; }
+
+    /* ---- Header ---- */
+    header { position: absolute; inset: 0 0 auto; z-index: 5; }
+    .nav { display: flex; align-items: center; gap: 28px; height: 76px; }
+    .brand { display: flex; align-items: center; gap: 10px; font: 700 19px var(--round); text-decoration: none; }
+    .brand img { width: 34px; height: 34px; }
+    .nav-links { display: flex; gap: 24px; margin-left: auto; font-size: 15px; }
+    .nav-links a { text-decoration: none; color: var(--ink-2); }
+    .nav-links a:hover { color: var(--ink); }
+
+    /* ---- Hero: a still evening horizon ---- */
+    .hero {
+      position: relative; overflow: hidden; padding: 150px 0 0;
+      background: linear-gradient(180deg, var(--sky-2) 0%, var(--sky) 100%);
+    }
+    .moon {
+      position: absolute; right: 9%; top: 108px; width: 92px; height: 92px; border-radius: 50%;
+      background: var(--moon); box-shadow: 0 0 0 18px rgba(255, 243, 196, .18), 0 0 80px 30px rgba(255, 243, 196, .35);
+    }
+    .hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); gap: 56px; align-items: end; }
+    .hero-copy { padding-bottom: 190px; }
+    .hero h1 { font-size: clamp(42px, 6vw, 68px); max-width: 9em; }
+    .hero .lede { margin-top: 22px; }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .fine { margin-top: 14px; font-size: 14px; color: var(--ink-2); }
+    .sea {
+      position: absolute; inset: auto 0 0; height: 150px;
+      background:
+        repeating-linear-gradient(180deg, transparent 0 13px, rgba(255,255,255,.07) 13px 14px),
+        linear-gradient(180deg, var(--sea) 0%, var(--sea-deep) 100%);
+    }
+    .sea::before { /* the moon's path on the water */
+      content: ""; position: absolute; right: calc(9% + 22px); top: 0; width: 48px; height: 100%;
+      background: repeating-linear-gradient(180deg, rgba(255,243,196,.5) 0 2px, transparent 2px 12px);
+      -webkit-mask: linear-gradient(180deg, #000, transparent 85%); mask: linear-gradient(180deg, #000, transparent 85%);
+      filter: blur(1.5px);
+    }
+
+    /* ---- Window mockups ---- */
+    .window {
+      position: relative; z-index: 1; background: var(--surface); border-radius: 16px;
+      box-shadow: var(--shadow); border: 1px solid var(--line); overflow: hidden; font-size: 14px;
+    }
+    .hero .window { margin-bottom: 48px; }
+    .titlebar { display: flex; align-items: center; gap: 7px; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+    .titlebar i { width: 11px; height: 11px; border-radius: 50%; background: var(--line-2); }
+    .titlebar b { margin-left: 10px; font: 600 13px var(--round); color: var(--ink-2); }
+    .list { padding: 6px 8px 12px; }
+    .group { display: flex; align-items: center; gap: 8px; padding: 12px 10px 6px; font: 600 13px var(--round); color: var(--ink-2); }
+    .group::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--c, var(--lilac)); }
+    .task { display: flex; align-items: center; gap: 12px; padding: 9px 10px; border-radius: 10px; }
+    .task.sel { background: rgba(140, 97, 247, .10); }
+    .box { flex: none; width: 18px; height: 18px; border-radius: 50%; border: 1.5px solid var(--line-2); }
+    .task .name { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .state { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-2); }
+    .state .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .state.working { color: var(--lilac); }
+    .state.working .dot { animation: breathe 1.8s ease-in-out infinite; }
+    .state.asks { color: var(--ask); }
+    .state.ready { color: var(--calm); }
+    @keyframes breathe { 50% { opacity: .25; } }
+    /* The one moment on load: two helpers finish and their tasks settle. */
+    .settle .state { transition: color .6s; }
+
+    /* ---- Sections ---- */
+    section { padding: 112px 0; }
+    .head { max-width: 40em; margin-bottom: 56px; }
+    .head .lede { margin-top: 16px; }
+
+    /* How it goes: three steps along one horizon line */
+    .steps { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; list-style: none; margin: 0; padding: 0; }
+    .steps::before { content: ""; position: absolute; left: 0; right: 0; top: 19px; height: 2px; background: var(--line-2); }
+    .steps li { position: relative; }
+    .steps .n {
+      display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+      background: var(--page); border: 2px solid var(--sea); color: var(--sea);
+      font: 700 17px var(--round); margin-bottom: 20px;
+    }
+    .steps p { color: var(--ink-2); margin-top: 8px; max-width: 26em; }
+
+    /* Feature rows: copy beside a mockup */
+    .feature { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 72px; align-items: center; }
+    .feature + .feature { margin-top: 128px; }
+    .feature.flip .copy { order: 2; }
+    .feature .copy p + p { margin-top: 14px; color: var(--ink-2); }
+    .feature .copy .lede { margin-top: 16px; }
+    .points { list-style: none; padding: 0; margin: 24px 0 0; display: grid; gap: 12px; }
+    .points li { display: flex; gap: 12px; color: var(--ink-2); }
+    .points li::before { content: ""; flex: none; width: 8px; height: 8px; margin-top: 10px; border-radius: 50%; background: var(--lilac); }
+
+    /* Task page mockup */
+    .page { padding: 22px 24px 24px; }
+    .page h4 { margin: 0; font: 700 20px var(--round); }
+    .page .summary { color: var(--ink-2); margin-top: 6px; }
+    .page .label { margin: 20px 0 10px; font: 600 13px var(--round); color: var(--ink-2); }
+    .step { display: flex; gap: 10px; align-items: flex-start; padding: 7px 0; }
+    .step .box { margin-top: 2px; border-radius: 6px; }
+    .step.done { color: var(--ink-2); text-decoration: line-through; text-decoration-color: var(--line-2); }
+    .step.done .box { background: var(--calm); border-color: var(--calm); position: relative; }
+    .step.done .box::after { content: ""; position: absolute; left: 5px; top: 1.5px; width: 4px; height: 8px; border: solid #fff; border-width: 0 2px 2px 0; transform: rotate(45deg); }
+    .step small { color: var(--ink-2); }
+    .question { margin: 8px 0 4px; padding: 14px; border-radius: 12px; background: rgba(201, 113, 31, .08); border: 1px solid rgba(201, 113, 31, .25); }
+    .question b { font-weight: 600; }
+    .choices { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .choice { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--surface); font-size: 13px; }
+    .choice.on { border-color: var(--lilac); color: var(--lilac); box-shadow: inset 0 0 0 1px var(--lilac); }
+
+    /* Assistant mockup */
+    .chat { padding: 18px; display: grid; gap: 12px; }
+    .bubble { max-width: 88%; padding: 12px 14px; border-radius: 14px; line-height: 1.5; }
+    .bubble.me { justify-self: end; background: var(--sea-deep); color: #fff; border-bottom-right-radius: 4px; }
+    .bubble.it { background: var(--page); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+    .bubble.it ul { margin: 8px 0 0; padding-left: 18px; }
+    .meta { font-size: 12.5px; color: var(--ink-2); }
+    .routine { display: flex; align-items: center; gap: 12px; padding: 12px 18px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+    .routine b { color: var(--ink); font-weight: 600; }
+    .routine span:last-child { margin-left: auto; }
+
+    /* Knowledge mockup */
+    .note { padding: 22px 26px; font-size: 14.5px; line-height: 1.65; }
+    .note h4 { margin: 0 0 10px; font: 700 20px var(--round); }
+    .note h5 { margin: 16px 0 4px; font: 600 15px var(--round); }
+    .note ul { margin: 0; padding-left: 18px; color: var(--ink-2); }
+    .note .hint { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); font-size: 13px; color: var(--ink-2); }
+
+    /* Calm by design */
+    .calm { background: var(--surface); border-block: 1px solid var(--line); }
+    .assurances { display: grid; grid-template-columns: repeat(2, 1fr); gap: 40px 64px; }
+    .assurances h3 { font-size: 19px; }
+    .assurances p { margin-top: 8px; color: var(--ink-2); }
+
+    /* Pricing */
+    .billing { display: inline-flex; padding: 4px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); margin-bottom: 28px; }
+    .billing button { font: 600 14px var(--round); color: var(--ink-2); background: none; border: 0; padding: 9px 16px; border-radius: 999px; cursor: pointer; }
+    .billing button[aria-checked="true"] { background: var(--btn); color: var(--btn-ink); }
+    .billing span { opacity: .75; font-weight: 500; margin-left: 4px; }
+    .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .plan { padding: 32px; border-radius: 20px; background: var(--surface); border: 1px solid var(--line); }
+    .plan.pro { border: 2px solid var(--lilac); }
+    .plan .price { display: flex; align-items: baseline; gap: 6px; margin: 14px 0 6px; }
+    .plan .price b { font: 700 44px var(--round); letter-spacing: -0.02em; }
+    .plan .price span, .plan .blurb { color: var(--ink-2); }
+    .plan .btn { margin: 22px 0 24px; }
+    .plan ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; }
+    .plan li { display: flex; gap: 10px; }
+    .plan li::before { content: ""; flex: none; width: 14px; height: 8px; margin-top: 7px; border: solid var(--calm); border-width: 0 0 2px 2px; transform: rotate(-45deg); }
+    .plan li.lead::before { display: none; }
+    .trial { display: inline-block; font: 600 13px var(--round); color: var(--lilac); }
+    .plan-fine { margin-top: 24px; color: var(--ink-2); font-size: 15px; max-width: 46em; }
+
+    /* FAQ */
+    .faq { max-width: 760px; }
+    .faq details { border-bottom: 1px solid var(--line-2); }
+    .faq summary {
+      list-style: none; cursor: pointer; padding: 22px 0; display: flex; justify-content: space-between; gap: 16px;
+      font: 600 18px var(--round);
+    }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: "+"; font-weight: 400; color: var(--ink-2); transition: transform .2s; }
+    .faq details[open] summary::after { transform: rotate(45deg); }
+    .faq details p { padding: 0 0 22px; color: var(--ink-2); max-width: 40em; }
+
+    /* Final call: the horizon again, calmer */
+    .final { position: relative; overflow: hidden; text-align: center; padding: 120px 0 200px; background: linear-gradient(180deg, var(--page), var(--sky)); }
+    .final img { width: 112px; height: 112px; margin: 0 auto 24px; }
+    .final h2 { font-size: clamp(36px, 5vw, 54px); }
+    .final .lede { margin: 16px auto 0; }
+    .final .cta { justify-content: center; }
+    .final .sea { height: 110px; }
+    .final .sea::before { display: none; }
+
+    footer { background: var(--sea-deep); color: rgba(255,255,255,.8); padding: 0 0 36px; font-size: 14px; }
+    .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .foot nav { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+    .foot a { text-decoration: none; }
+    .foot a:hover { color: #fff; }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav .btn { margin-left: auto; }
+      .hero { padding-top: 120px; }
+      .hero-grid, .feature { grid-template-columns: minmax(0, 1fr); gap: 40px; }
+      .hero-copy { padding-bottom: 0; }
+      .moon { width: 52px; height: 52px; top: 84px; right: 20px; }
+      .feature.flip .copy { order: 0; }
+      .feature + .feature { margin-top: 96px; }
+      .steps, .assurances, .plans { grid-template-columns: minmax(0, 1fr); }
+      .steps::before { display: none; }
+      section { padding: 80px 0; }
+    }
+    @media (max-width: 520px) {
+      .state .label { display: none; }
+      .plan { padding: 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .state.working .dot { animation: none; }
+      .btn, .settle .state { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/flagship/"><img src="icon.png" alt="" width="34" height="34" />Flagship</a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">Questions</a>
+      </nav>
+      <a class="btn btn-primary btn-sm" data-download href="https://github.com/tiny-penguin-dev/flagship-releases/releases/latest">Download</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="moon" aria-hidden="true"></div>
+      <div class="wrap hero-grid">
+        <div class="hero-copy">
+          <h1 id="hero-title">Your to-do list, looked after.</h1>
+          <p class="lede">Flagship is a to-do list for your Mac where every task gets a helper of its own. It does the legwork, keeps careful notes and checks in only when a decision is yours.</p>
+          <div class="cta">
+            <a class="btn btn-primary" data-download href="https://github.com/tiny-penguin-dev/flagship-releases/releases/latest">
+              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 1a.9.9 0 0 1 .9.9v7.3l2.4-2.4a.9.9 0 1 1 1.3 1.3l-4 4a.9.9 0 0 1-1.3 0l-4-4a.9.9 0 1 1 1.3-1.3l2.5 2.4V1.9A.9.9 0 0 1 8 1zM2 13.3h12a.9.9 0 0 1 0 1.7H2a.9.9 0 0 1 0-1.7z"/></svg>
+              Download for Mac
+            </a>
+            <a class="btn btn-quiet" href="#how">See how it works</a>
+          </div>
+          <p class="fine">Free to use, with 14 days of Pro to try. Needs macOS 26 and Claude Code.</p>
+        </div>
+
+        <div class="window" role="img" aria-label="Flagship's task list. Helpers are working on two tasks, one task needs a decision and another is ready to check.">
+          <div class="titlebar" aria-hidden="true"><i></i><i></i><i></i><b>Tasks</b></div>
+          <div class="list" aria-hidden="true">
+            <div class="group" style="--c:#8c61f7">Now</div>
+            <div class="task sel"><span class="box"></span><span class="name">Draft the Q4 planning doc</span><span class="state working" data-settle="ready"><span class="dot"></span><span class="label">Working on it</span></span></div>
+            <div class="task"><span class="box"></span><span class="name">Book flights for Lisbon</span><span class="state asks"><span class="dot"></span><span class="label">Pick a flight</span></span></div>
+            <div class="task"><span class="box"></span><span class="name">Renew the car insurance</span><span class="state ready"><span class="dot"></span><span class="label">Ready to check</span></span></div>
+            <div class="group" style="--c:#4d58d2">Next</div>
+            <div class="task"><span class="box"></span><span class="name">Compare standing desks</span><span class="state working" data-settle="ready"><span class="dot"></span><span class="label">Working on it</span></span></div>
+            <div class="task"><span class="box"></span><span class="name">Reply to Sam about the offsite</span><span class="state"><span class="label">Draft waiting</span></span></div>
+            <div class="group" style="--c:#2f9e75">Later</div>
+            <div class="task"><span class="box"></span><span class="name">Plan Mum's 60th birthday</span><span class="state"><span class="label">Ideas in notes</span></span></div>
+          </div>
+        </div>
+      </div>
+      <div class="sea" aria-hidden="true"></div>
+    </section>
+
+    <section id="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="how-title">Write it down. Then let it go.</h2>
+          <p class="lede">You don't have to remember where you left anything. Each task carries its own notes and its own next steps, so picking it up again takes a glance.</p>
+        </div>
+        <ol class="steps">
+          <li>
+            <span class="n" aria-hidden="true">1</span>
+            <h3>Jot it down</h3>
+            <p>Add a task the way you'd say it: "find a plumber for the kitchen sink" or "prep for Thursday's review".</p>
+          </li>
+          <li>
+            <span class="n" aria-hidden="true">2</span>
+            <h3>Its helper gets going</h3>
+            <p>The task's helper researches, compares, drafts and writes down what it found and what comes next.</p>
+          </li>
+          <li>
+            <span class="n" aria-hidden="true">3</span>
+            <h3>You make the calls</h3>
+            <p>When it needs you, the question comes with the answers laid out. One click, and it carries on.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section aria-label="What Flagship does" style="padding-top:0">
+      <div class="wrap">
+        <div class="feature">
+          <div class="copy">
+            <h2>Questions arrive with the answers ready.</h2>
+            <p class="lede">Open a task and you'll find a short summary, what's been done and the next steps. Steps are a click away, and decisions come as choices, not homework.</p>
+            <ul class="points">
+              <li>Tick a step and the helper takes it from there</li>
+              <li>Steps wait their turn until the one before is done</li>
+              <li>Talk to the helper on the task's page whenever you like</li>
+            </ul>
+          </div>
+          <div class="window" role="img" aria-label="A task's page with a summary, a finished step, a question with three choices and a step waiting for it.">
+            <div class="titlebar" aria-hidden="true"><i></i><i></i><i></i><b>Book flights for Lisbon</b></div>
+            <div class="page" aria-hidden="true">
+              <h4>Book flights for Lisbon</h4>
+              <p class="summary">Three good options for May 14 to 19, all under $620 return.</p>
+              <div class="label">Next</div>
+              <div class="step done"><span class="box"></span>Check the dates against your calendar</div>
+              <div class="question">
+                <b>Which flight should I hold?</b>
+                <div class="choices">
+                  <span class="choice on">TAP, direct, $588</span>
+                  <span class="choice">United, 1 stop, $512</span>
+                  <span class="choice">Iberia, 1 stop, $541</span>
+                </div>
+              </div>
+              <div class="step"><span class="box"></span><span>Put the hold on your card and email you the details <small>(after the flight is picked)</small></span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="feature flip">
+          <div class="copy">
+            <h2>Mornings start sorted.</h2>
+            <p class="lede">An assistant looks after the list as a whole. Ask it to triage, reshuffle or hand work to a task's helper, or give it a routine and it shows up on its own.</p>
+            <ul class="points">
+              <li>Routines follow your work hours: start of the day, every hour while you work, or whenever you choose</li>
+              <li>Several conversations can run side by side</li>
+              <li>It works with the tools you've connected to Claude Code, like your calendar, mail and docs</li>
+            </ul>
+          </div>
+          <div class="window" role="img" aria-label="The assistant's morning brief, listing what needs a decision today, and the routine that wrote it.">
+            <div class="titlebar" aria-hidden="true"><i></i><i></i><i></i><b>Assistant</b></div>
+            <div class="chat" aria-hidden="true">
+              <div class="meta">Morning brief · 9:00</div>
+              <div class="bubble it">
+                Good morning. Two things need you today:
+                <ul>
+                  <li>Pick a Lisbon flight. The TAP fare goes up tonight.</li>
+                  <li>Sam's offsite reply is drafted and waiting for a look.</li>
+                </ul>
+                The desk comparison and the insurance quotes are done.
+              </div>
+              <div class="bubble me">Move the planning doc to Thursday, please.</div>
+              <div class="bubble it">Done. It's under Next, and its helper knows the new date.</div>
+            </div>
+            <div class="routine" aria-hidden="true"><b>Morning brief</b><span>Start of work, weekdays</span><span>Next tomorrow 9:00</span></div>
+          </div>
+        </div>
+
+        <div class="feature">
+          <div class="copy">
+            <h2>It gets to know how you like things done.</h2>
+            <p class="lede">Knowledge is a set of notes about you, your people and your projects that every helper reads before it starts. Flagship can build it for you from the tools you've connected, and you can edit any of it.</p>
+            <p>Quick notes have a home too. Jot things down as they come; helpers search them when it matters and leave them be otherwise.</p>
+          </div>
+          <div class="window" role="img" aria-label="A Knowledge note describing how the user likes to work.">
+            <div class="titlebar" aria-hidden="true"><i></i><i></i><i></i><b>Knowledge</b></div>
+            <div class="note" aria-hidden="true">
+              <h4>How I work</h4>
+              <h5>Travel</h5>
+              <ul><li>Window seat, direct flights when the difference is under $100</li><li>Hold bookings, never buy without asking</li></ul>
+              <h5>Writing</h5>
+              <ul><li>Short emails, first names, no sign-off fluff</li><li>Docs open with the decision, then the why</li></ul>
+              <p class="hint">Every helper reads this before it starts.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="calm" aria-labelledby="calm-title">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="calm-title">Helpful, and never pushy.</h2>
+          <p class="lede">Handing things off only works if you can trust what happens next. Flagship is built so you always know.</p>
+        </div>
+        <div class="assurances">
+          <div>
+            <h3>It asks before it speaks for you</h3>
+            <p>Reading and preparing are fine. Sending, posting, accepting or buying waits for your go-ahead. When in doubt, it drafts and shows you.</p>
+          </div>
+          <div>
+            <h3>You can see everything it did</h3>
+            <p>Activity records every change to your list, who made it and the conversation it came from.</p>
+          </div>
+          <div>
+            <h3>Your list stays on your Mac</h3>
+            <p>Tasks, notes and Knowledge live on your Mac. Notes are plain Markdown files you can open anywhere.</p>
+          </div>
+          <div>
+            <h3>Updates never lose your data</h3>
+            <p>Flagship backs up your list before each new version first runs, and updates arrive quietly in the background.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING. Free limits and Pro features mirror Plan.swift in the app. -->
+    <section id="pricing" aria-labelledby="pricing-title">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="pricing-title">Free for your list. Pro when you want more hands.</h2>
+          <p class="lede">The list, its helpers, the assistant and Knowledge are free. Pro lets every helper work at once, with 14 days to try it.</p>
+        </div>
+
+        <div class="billing" role="radiogroup" aria-label="Billing period">
+          <button type="button" role="radio" aria-checked="false" data-period="monthly">Monthly</button>
+          <button type="button" role="radio" aria-checked="true" data-period="yearly">Yearly <span>2 months free</span></button>
+        </div>
+
+        <div class="plans">
+          <div class="plan">
+            <h3>Free</h3>
+            <div class="price"><b>$0</b><span>forever</span></div>
+            <p class="blurb">Everything you need to keep one thing moving at a time.</p>
+            <a class="btn btn-quiet" data-download href="https://github.com/tiny-penguin-dev/flagship-releases/releases/latest">Download</a>
+            <ul>
+              <li>Unlimited tasks and sections</li>
+              <li>A helper on every task, one working at a time</li>
+              <li>The assistant and one routine</li>
+              <li>Knowledge and quick notes</li>
+              <li>Activity, search and backups</li>
+            </ul>
+          </div>
+
+          <div class="plan pro">
+            <span class="trial">14-day free trial</span>
+            <h3>Pro</h3>
+            <div class="price" data-price-yearly="$80" data-price-monthly="$8"><b>$80</b><span data-per>/ year</span></div>
+            <p class="blurb" data-blurb-yearly="About $6.67 a month, billed yearly." data-blurb-monthly="Billed monthly, cancel any time.">About $6.67 a month, billed yearly.</p>
+            <a class="btn btn-primary" data-download href="https://github.com/tiny-penguin-dev/flagship-releases/releases/latest">Start free trial</a>
+            <ul>
+              <li class="lead"><b>Everything in Free, plus:</b></li>
+              <li>Every task's helper working at once</li>
+              <li>Unlimited routines</li>
+              <li>Your own folders within the helpers' reach</li>
+              <li>Claude Code's own terminal on the assistant's conversation</li>
+            </ul>
+          </div>
+        </div>
+
+        <p class="plan-fine">Start the trial in Flagship under Settings › Pro. If you don't subscribe, you keep Free: nothing is deleted, and anything past the free limits waits until you upgrade.</p>
+      </div>
+    </section>
+
+    <section id="faq" aria-labelledby="faq-title" style="padding-top:0">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="faq-title">Questions</h2>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>What do I need to use Flagship?</summary>
+            <p>A Mac on macOS 26 or later, and Claude Code signed in to your Claude account. Flagship's helpers run on Claude Code, so they use your existing Claude plan.</p>
+          </details>
+          <details>
+            <summary>Will it do things without asking me?</summary>
+            <p>Reading and preparing are fine. Anything that leaves your Mac or speaks for you, like sending an email, posting, accepting an invite or buying something, waits for your go-ahead. When in doubt, it drafts and shows you first.</p>
+          </details>
+          <details>
+            <summary>Where does my list live?</summary>
+            <p>On your Mac. Your tasks, task notes, Knowledge and Notes are kept locally, and notes are plain Markdown files you can open in any editor. Flagship backs up your data before each update.</p>
+          </details>
+          <details>
+            <summary>What happens if I stop paying for Pro?</summary>
+            <p>You keep Flagship Free and nothing is deleted. One task's helper works at a time and one routine runs; the rest wait, untouched, until you upgrade again.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" aria-labelledby="final-title">
+      <div class="wrap">
+        <img src="icon.png" alt="" width="112" height="112" loading="lazy" />
+        <h2 id="final-title">Rest easy. It's on the list.</h2>
+        <p class="lede">Download Flagship, add the first thing on your mind and let its helper get started.</p>
+        <div class="cta">
+          <a class="btn btn-primary" data-download href="https://github.com/tiny-penguin-dev/flagship-releases/releases/latest">Download for Mac</a>
+          <a class="btn btn-quiet" href="mailto:hello@tinypenguin.com?subject=Flagship">Say hi</a>
+        </div>
+        <p class="fine">Requires macOS 26 and Claude Code.</p>
+      </div>
+      <div class="sea" aria-hidden="true"></div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div>© <span id="year">2026</span> <a href="/">Tiny Penguin</a> · Flagship</div>
+      <nav aria-label="Footer">
+        <a href="/flotilla/">Flotilla</a>
+        <a href="https://github.com/tiny-penguin-dev/flagship-releases/releases">Releases</a>
+        <a href="/terms/">Terms</a>
+        <a href="/privacy/">Privacy</a>
+        <a href="/refunds/">Refunds</a>
+        <a href="mailto:hello@tinypenguin.com">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+  (() => {
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Pricing: monthly/yearly toggle
+    const price = document.querySelector('[data-price-yearly]'), blurb = document.querySelector('[data-blurb-yearly]');
+    document.querySelectorAll('[data-period]').forEach(btn => btn.addEventListener('click', () => {
+      const yearly = btn.dataset.period === 'yearly';
+      document.querySelectorAll('[data-period]').forEach(b => b.setAttribute('aria-checked', b === btn));
+      price.querySelector('b').textContent = yearly ? price.dataset.priceYearly : price.dataset.priceMonthly;
+      price.querySelector('[data-per]').textContent = yearly ? '/ year' : '/ month';
+      blurb.textContent = yearly ? blurb.dataset.blurbYearly : blurb.dataset.blurbMonthly;
+    }));
+
+    // Release zips are versioned (Flagship-1.0.0.zip), so point the buttons at
+    // the latest one; they keep the releases page if GitHub doesn't answer.
+    fetch('https://api.github.com/repos/tiny-penguin-dev/flagship-releases/releases/latest')
+      .then(r => r.ok ? r.json() : Promise.reject(r.status))
+      .then(release => {
+        const zip = release.assets.find(a => /^Flagship-.*\.zip$/.test(a.name));
+        if (zip) document.querySelectorAll('[data-download]').forEach(a => { a.href = zip.browser_download_url; });
+      })
+      .catch(() => {});
+
+    // The hero's one moment: a few seconds in, two helpers finish and their tasks settle.
+    const settle = () => document.querySelectorAll('[data-settle]').forEach((s, i) => setTimeout(() => {
+      s.className = 'state ready';
+      s.querySelector('.label').textContent = 'Ready to check';
+    }, i * 1400));
+    if (!reduced) { document.querySelector('.hero .list').classList.add('settle'); setTimeout(settle, 2600); }
+  })();
+  </script>
+</body>
+</html>
