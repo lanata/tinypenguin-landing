@@ -27,14 +27,14 @@
       <p class="lede">Review a teammate's pull request with the whole repo at hand, and an agent beside you that reviews it, explains the tricky parts and answers your questions.</p>
 
       <h2 id="start">Open a review</h2>
-      <p>A review checks the pull request out in a session of its own, in the project that has its repo. Start one from:</p>
+      <p>A review opens the pull request in a pane of its own, focused on its diff. Open one from:</p>
       <ul>
-        <li><strong>Review Requests</strong> at the top of the PRs list (<kbd>⌘2</kbd>): the pull requests waiting on you. Click one.</li>
+        <li><strong>Review Requests</strong> at the top of the PRs list (<kbd>⌘2</kbd>): the pull requests waiting on you. Click one, or any other pull request in the list.</li>
         <li>The <b>Review</b> button on any pull request you have open in Flotilla.</li>
         <li><b>File › Review Pull Request…</b> (<kbd>⇧⌘R</kbd>): paste its link.</li>
       </ul>
-      <p>The pull request opens on its <b>Files</b> tab, beside the session's agent.</p>
-      <p>A pull request on a repo that isn't in any of your projects opens in the pull request view instead. You can still leave comments and submit your review there; the AI review, questions and ⌘-click to a definition need the repo in a project.</p>
+      <p><b>Conversation</b> at the top opens the whole pull request: its discussion, checks and merge button.</p>
+      <p>When one of your projects has the repo, the first time you ask for the AI review, ask a question, ⌘-click a name or show more of a file, Flotilla checks the pull request out in a review session of that project and starts its agent in the background. <b>Agent</b> at the top shows it beside the review. On a repo that isn't in any of your projects you can still leave comments and submit your review; the AI review, questions and ⌘-click need the repo in a project.</p>
 
       <h2 id="read">Read the diff</h2>
       <p>The diff shows only what changed, and the rest of the repo is a click away:</p>
@@ -69,7 +69,7 @@
 
       <h2 id="settings">Make it yours</h2>
       <p>Settings › Review sets how many findings the agent writes, how strict its recommendation is, whether it explains the code, how it words things, and instructions of your own, for every review or one project. It also chooses which review requests show: requests to your teams, drafts, bots and old ones are all optional.</p>
-      <p>When you're done, delete the review session like any other (<kbd>⌥Q</kbd>). Its notes go with it.</p>
+      <p>When you're done, delete the review session like any other (<kbd>⌥Q</kbd>), or choose <b>End Review…</b> on its row in Review Requests. Its notes go with it.</p>
       <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
     </main>
   </div>
