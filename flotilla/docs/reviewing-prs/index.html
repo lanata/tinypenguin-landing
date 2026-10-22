@@ -27,13 +27,14 @@
       <p class="lede">Review a teammate's pull request with the whole repo at hand, and an agent beside you that reviews it, explains the tricky parts and answers your questions.</p>
 
       <h2 id="start">Open a review</h2>
-      <p>A review checks the pull request out in a session of its own, in the project that has its repo. Start one from:</p>
+      <p>A review opens the pull request in a session of its own. When one of your projects has its repo, the session checks the pull request out. Start one from:</p>
       <ul>
         <li><strong>Review Requests</strong> at the top of the PRs list (<kbd>⌘2</kbd>): the pull requests waiting on you. Click one.</li>
         <li>The <b>Review</b> button on any pull request you have open in Flotilla.</li>
         <li><b>File › Review Pull Request…</b> (<kbd>⇧⌘R</kbd>): paste its link.</li>
       </ul>
-      <p>The pull request opens on its <b>Files</b> tab, beside the session's agent. The repo has to belong to one of your projects; add it first if it doesn't.</p>
+      <p>The pull request opens on its <b>Files</b> tab, beside the session's agent.</p>
+      <p>A repo that isn't in any of your projects can be reviewed too, from GitHub's diff. Comments, the AI review and questions all work; ⌘-click to a definition, showing more of a file and opening files in the editor need a local checkout, so add the repo to a project when you want those. To close one of these reviews, right-click its row in Review Requests and choose <b>End Review…</b>.</p>
 
       <h2 id="read">Read the diff</h2>
       <p>The diff shows only what changed, and the rest of the repo is a click away:</p>
@@ -64,7 +65,7 @@
       <p>When the agent can't tell, <b>Ask the Author</b> turns your question into a draft comment for whoever wrote the pull request.</p>
 
       <h2 id="updates">When the pull request changes</h2>
-      <p>New commits show a banner above the diff. <b>Update Checkout</b> moves your review to them: notes and drafts follow their lines, and any whose lines changed fold into <b>outdated</b> under their file. Then <b>Review the New Commits</b> has the agent look at just what's new.</p>
+      <p>New commits show a banner above the diff. <b>Update Checkout</b> (or <b>Update</b>, without a checkout) moves your review to them: notes and drafts follow their lines, and any whose lines changed fold into <b>outdated</b> under their file. Then <b>Review the New Commits</b> has the agent look at just what's new.</p>
 
       <h2 id="settings">Make it yours</h2>
       <p>Settings › Review sets how many findings the agent writes, how strict its recommendation is, whether it explains the code, how it words things, and instructions of your own, for every review or one project. It also chooses which review requests show: requests to your teams, drafts, bots and old ones are all optional.</p>
