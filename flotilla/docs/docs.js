@@ -11,6 +11,7 @@ const sections = [
     ["workspace", "Arranging your workspace", "Panes, tabs and windows, mostly from the keyboard."],
     ["reviewing", "Reviewing the work", "See what an agent changed, read the code and send it notes."],
     ["pull-requests", "Pull requests and wrapping up", "Follow a pull request to merge, then clean up."],
+    ["reviewing-prs", "Reviewing pull requests", "Review a teammate's pull request with an agent beside you."],
   ]],
   ["Going further", [
     ["many-agents", "Running many agents", "Checkouts, branches, forks and sleeping agents."],

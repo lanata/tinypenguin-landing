@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Reviewing pull requests · Flotilla Docs</title>
+  <meta name="description" content="Review a teammate's pull request in Flotilla, with the whole repo at hand and an agent to review it, explain it and answer your questions." />
+  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/reviewing-prs/" />
+  <link rel="icon" type="image/png" href="/flotilla/boat.png" />
+  <link rel="stylesheet" href="/legal.css" />
+  <link rel="stylesheet" href="/flotilla/docs/docs.css" />
+  <script src="/flotilla/docs/docs.js" defer></script>
+</head>
+<body class="docs">
+  <header>
+    <div class="bar">
+      <a class="brand" href="/flotilla/"><img src="/flotilla/boat.png" alt="" /> Flotilla</a>
+      <nav><a href="/flotilla/docs/" aria-current="page">Docs</a><a href="/flotilla/">Download</a></nav>
+    </div>
+  </header>
+
+  <div class="docs-layout">
+    <nav id="docs-nav" class="docs-nav" aria-label="Guides"></nav>
+    <main>
+      <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Everyday work</p>
+      <h1>Reviewing pull requests</h1>
+      <p class="lede">Review a teammate's pull request with the whole repo at hand, and an agent beside you that reviews it, explains the tricky parts and answers your questions.</p>
+
+      <h2 id="start">Open a review</h2>
+      <p>A review checks the pull request out in a session of its own, in the project that has its repo. Start one from:</p>
+      <ul>
+        <li><strong>Review Requests</strong> at the top of the PRs list (<kbd>⌘2</kbd>): the pull requests waiting on you. Click one.</li>
+        <li>The <b>Review</b> button on any pull request you have open in Flotilla.</li>
+        <li><b>File › Review Pull Request…</b> (<kbd>⇧⌘R</kbd>): paste its link.</li>
+      </ul>
+      <p>The pull request opens on its <b>Files</b> tab, beside the session's agent. The repo has to belong to one of your projects; add it first if it doesn't.</p>
+
+      <h2 id="read">Read the diff</h2>
+      <p>The diff shows only what changed, and the rest of the repo is a click away:</p>
+      <table>
+        <tbody>
+          <tr><td><kbd>⌘</kbd>-click</td><td>Jump to where a name is declared, in the editor.</td></tr>
+          <tr><td>Show more</td><td>The button on a file's header shows more of the file around the changes, then all of it.</td></tr>
+          <tr><td>Fold</td><td>The arrow on a file's header folds it away.</td></tr>
+        </tbody>
+      </table>
+
+      <h2 id="comments">Comment, then submit <span class="badge">PRO</span></h2>
+      <p>Hover over a line and click <b>+</b> to comment on it. Shift-click a second <b>+</b> to comment on a range of lines, or use the <b>+</b> on a file's header for the whole file.</p>
+      <p>Comments are drafts: nothing reaches GitHub until you click <b>Submit Review…</b> under the diff and choose <b>Comment</b>, <b>Approve</b> or <b>Request Changes</b>. They all go out together as one review.</p>
+
+      <h2 id="ai">Review with AI <span class="badge">PRO</span></h2>
+      <p>Click <b>Review with AI</b> above the diff. The agent reads the pull request, and the code around it, and leaves short notes on the lines they're about:</p>
+      <ul>
+        <li><strong>Findings:</strong> bugs, risks and better approaches.</li>
+        <li><strong>Context:</strong> why something was done the way it was, especially where it looks odd. Each says where that comes from: the pull request, the code's history, or the agent's own reading.</li>
+        <li><strong>A reading guide:</strong> what the pull request does, the order to read the files in, and which files are mechanical. Those start folded.</li>
+        <li><strong>A recommendation:</strong> approve or request changes, and why.</li>
+      </ul>
+      <p>None of it is posted. Click <b>Adopt</b> on a note to copy it into a draft comment of yours, or <b>Select…</b> to adopt several at once. <b>Findings</b> and <b>Context</b> above the diff show or hide each kind.</p>
+
+      <h2 id="ask">Ask the agent <span class="badge">PRO</span></h2>
+      <p>Wondering why something is there? Write your question where you'd write a comment and click <b>Ask Agent</b> (<kbd>⌥⌘↩</kbd>). The answer appears right under it, and <b>Reply</b> asks a follow-up. For a question about the whole pull request, use the field above the diff.</p>
+      <p>When the agent can't tell, <b>Ask the Author</b> turns your question into a draft comment for whoever wrote the pull request.</p>
+
+      <h2 id="updates">When the pull request changes</h2>
+      <p>New commits show a banner above the diff. <b>Update Checkout</b> moves your review to them: notes and drafts follow their lines, and any whose lines changed fold into <b>outdated</b> under their file. Then <b>Review the New Commits</b> has the agent look at just what's new.</p>
+
+      <h2 id="settings">Make it yours</h2>
+      <p>Settings › Review sets how many findings the agent writes, how strict its recommendation is, whether it explains the code, how it words things, and instructions of your own, for every review or one project. It also chooses which review requests show: requests to your teams, drafts, bots and old ones are all optional.</p>
+      <p>When you're done, delete the review session like any other (<kbd>⌥Q</kbd>). Its notes go with it.</p>
+      <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
+    </main>
+  </div>
+
+  <footer>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+  </footer>
+</body>
+</html>
