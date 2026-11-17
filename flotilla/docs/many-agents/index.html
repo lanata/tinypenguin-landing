@@ -44,12 +44,16 @@
       <p>Holding <kbd>⌥</kbd> shows a number next to the first nine agents in the sidebar; <kbd>⌥1</kbd> to <kbd>⌥9</kbd> opens them.</p>
 
       <h2 id="ready">Start agents instantly <span class="badge">PRO</span></h2>
-      <p>Checking out a big repo takes a moment. In Edit Project, unfold <b>Ready worktrees, sleeping agents, repo settings</b> and choose how many worktrees to keep ready. New agents then start in one straight away, and each deleted agent's worktree is replaced with a fresh one.</p>
+      <p>Checking out a big repo takes a moment. In Edit Project, unfold <b>Ready worktrees, sleeping agents, environment, repo settings</b> and choose how many worktrees to keep ready. New agents then start in one straight away, and each deleted agent's worktree is replaced with a fresh one.</p>
       <p>If every new worktree needs the same setup, like installing dependencies or copying a <code>.env</code> file, put it in the repo's settings and Flotilla does it before an agent arrives. See <a href="/flotilla/docs/repo-settings/">Repo settings</a>.</p>
 
       <h2 id="sleep">Let idle agents sleep <span class="badge">PRO</span></h2>
       <p>An agent that's done and waiting still uses memory. Flotilla can put idle agents to sleep after a while (30 minutes, unless you change it in Settings › Agents). A sleeping agent keeps its last screen; press <kbd>↩</kbd> in its pane or click <b>Resume</b> and it carries on with its conversation. An agent with a command still running in the background, like a build or a dev server, stays awake until it finishes.</p>
       <p>You can change this for a project in Edit Project, or for a single agent by right-clicking it and choosing <b>Sleep When Idle</b> or <b>Sleep Now</b>. When your Mac runs low on memory, Flotilla puts idle agents to sleep sooner.</p>
+
+      <h2 id="environment">Give a project's agents environment variables</h2>
+      <p>If a project's agents need a token, a region or any other setting in their environment, add it in Edit Project under <b>Ready worktrees, sleeping agents, environment, repo settings</b>, one <code>KEY=value</code> per line. Agents and their terminal tabs get them the next time they start.</p>
+      <p>The values are kept unencrypted in Flotilla's data on your Mac, and the agents can read them, so only add secrets you're happy for an agent to use.</p>
 
       <h2 id="persist">Keep agents running when you quit <span class="badge">PRO</span></h2>
       <p>Turn on <b>Keep agents running across restarts</b> in Settings › Agents, and agents carry on in the background when you quit, update or restart Flotilla. Open it again and every pane is right where you left it.</p>
