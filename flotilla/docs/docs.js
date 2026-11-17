@@ -16,7 +16,7 @@ const sections = [
   ["Going further", [
     ["many-agents", "Running many agents", "Checkouts, branches, forks and sleeping agents."],
     ["fewer-interruptions", "Fewer interruptions", "Let agents run the commands you trust without asking."],
-    ["routines", "Routines", "Agents that run on a schedule."],
+    ["scheduled", "Scheduled", "Agents that run on a schedule."],
     ["teamwork", "Agents that work together", "Agents that start helpers and message each other."],
     ["repo-settings", "Repo settings", "Set up each new worktree of a repo: commands, files and exclusions."],
   ]],

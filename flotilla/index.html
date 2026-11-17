@@ -641,7 +641,7 @@
       <nav class="nav-links">
         <a href="#flow">How it works</a>
         <a href="#features">Features</a>
-        <a href="#routines">Routines</a>
+        <a href="#scheduled">Scheduled</a>
         <a href="#pricing">Pricing</a>
       </nav>
       <div class="nav-end">
@@ -831,7 +831,7 @@
 
           <div class="card wide rv" style="--d:.08s">
             <h3>Agents that delegate</h3>
-            <p>Agents get a <span class="mono">flotilla</span> command of their own. They can start helpers, message each other and schedule routines, all in view.</p>
+            <p>Agents get a <span class="mono">flotilla</span> command of their own. They can start helpers, message each other and set up scheduled tasks, all in view.</p>
           </div>
         </div>
       </div>
@@ -848,7 +848,7 @@
           <div class="head" style="margin-bottom:0">
             <span class="eyebrow">Command line</span>
             <h2>Agents can run the fleet too.</h2>
-            <p>Every agent knows it's inside Flotilla. With the <span class="mono">flotilla</span> command it can see the other agents, hand off a side quest to a new one, message a teammate or set up a routine. You stay in charge, and you see all of it in the sidebar.</p>
+            <p>Every agent knows it's inside Flotilla. With the <span class="mono">flotilla</span> command it can see the other agents, hand off a side quest to a new one, message a teammate or set up a scheduled task. You stay in charge, and you see all of it in the sidebar.</p>
           </div>
         </div>
       </div>
@@ -879,12 +879,12 @@
       </div>
     </section>
 
-    <!-- ROUTINES -->
-    <section id="routines">
+    <!-- SCHEDULED -->
+    <section id="scheduled">
       <div class="wrap split">
         <div class="rv">
           <div class="head" style="margin-bottom:0">
-            <span class="eyebrow">Routines</span>
+            <span class="eyebrow">Scheduled</span>
             <h2>Agents that show up on schedule.</h2>
             <p>Give a prompt a schedule in plain words, like "every 4h" or "weekdays 9:00". Each run is a normal agent you can open and watch, and it leaves a one-line summary in the history.</p>
           </div>
@@ -948,7 +948,7 @@
             <a class="btn btn-ghost" data-download href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest">Download</a>
             <ul>
               <li>Up to 3 agents running at once</li>
-              <li>1 project and 1 routine</li>
+              <li>1 project and 1 scheduled task</li>
               <li>Claude Code, Codex and Cursor</li>
               <li>Tiling grid, live status and notifications</li>
               <li>Editor, Changes and Pull Requests tabs</li>
@@ -964,7 +964,7 @@
             <a class="btn btn-primary" data-download href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest">Start free trial</a>
             <ul>
               <li><b>Everything in Free, plus:</b></li>
-              <li>Unlimited agents, projects and routines</li>
+              <li>Unlimited agents, projects and scheduled tasks</li>
               <li>Agents that survive quitting Flotilla</li>
               <li>Allowed rules that answer permission prompts for you</li>
               <li>Review comments for agents and on GitHub PRs</li>
@@ -1086,7 +1086,7 @@
 
     const sidebar = (sel) => `
       <aside class="side">
-        <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span class="picker"><i class="on">Projects</i><i>PRs</i><i>Routines</i></span><i>${ui.sidebar}</i></div>
+        <div class="bar"><span class="lights"><i></i><i></i><i></i></span><span class="picker"><i class="on">Projects</i><i>PRs</i><i>Scheduled</i></span><i>${ui.sidebar}</i></div>
         ${projects.map(p => `
           <div class="grp"><span class="dot" style="background:${p.dot}"></span>${p.name}<span class="plus"><svg viewBox="0 0 10 10" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M5 2v6M2 5h6"/></svg></span></div>
           ${p.agents.map(a => `
@@ -1546,8 +1546,8 @@
       ['p', '$ flotilla send search-index "Rebase on main once #431 merges"'],
       ['ok', '✓ Sent'],
       ['', ''],
-      ['p', '$ flotilla routine add deps --schedule "weekdays 9:00" --prompt "Check for dependency updates"'],
-      ['ok', '✓ Routine deps runs weekdays at 9:00'],
+      ['p', '$ flotilla scheduled add deps --schedule "weekdays 9:00" --prompt "Check for dependency updates"'],
+      ['ok', '✓ Scheduled task deps runs weekdays at 9:00'],
     ];
     const cliOut = document.getElementById('cliOut');
     const cls = { p: 'p', ok: 'ok', o: '', '': '' };

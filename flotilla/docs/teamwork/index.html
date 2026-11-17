@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Agents that work together · Flotilla Docs</title>
-  <meta name="description" content="Flotilla agents can start other agents, message each other and schedule routines with the flotilla command." />
+  <meta name="description" content="Flotilla agents can start other agents, message each other and set up scheduled tasks with the flotilla command." />
   <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/teamwork/" />
   <link rel="icon" type="image/png" href="/flotilla/boat.png" />
   <link rel="stylesheet" href="/legal.css" />
@@ -33,7 +33,7 @@
         <li>"Start an agent to write tests for this once you're done."</li>
         <li>"Tell the api-auth agent that the endpoint name changed."</li>
         <li>"Let me know when the build is green." The agent sends you a notification.</li>
-        <li>"Set up a routine that runs the full test suite every night."</li>
+        <li>"Set up a scheduled task that runs the full test suite every night."</li>
       </ul>
       <p>New agents appear in the sidebar like any other, so you stay in charge. You can open, redirect or stop any of them.</p>
 
@@ -46,7 +46,7 @@
           <tr><td><code>flotilla fork</code></td><td>Start a copy of this agent, conversation included.</td></tr>
           <tr><td><code>flotilla send api-auth "…"</code></td><td>Message another agent.</td></tr>
           <tr><td><code>flotilla notify "…"</code></td><td>Send yourself a notification.</td></tr>
-          <tr><td><code>flotilla routine add …</code></td><td>Schedule a routine.</td></tr>
+          <tr><td><code>flotilla scheduled add …</code></td><td>Add a scheduled task.</td></tr>
         </tbody>
       </table>
       <p>Run <code>flotilla</code> on its own to see everything it can do.</p>
