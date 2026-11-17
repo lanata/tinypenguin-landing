@@ -30,7 +30,8 @@
       <p>A project is a repository you want agents to work in. Agents never touch your own checkout of it: each one gets a fresh copy (a git worktree) on a branch of its own, so they can't trip over your work or each other's.</p>
       <ol class="steps">
         <li>Click <b>Add Project…</b> in the sidebar, or press <kbd>⇧⌘N</kbd>.</li>
-        <li>Click <b>Add a repository folder…</b> and pick the folder of a git repository.</li>
+        <li>Click <b>Add a repository folder…</b> and pick the folder of a git repository. A plain folder works too, but with no git there are no worktrees: every agent works directly in that folder.</li>
+        <li>Don't have it on this Mac yet? Click <b>Clone a repository…</b> instead, paste its git URL (or a GitHub <code>owner/name</code>), and pick the folder to clone it into.</li>
         <li>Give the project a name and a color. The color shows next to each of its agents, which helps once you have a few projects.</li>
         <li>Click <b>Add Project</b>.</li>
       </ol>
