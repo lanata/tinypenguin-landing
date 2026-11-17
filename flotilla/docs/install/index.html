@@ -47,8 +47,9 @@
           <tr><td>Neovim or Vim</td><td>Only if you'd rather edit in Vim than in Flotilla's editor.</td></tr>
         </tbody>
       </table>
-      <p>Anything missing gets an <b>Install</b> button or a command to copy into Terminal. Once everything is green you'll see "Everything Flotilla needs is in place." Click <b>Check Again</b> after installing something.</p>
-      <div class="tip"><p>For pull requests, sign the GitHub CLI in once with <code>gh auth login</code>. Flotilla uses your login and never sees your password.</p></div>
+      <p>Anything missing gets an <b>Install</b> button or the command that installs it. Click <b>Run</b> and the command runs in a terminal right there in Settings, where you can answer anything it asks, like your Mac password. When it finishes, press any key and Setup checks again. If you'd rather run it yourself, <b>Copy Command</b> puts it on the clipboard for Terminal. Once everything is green you'll see "Everything Flotilla needs is in place."</p>
+      <p>The GitHub CLI and Neovim install with Homebrew. If you don't have Homebrew yet, Setup offers to install it first, then the tool.</p>
+      <div class="tip"><p>For pull requests, sign the GitHub CLI in once: Setup offers <code>gh auth login</code> with a <b>Run</b> button. Flotilla uses your login and never sees your password.</p></div>
 
       <h2 id="terminal">Your terminal, as you like it</h2>
       <p>Flotilla's terminals are drawn by Ghostty and read your Ghostty config, so if you use Ghostty your font and theme already match. Agents also get everything your <code>~/.zshrc</code> sets up, like your <code>PATH</code>, so they find the same tools you do.</p>
