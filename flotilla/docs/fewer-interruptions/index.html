@@ -27,7 +27,7 @@
       <p class="lede">Most permission prompts are for the same handful of commands. Tell Flotilla which ones you trust and spend your attention where it matters.</p>
 
       <h2 id="rules">Always allow the commands you trust <span class="badge">PRO</span></h2>
-      <p>Go to Settings › Permissions and add a rule under <b>Always Allowed</b> for each thing agents may do without asking. Rules are written the way Claude Code writes them:</p>
+      <p>Go to Settings › Agents and add a rule under <b>Always Allowed</b> for each thing agents may do without asking. Rules are written the way Claude Code writes them:</p>
       <table>
         <tbody>
           <tr><td><code>Bash(npm test)</code></td><td>Run the tests.</td></tr>
@@ -41,7 +41,7 @@
       <div class="tip"><p>Start small. Add a rule the third time you find yourself approving the same thing.</p></div>
 
       <h2 id="auto">Auto-approve one agent <span class="badge">PRO</span></h2>
-      <p>For a task you trust completely, you can let one agent approve every one of its own requests. First allow it in Settings › Permissions (you'll be asked to confirm that you understand the risk). Then right-click the agent and choose <b>Auto-Approve Permission Requests</b>.</p>
+      <p>For a task you trust completely, you can let one agent approve every one of its own requests. First allow it at the bottom of Settings › Agents (you'll be asked to confirm that you understand the risk). Then right-click the agent and choose <b>Auto-Approve Permission Requests</b>.</p>
       <p>A shield shows on its row and pane while it's on. Click the shield to turn it off.</p>
       <div class="note"><p>An auto-approving agent can run any command and change any file it can reach. Use it for work you'd be happy to let run unattended, and keep an eye on it.</p></div>
 
@@ -50,7 +50,7 @@
       <p>The cup in the sidebar's footer shows when it's keeping your Mac awake, and which agents are working.</p>
 
       <h2 id="prompt">Tell every agent once <span class="badge">PRO</span></h2>
-      <p>Have instructions you give every agent, like "use pnpm, not npm" or "write tests first"? Put them in Settings › Prompt and they're added to every Claude Code and Codex agent's instructions.</p>
+      <p>Have instructions you give every agent, like "use pnpm, not npm" or "write tests first"? Put them under <b>System Prompt</b> in Settings › Agents and they're added to every Claude Code and Codex agent's instructions.</p>
 
       <h2 id="updates">Claude Code updates</h2>
       <p>When Claude Code updates itself, agents still on the old version show an <b>Update</b> button in their pane's header. Click it to restart the agent on the new version; its conversation carries on. To have idle agents do this on their own, turn on <b>Restart idle agents onto Claude Code updates</b> in Settings › Agents.</p>
