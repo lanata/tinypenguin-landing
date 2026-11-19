@@ -18,6 +18,7 @@ const sections = [
     ["fewer-interruptions", "Fewer interruptions", "Let agents run the commands you trust without asking."],
     ["scheduled", "Scheduled", "Agents that run on a schedule."],
     ["teamwork", "Agents that work together", "Agents that start helpers and message each other."],
+    ["commander", "The commander", "One agent above all your projects that starts and coordinates the rest."],
     ["repo-settings", "Repo settings", "Set up each new worktree of a repo: commands, files and exclusions."],
   ]],
   ["Reference", [
