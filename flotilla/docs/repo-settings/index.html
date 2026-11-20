@@ -24,7 +24,7 @@
     <main>
       <p class="crumbs"><a href="/flotilla/docs/">Docs</a> / Going further</p>
       <h1>Repo settings</h1>
-      <p class="lede">Tell Flotilla how to get each new worktree of a repo ready: what to run, what to copy in, and what the editor leaves out.</p>
+      <p class="lede">Tell Flotilla how to get each new worktree of a repo ready: what to run, what to copy in, what the editor leaves out, and the tabs and buttons its agents get.</p>
 
       <nav class="toc">
             <h2>On this page</h2>
@@ -57,7 +57,11 @@
           "copy": [".env.local", "config/master.key"],
           "cleanup": "./scripts/cleanup-checkout.sh \"$FLOTILLA_CHECKOUT\""
         },
-        "editor": { "exclude": ["node_modules", "/build"] }
+        "editor": { "exclude": ["node_modules", "/build"] },
+        "commands": [
+          { "name": "Tests", "icon": "checkmark.diamond", "key": "t", "run": "npm test" },
+          { "name": "Push", "icon": "arrow.up.circle", "message": "Commit what is done and push it." }
+        ]
       }</code></pre>
           <p>Every key is optional, and Flotilla ignores keys it does not know.</p>
 
@@ -88,6 +92,23 @@
             <li>A bare name, like <code>node_modules</code>, matches a file or folder of that name at any depth.</li>
             <li>A path with a slash, like <code>src/generated</code>, or a leading <code>/</code>, like <code>/build</code>, matches from the top of the checkout only.</li>
           </ul>
+
+          <h3 id="commands"><code>commands</code></h3>
+          <p>Tabs and buttons for the pane of every agent working on the repo, so everyone on the team gets them. Each one either runs a command in the agent's checkout or sends the agent a message. They come after the ones you set in Flotilla, in Settings › Commands, for every agent and for the project.</p>
+      <pre><code>"commands": [
+        { "name": "Tests", "icon": "checkmark.diamond", "key": "t", "run": "npm test" },
+        { "name": "Lazygit", "kind": "popup", "run": "lazygit" },
+        { "name": "Dev server", "kind": "background", "run": "npm run dev" },
+        { "name": "Push", "icon": "arrow.up.circle", "message": "Commit what is done and push it." }
+      ]</code></pre>
+          <ul>
+            <li><code>name</code>: what its tab or button is called.</li>
+            <li><code>run</code>: a command to run in the agent's checkout, in <code>zsh</code> with the agent's environment. <code>kind</code> says where it shows: <code>tab</code>, the default, for a tab after the agent's other tabs; <code>popup</code> for a button that opens it over the window; <code>background</code> for a button that runs it with no window.</li>
+            <li><code>message</code>: instead of <code>run</code>, text to send the agent as if you had typed it, such as a request or a slash command.</li>
+            <li><code>icon</code>: an SF Symbol's name, like <code>hammer</code>. You can look them up in Apple's SF Symbols app, or pick one in Settings › Commands to find its name.</li>
+            <li><code>key</code>: one key that runs it with <kbd>⌃⌥</kbd> held. If two commands share a key, the first one wins, and the ones set in Flotilla come first.</li>
+          </ul>
+          <p>Commands come from the agent's first repo, as its worktree has them. See <a href="/flotilla/docs/workspace/#commands">Your own tabs and buttons</a> for what each kind does.</p>
 
           <h2 id="when">When commands run</h2>
           <table>
@@ -122,6 +143,7 @@
 
           <h2 id="approval">Approving committed commands</h2>
           <p>Anyone who can commit to a repo can change its <code>settings.json</code>, so Flotilla does not run a command from it until you have seen it. The first time, it shows the command's exact text and asks whether to run it. Flotilla remembers your answer for that repo and that text, and asks again whenever the command changes. If you choose Don't Run, it is skipped and Flotilla asks again next time.</p>
+          <p>The same goes for the tabs and buttons under <code>commands</code>: the first time you press one from the committed file, Flotilla shows what it runs or sends and asks first.</p>
           <p>Commands in <code>settings.local.json</code> are your own and run without asking.</p>
 
           <h2 id="schema">Editor help with $schema</h2>
