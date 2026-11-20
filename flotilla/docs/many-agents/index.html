@@ -58,6 +58,7 @@
       <h2 id="persist">Keep agents running when you quit <span class="badge">PRO</span></h2>
       <p>Turn on <b>Keep agents running across restarts</b> in Settings › Agents, and agents carry on in the background when you quit, update or restart Flotilla. Open it again and every pane is right where you left it.</p>
       <p>Without it, quitting stops the agents. Their conversations are saved, and each one resumes when you open it next time.</p>
+      <p>Whichever way an agent stops (you stop or delete it, it crashes, or Flotilla quits with it), anything it started that's still running, like a dev server or a watcher, is stopped with it. The sidebar's footer says what was stopped. Apps it opened, like Docker or a simulator, keep running.</p>
 
       <h2 id="repos">Projects with several repos <span class="badge">PRO</span></h2>
       <p>If your work spans repositories, like an app and its API, add them all to one project. Each agent gets a checkout of every repo and starts in the first one. Adding a repo tells Claude Code you trust it, so its agents don't ask each time they start.</p>
