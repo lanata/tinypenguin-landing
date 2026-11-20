@@ -56,7 +56,7 @@
       <ul>
         <li><strong>Tab</strong>: a tab after the agent's other tabs that runs a command in its checkout, like your tests. When the command ends, it waits for a key so you can read the result. Right-click the tab to open it beside the agent.</li>
         <li><strong>Popup</strong>: a button that runs a command in a window over the grid, for tools you work in like lazygit. It closes when the command ends; if the command failed, it waits for a key so you can read why. <kbd>⌘W</kbd> or a click outside closes it early.</li>
-        <li><strong>In the background</strong>: a button that runs a command with no window. The button lights up while it runs, and the bottom of the sidebar says whether it finished or failed.</li>
+        <li><strong>In the background</strong>: a button that runs a command with no window. The button lights up while it runs. If the command fails, a popover on the button shows the end of its output, with Run Again; when it finishes, the bottom of the sidebar says so.</li>
         <li><strong>Message to the agent</strong>: a button that sends the agent a message, as if you had typed it, like "Commit what's done and push it" or a slash command.</li>
       </ul>
       <p>Buttons sit in the pane's header, just before its tabs. Commands run with the same environment as the agent. A project's commands come after the ones every agent has; you can also reach them from Edit Project.</p>
