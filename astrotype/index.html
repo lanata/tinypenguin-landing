@@ -1,0 +1,497 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Astrotype · Type fast with both thumbs</title>
+  <meta name="description" content="Astrotype is an iPhone keyboard for typing fast with both thumbs. Tap with one thumb, swipe with the other, both in the same word. What you type stays on your iPhone." />
+  <meta name="theme-color" content="#1b2443" />
+  <meta name="color-scheme" content="light dark" />
+
+  <meta property="og:site_name" content="Tiny Penguin" />
+  <meta property="og:title" content="Astrotype · Type fast with both thumbs" />
+  <meta property="og:description" content="An iPhone keyboard where both thumbs tap and swipe in the same word. Free, with 14 days of Pro to try." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tinypenguin.com/astrotype/" />
+  <meta property="og:image" content="https://tinypenguin.com/astrotype/og.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Astrotype's icon, a key with two orbiting thumb trails, above the words: Type fast with both thumbs." />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Astrotype · Type fast with both thumbs" />
+  <meta name="twitter:description" content="An iPhone keyboard where both thumbs tap and swipe in the same word." />
+  <meta name="twitter:image" content="https://tinypenguin.com/astrotype/og.png" />
+  <link rel="canonical" href="https://tinypenguin.com/astrotype/" />
+
+  <link rel="icon" type="image/png" href="icon.png" />
+  <link rel="apple-touch-icon" href="icon.png" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "SoftwareApplication",
+        "name": "Astrotype",
+        "url": "https://tinypenguin.com/astrotype/",
+        "image": "https://tinypenguin.com/astrotype/icon.png",
+        "description": "An iPhone keyboard for typing fast with both thumbs: tap with one, swipe with the other, both in the same word.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "iOS",
+        "publisher": { "@type": "Organization", "name": "Tiny Penguin", "url": "https://tinypenguin.com/" },
+        "offers": [
+          { "@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD" },
+          { "@type": "Offer", "name": "Pro, monthly", "price": "2.99", "priceCurrency": "USD" },
+          { "@type": "Offer", "name": "Pro, yearly", "price": "19.99", "priceCurrency": "USD" }
+        ]
+      }
+    ]
+  }
+  </script>
+
+  <style>
+    /* ---- Tokens. Night sky and the two thumb colours come from the app icon. ---- */
+    :root {
+      --night:   #1b2443;
+      --night-2: #2b3a6b;
+      --left:    #139fb5;   /* left thumb, the app's accent */
+      --right:   #ff6f86;   /* right thumb */
+      --sun:     #ffc24d;   /* Pro */
+      --mint:    #2fbf96;
+      --ink:     #1e2945;
+      --ink-2:   #5c6a87;
+      --page:    #f3f8fa;
+      --surface: #ffffff;
+      --ice:     #d9edf3;
+      --line:    rgba(30, 41, 69, .10);
+      --line-2:  rgba(30, 41, 69, .18);
+      --key:     #ffffff;
+      --key-fn:  #c9d6de;
+      --kb:      #dce6ec;
+      --btn:     #139fb5;
+      --btn-ink: #ffffff;
+      --shadow:  0 1px 2px rgba(30, 41, 69, .06), 0 18px 48px -18px rgba(30, 41, 69, .30);
+
+      --round: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif;
+      --font:  -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --maxw:  1120px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --left:    #2fc6dc;
+        --right:   #ff8a9e;
+        --sun:     #ffcd66;
+        --mint:    #45d3aa;
+        --ink:     #eef4f8;
+        --ink-2:   #97a6b8;
+        --page:    #111a24;
+        --surface: #1a2634;
+        --ice:     #1d3240;
+        --line:    rgba(238, 244, 248, .09);
+        --line-2:  rgba(238, 244, 248, .18);
+        --key:     #2a3a4a;
+        --key-fn:  #1c2834;
+        --kb:      #131e29;
+        --btn:     #2fc6dc;
+        --btn-ink: #06202a;
+        --shadow:  0 1px 2px rgba(0, 0, 0, .25), 0 22px 50px -20px rgba(0, 0, 0, .65);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--page); color: var(--ink); font: 17px/1.6 var(--font); -webkit-font-smoothing: antialiased; }
+    img { max-width: 100%; display: block; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid var(--left); outline-offset: 3px; border-radius: 8px; }
+    .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 24px; }
+    h1, h2, h3 { font-family: var(--round); font-weight: 800; letter-spacing: -0.015em; line-height: 1.1; margin: 0; }
+    h2 { font-size: clamp(30px, 4vw, 42px); }
+    h3 { font-size: 20px; }
+    p { margin: 0; }
+    .lede { color: var(--ink-2); font-size: 19px; max-width: 34em; }
+    .skip { position: absolute; left: -999px; }
+    .skip:focus { left: 16px; top: 12px; z-index: 10; background: var(--surface); padding: 8px 14px; }
+
+    /* ---- Buttons ---- */
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+      font: 700 16px/1 var(--round); padding: 14px 22px; border-radius: 999px;
+      border: 1px solid transparent; transition: transform .15s, background .15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-primary { background: var(--btn); color: var(--btn-ink); box-shadow: 0 3px 0 rgba(0,0,0,.18); }
+    .btn-quiet { background: transparent; border-color: var(--line-2); color: var(--ink); }
+    .btn-sm { padding: 10px 16px; font-size: 14px; }
+
+    /* ---- Header ---- */
+    header { position: absolute; inset: 0 0 auto; z-index: 5; color: #fff; }
+    .nav { display: flex; align-items: center; gap: 28px; height: 76px; }
+    .brand { display: flex; align-items: center; gap: 10px; font: 800 19px var(--round); text-decoration: none; }
+    .brand img { width: 34px; height: 34px; border-radius: 9px; }
+    .nav-links { display: flex; gap: 24px; margin-left: auto; font-size: 15px; }
+    .nav-links a { text-decoration: none; color: rgba(255,255,255,.75); }
+    .nav-links a:hover { color: #fff; }
+    header .btn-primary { background: #2fc6dc; color: #06202a; }
+
+    /* ---- Hero: the icon's night sky ---- */
+    .hero {
+      position: relative; overflow: hidden; padding: 140px 0 96px; color: #fff;
+      background: linear-gradient(180deg, var(--night-2) 0%, var(--night) 100%);
+    }
+    .stars { position: absolute; inset: 0; pointer-events: none;
+      background-image:
+        radial-gradient(2px 2px at 12% 18%, rgba(255,255,255,.6), transparent),
+        radial-gradient(2px 2px at 82% 12%, rgba(255,255,255,.5), transparent),
+        radial-gradient(1.5px 1.5px at 64% 30%, rgba(255,255,255,.5), transparent),
+        radial-gradient(2px 2px at 30% 74%, rgba(255,255,255,.35), transparent),
+        radial-gradient(1.5px 1.5px at 92% 66%, rgba(255,255,255,.45), transparent),
+        radial-gradient(2px 2px at 8% 88%, rgba(255,255,255,.4), transparent),
+        radial-gradient(1.5px 1.5px at 48% 8%, rgba(255,255,255,.5), transparent); }
+    .hero-grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: center; }
+    .hero h1 { font-size: clamp(42px, 6vw, 66px); max-width: 9em; }
+    .hero h1 .l { color: #2fc6dc; } .hero h1 .r { color: #ff8a9e; }
+    .hero .lede { margin-top: 22px; color: rgba(255,255,255,.78); }
+    .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 32px; }
+    .hero .btn-primary { background: #2fc6dc; color: #06202a; }
+    .hero .btn-quiet { color: #fff; border-color: rgba(255,255,255,.3); }
+    .fine { margin-top: 14px; font-size: 14px; color: var(--ink-2); }
+    .hero .fine { color: rgba(255,255,255,.6); }
+
+    /* ---- The demo keyboard ---- */
+    .demo {
+      position: relative; max-width: 440px; width: 100%; justify-self: center;
+      background: #dce6ec; border-radius: 26px; padding: 10px 6px 14px;
+      box-shadow: 0 30px 80px -20px rgba(0,0,0,.6); color: #1e2945;
+    }
+    .bar { display: flex; justify-content: space-around; align-items: center; height: 46px; font: 600 18px var(--round); }
+    .bar span { color: #67748f; min-width: 30%; text-align: center; transition: color .2s; }
+    .bar .word { color: #1e2945; font-weight: 800; }
+    .rows { display: grid; gap: 10px; }
+    .row { display: flex; gap: 6px; justify-content: center; }
+    .k {
+      flex: 0 0 calc((100% - 54px) / 10); height: 46px; border-radius: 7px; background: #fff;
+      display: grid; place-items: center; font: 500 21px var(--round);
+      box-shadow: 0 1px 0 rgba(30,41,69,.28); transition: background .15s;
+    }
+    .k.fn { background: #c9d6de; font-size: 15px; }
+    .k.wide { flex: 0 0 calc((100% - 54px) / 10 * 1.4); }
+    .k.space { flex: 1 1 auto; font-size: 14px; color: #67748f; }
+    .k.hit-l { background: #bfeef5; } .k.hit-r { background: #ffd6de; }
+    .trails { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+    .trails path { fill: none; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; opacity: .85; }
+    .trails circle { opacity: .85; }
+    .thumbs { display: flex; justify-content: space-between; margin-top: 18px; font: 600 14px var(--round); color: rgba(255,255,255,.7); }
+    .thumbs i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; }
+
+    /* ---- Sections ---- */
+    section { padding: 104px 0; }
+    .head { max-width: 40em; margin-bottom: 52px; }
+    .head .lede { margin-top: 16px; }
+
+    .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; list-style: none; margin: 0; padding: 0; }
+    .steps .n {
+      display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%;
+      background: var(--ice); color: var(--left); font: 800 17px var(--round); margin-bottom: 18px;
+    }
+    .steps li:nth-child(2) .n { color: var(--right); }
+    .steps p { color: var(--ink-2); margin-top: 8px; max-width: 26em; }
+
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card { padding: 28px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .card .ico { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; font-size: 22px; background: var(--ice); margin-bottom: 18px; }
+    .card p { color: var(--ink-2); margin-top: 8px; }
+    .badge { display: inline-block; font: 800 11px/1 var(--round); letter-spacing: .06em; padding: 4px 7px; border-radius: 6px; background: var(--sun); color: #3a2a00; vertical-align: 3px; margin-left: 6px; }
+
+    .private { background: var(--surface); border-block: 1px solid var(--line); }
+    .assurances { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; }
+    .assurances p { margin-top: 8px; color: var(--ink-2); }
+
+    /* Pricing */
+    .plans { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+    .plan { padding: 32px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); }
+    .plan.pro { border: 2px solid var(--sun); }
+    .plan .price { display: flex; align-items: baseline; gap: 6px; margin: 14px 0 6px; flex-wrap: wrap; }
+    .plan .price b { font: 800 44px var(--round); letter-spacing: -0.02em; }
+    .plan .price span, .plan .blurb { color: var(--ink-2); }
+    .plan ul { list-style: none; padding: 0; margin: 22px 0 0; display: grid; gap: 10px; }
+    .plan li { display: flex; gap: 10px; }
+    .plan li::before { content: ""; flex: none; width: 14px; height: 8px; margin-top: 7px; border: solid var(--mint); border-width: 0 0 2px 2px; transform: rotate(-45deg); }
+    .trial { display: inline-block; font: 700 13px var(--round); color: var(--left); }
+    .plan-fine { margin-top: 24px; color: var(--ink-2); font-size: 15px; max-width: 46em; }
+
+    /* FAQ */
+    .faq { max-width: 760px; }
+    .faq details { border-bottom: 1px solid var(--line-2); }
+    .faq summary { list-style: none; cursor: pointer; padding: 22px 0; display: flex; justify-content: space-between; gap: 16px; font: 700 18px var(--round); }
+    .faq summary::-webkit-details-marker { display: none; }
+    .faq summary::after { content: "+"; font-weight: 400; color: var(--ink-2); transition: transform .2s; }
+    .faq details[open] summary::after { transform: rotate(45deg); }
+    .faq details p { padding: 0 0 22px; color: var(--ink-2); max-width: 40em; }
+    .faq a { color: var(--left); }
+
+    .final { position: relative; overflow: hidden; text-align: center; padding: 112px 0; color: #fff; background: linear-gradient(180deg, var(--night-2), var(--night)); }
+    .final img { width: 112px; height: 112px; margin: 0 auto 24px; border-radius: 26px; }
+    .final h2 { font-size: clamp(36px, 5vw, 54px); }
+    .final .lede { margin: 16px auto 0; color: rgba(255,255,255,.78); }
+    .final .cta { justify-content: center; }
+    .final .btn-primary { background: #2fc6dc; color: #06202a; }
+    .final .btn-quiet { color: #fff; border-color: rgba(255,255,255,.3); }
+
+    footer { background: var(--night); color: rgba(255,255,255,.75); padding: 0 0 36px; font-size: 14px; }
+    .foot { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 16px; border-top: 1px solid rgba(255,255,255,.1); padding-top: 28px; }
+    .foot nav { display: flex; flex-wrap: wrap; gap: 8px 20px; }
+    .foot a { text-decoration: none; }
+    .foot a:hover { color: #fff; }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav .btn { margin-left: auto; }
+      .hero { padding-top: 112px; }
+      .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
+      .steps, .cards, .assurances, .plans { grid-template-columns: minmax(0, 1fr); }
+      section { padding: 80px 0; }
+    }
+    @media (max-width: 520px) {
+      .wrap { padding: 0 16px; }
+      .k { height: 40px; font-size: 18px; }
+      .row { gap: 5px; }
+      .plan, .card { padding: 24px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      .btn, .k { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header>
+    <div class="wrap nav">
+      <a class="brand" href="/astrotype/"><img src="icon.png" alt="" width="34" height="34" />Astrotype</a>
+      <nav class="nav-links" aria-label="Sections">
+        <a href="#how">How it works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">Questions</a>
+        <a href="/astrotype/support/">Support</a>
+      </nav>
+      <!-- At launch: point every [data-get] link at the App Store page and change its label. -->
+      <a class="btn btn-primary btn-sm" data-get href="mailto:hello@tinypenguin.com?subject=Astrotype%20beta">Join the beta</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="stars" aria-hidden="true"></div>
+      <div class="wrap hero-grid">
+        <div>
+          <h1 id="hero-title">Type fast with <span class="l">both</span> <span class="r">thumbs</span>.</h1>
+          <p class="lede">Astrotype is an iPhone keyboard where each thumb taps or swipes a few letters at a time, both in the same word. It puts the pieces together into the word you meant.</p>
+          <div class="cta">
+            <a class="btn btn-primary" data-get href="mailto:hello@tinypenguin.com?subject=Astrotype%20beta">Join the beta</a>
+            <a class="btn btn-quiet" href="#how">See how it works</a>
+          </div>
+          <p class="fine">Coming soon to the App Store. Free, with 14 days of Pro to try.</p>
+        </div>
+
+        <div>
+          <div class="demo" aria-label="A keyboard typing the word thumbs: the left thumb taps t, the right thumb swipes h, u, m, and the left thumb swipes b, s." role="img">
+            <div class="bar" aria-hidden="true"><span>the</span><span class="word" id="word">&nbsp;</span><span>thump</span></div>
+            <div class="rows" id="rows" aria-hidden="true">
+              <div class="row"><b class="k">q</b><b class="k">w</b><b class="k">e</b><b class="k">r</b><b class="k">t</b><b class="k">y</b><b class="k">u</b><b class="k">i</b><b class="k">o</b><b class="k">p</b></div>
+              <div class="row"><b class="k">a</b><b class="k">s</b><b class="k">d</b><b class="k">f</b><b class="k">g</b><b class="k">h</b><b class="k">j</b><b class="k">k</b><b class="k">l</b></div>
+              <div class="row"><b class="k fn wide">⇧</b><b class="k">z</b><b class="k">x</b><b class="k">c</b><b class="k">v</b><b class="k">b</b><b class="k">n</b><b class="k">m</b><b class="k fn wide">⌫</b></div>
+              <div class="row"><b class="k fn wide">123</b><b class="k space">space</b><b class="k fn wide">return</b></div>
+            </div>
+            <svg class="trails" id="trails" aria-hidden="true"></svg>
+          </div>
+          <div class="thumbs" aria-hidden="true"><span><i style="background:#2fc6dc"></i>Left thumb</span><span><i style="background:#ff8a9e"></i>Right thumb</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how" aria-labelledby="how-title">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="how-title">Two thumbs, one word.</h2>
+          <p class="lede">Swipe typing is one long swipe per word with one finger. Astrotype lets both thumbs share the work, so each one only covers its half of the keys.</p>
+        </div>
+        <ol class="steps">
+          <li><div class="n">1</div><h3>Tap or swipe with one thumb</h3><p>A tap is a letter. A short swipe is a few letters. Use whichever comes naturally.</p></li>
+          <li><div class="n">2</div><h3>Keep going with the other</h3><p>Switch thumbs in the middle of a word, or use both at once. Nothing is final yet.</p></li>
+          <li><div class="n">3</div><h3>Press space</h3><p>Astrotype turns the pieces into the word you meant, and learns your words as you go.</p></li>
+        </ol>
+      </div>
+    </section>
+
+    <section aria-labelledby="features-title" style="padding-top:0">
+      <div class="wrap">
+        <div class="head"><h2 id="features-title">A whole keyboard, made to go fast.</h2></div>
+        <div class="cards">
+          <div class="card"><div class="ico">⚡</div><h3>Learns how you type</h3><p>Guesses, autocorrect and next-word suggestions that get to know your words. Fix an earlier word with a tap.</p></div>
+          <div class="card"><div class="ico">⏱️</div><h3>See yourself get faster</h3><p>A speed test, your everyday speed on a graph, and weekly Game Center leaderboards. Drills build the habit.<span class="badge">PRO</span></p></div>
+          <div class="card"><div class="ico">✨</div><h3>Make it yours</h3><p>Themes, tap effects and swipe trails, a split layout for wide screens, and the height you like.<span class="badge">PRO</span></p></div>
+          <div class="card"><div class="ico">🌎</div><h3>English and Spanish</h3><p>Every language is free. Type in two at once and Astrotype tells them apart, with no switching.<span class="badge">PRO</span></p></div>
+          <div class="card"><div class="ico">⌨️</div><h3>Everything you expect</h3><p>Space-bar cursor, word delete, text replacements, numbers and symbols, all where you'd look for them.</p></div>
+          <div class="card"><div class="ico">🎯</div><h3>Practice inside the app</h3><p>Try the keyboard right in Astrotype before you switch, and learn two-thumb typing step by step.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="private" aria-labelledby="private-title">
+      <div class="wrap">
+        <div class="head"><h2 id="private-title">What you type stays on your iPhone.</h2></div>
+        <div class="assurances">
+          <div><h3>No account</h3><p>Nothing to sign up for. Your learned words and settings sync through your own iCloud, which we never see.</p></div>
+          <div><h3>Works without Full Access</h3><p>The keyboard types fully without it. Turn it on only if you want iCloud sync, haptics and sending us a problem report.</p></div>
+          <div><h3>No tracking</h3><p>No ads, no trackers. Crash reports never carry your text. <a href="/astrotype/privacy/" style="color:var(--left)">Read the privacy policy</a>.</p></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" aria-labelledby="pricing-title">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="pricing-title">A great keyboard for free. Two thumbs with Pro.</h2>
+          <p class="lede">Every new install starts with 14 days of Pro, no sign-up. When it ends, you keep the free keyboard and all your words.</p>
+        </div>
+        <div class="plans">
+          <div class="plan">
+            <h3>Free</h3>
+            <div class="price"><b>$0</b></div>
+            <p class="blurb">A complete everyday keyboard.</p>
+            <ul>
+              <li>Tap typing and one-finger swipe typing</li>
+              <li>Suggestions, autocorrect and next-word guesses</li>
+              <li>Learned words, synced over iCloud</li>
+              <li>Any one language</li>
+              <li>The speed test and your everyday speed</li>
+            </ul>
+          </div>
+          <div class="plan pro">
+            <h3>Astrotype Pro <span class="trial">14 days free</span></h3>
+            <div class="price"><b>$19.99</b><span>/ year</span><span>· or $2.99 / month</span></div>
+            <p class="blurb">Everything in Free, plus:</p>
+            <ul>
+              <li>Two-thumb typing, taps and swipes in one word</li>
+              <li>Themes, tap effects and swipe trails</li>
+              <li>Drills and their history</li>
+              <li>The split layout</li>
+              <li>Two languages at once</li>
+            </ul>
+          </div>
+        </div>
+        <p class="plan-fine">Prices in US dollars; the App Store shows your local price. Subscriptions renew until you cancel, which you can do any time in your App Store account settings.</p>
+      </div>
+    </section>
+
+    <section id="faq" aria-labelledby="faq-title" style="padding-top:0">
+      <div class="wrap">
+        <div class="head"><h2 id="faq-title">Questions</h2></div>
+        <div class="faq">
+          <details><summary>Is it hard to learn?</summary><p>Not at first: Astrotype works like a normal keyboard from the start, with taps and one-finger swipes. Two-thumb typing is a new habit, and the app's lessons and drills walk you through it. Most people feel the rhythm within a week.</p></details>
+          <details><summary>Why does it ask for Full Access?</summary><p>Only for extras: syncing your words and settings through your iCloud, haptics, and sending a problem report when you tap Send. The keyboard types fully without it, and what you type never leaves your iPhone.</p></details>
+          <details><summary>Which iPhones and languages does it support?</summary><p>Any iPhone on iOS 18 or later. It types in English and Spanish, and Pro can do both at once. The app's screens are in English for now.</p></details>
+          <details><summary>I used Nintype. Will this feel familiar?</summary><p>Yes. Astrotype is built around the same idea: both thumbs, taps and swipes mixed, and the word is only chosen when you press space. It's a fresh keyboard made for today's iPhones.</p></details>
+          <details><summary>What happens when the trial ends?</summary><p>You keep the free keyboard, with all your learned words and settings. Pro features wait for you until you subscribe.</p></details>
+          <details><summary>I need help.</summary><p>See <a href="/astrotype/support/">Support</a>, use Report an issue in the app, or email <a href="mailto:hello@tinypenguin.com?subject=Astrotype">hello@tinypenguin.com</a>.</p></details>
+        </div>
+      </div>
+    </section>
+
+    <section class="final" aria-labelledby="final-title">
+      <div class="wrap">
+        <img src="icon.png" alt="" width="112" height="112" loading="lazy" />
+        <h2 id="final-title">Both flippers, go.</h2>
+        <p class="lede">Give your other thumb something to do.</p>
+        <div class="cta">
+          <a class="btn btn-primary" data-get href="mailto:hello@tinypenguin.com?subject=Astrotype%20beta">Join the beta</a>
+          <a class="btn btn-quiet" href="mailto:hello@tinypenguin.com?subject=Astrotype">Say hi</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap foot">
+      <div>© <span id="year">2026</span> <a href="/">Tiny Penguin</a> · Astrotype</div>
+      <nav aria-label="Footer">
+        <a href="/astrotype/support/">Support</a>
+        <a href="/astrotype/privacy/">Privacy</a>
+        <a href="/terms/">Terms</a>
+        <a href="/flotilla/">Flotilla</a>
+        <a href="/flagship/">Flagship</a>
+        <a href="mailto:hello@tinypenguin.com">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script>
+  (() => {
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // The hero demo: "thumbs" typed with both thumbs. The left taps t, the right
+    // swipes h-u-m, the left swipes b-s, then space. Trails fade like the app's.
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const demo = document.querySelector('.demo'), svg = document.getElementById('trails'), word = document.getElementById('word');
+    const keys = {};
+    document.querySelectorAll('#rows .k').forEach(k => { keys[k.textContent] = k; });
+    const colors = { l: '#2fc6dc', r: '#ff8a9e' };
+    const strokes = [
+      { thumb: 'l', letters: 't', shows: 't' },
+      { thumb: 'r', letters: 'hum', shows: 'thum' },
+      { thumb: 'l', letters: 'bs', shows: 'thumbs' },
+    ];
+    const NS = 'http://www.w3.org/2000/svg';
+    const centre = ch => {
+      const d = demo.getBoundingClientRect(), r = keys[ch].getBoundingClientRect();
+      return [r.left - d.left + r.width / 2, r.top - d.top + r.height / 2];
+    };
+    const wait = ms => new Promise(res => setTimeout(res, ms));
+
+    async function draw(stroke) {
+      const pts = [...stroke.letters].map(centre);
+      const c = colors[stroke.thumb];
+      let el;
+      if (pts.length === 1) {
+        el = document.createElementNS(NS, 'circle');
+        el.setAttribute('cx', pts[0][0]); el.setAttribute('cy', pts[0][1]); el.setAttribute('r', 16);
+        el.setAttribute('fill', c);
+      } else {
+        el = document.createElementNS(NS, 'path');
+        el.setAttribute('d', 'M' + pts.map(p => p.join(' ')).join(' L'));
+        el.setAttribute('stroke', c);
+      }
+      svg.appendChild(el);
+      [...stroke.letters].forEach(ch => keys[ch].classList.add('hit-' + stroke.thumb));
+      if (!reduced && el.getTotalLength && pts.length > 1) {
+        const len = el.getTotalLength();
+        el.style.strokeDasharray = len; el.style.strokeDashoffset = len;
+        el.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 260 * (pts.length - 1), fill: 'forwards', easing: 'ease-out' });
+        await wait(260 * (pts.length - 1));
+        el.style.strokeDashoffset = 0;
+      }
+      word.textContent = stroke.shows;
+      setTimeout(() => {
+        [...stroke.letters].forEach(ch => keys[ch].classList.remove('hit-' + stroke.thumb));
+        if (reduced) return;
+        el.animate([{ opacity: .85 }, { opacity: 0 }], { duration: 1200, fill: 'forwards' });
+      }, 300);
+    }
+
+    async function loop() {
+      for (;;) {
+        svg.innerHTML = ''; word.innerHTML = '&nbsp;';
+        for (const s of strokes) { await draw(s); await wait(reduced ? 700 : 320); }
+        keys['space'].classList.add('hit-l'); await wait(180); keys['space'].classList.remove('hit-l');
+        word.textContent = 'thumbs';
+        await wait(2400);
+        if (reduced) return;
+      }
+    }
+    loop();
+  })();
+  </script>
+</body>
+</html>
