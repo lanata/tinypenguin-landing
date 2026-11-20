@@ -235,15 +235,13 @@
     .thumbs i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; transition: background .4s; }
     .thumbs .style { padding: 4px 12px; border-radius: 999px; background: rgba(255,255,255,.12); color: #fff; }
 
-    /* Make it yours: one card per style, a still keyboard mid-swipe (tap its keys). */
+    /* Make it yours: one card per style, with a recording of it typing. */
     .gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
     .style-card { margin: 0; padding: 14px 14px 22px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
-    .mini { position: relative; overflow: hidden; background: var(--bd); border-radius: 16px; padding: 12px 3px 14px; }
-    .mini .rows { gap: 7px; padding: 0; }
-    .mini .row { gap: 3px; }
-    .mini .k { flex-basis: calc((100% - 27px) / 10); height: 32px; font-size: 15px; cursor: pointer; }
-    .mini .k.wide { flex-basis: calc((100% - 27px) / 10 * 1.3); }
-    .mini .k svg { width: 15px; height: 15px; }
+    /* The clips play like part of the page: no controls or frame, only while on screen. */
+    .clip { display: block; width: 100%; aspect-ratio: 600 / 442; object-fit: cover; border-radius: 16px; background: #d1d3d9; pointer-events: none; }
+    .style-card[data-style="arcade"] .clip { background: #120428; }
+    .style-card[data-style="space"] .clip { background: #0b1026; }
     .style-card h3 { margin-top: 18px; padding: 0 6px; }
     .style-card p { margin-top: 6px; padding: 0 6px; color: var(--ink-2); font-size: 16px; }
     .more-styles { margin-top: 28px; color: var(--ink-2); max-width: 46em; }
@@ -407,15 +405,15 @@
       <div class="wrap">
         <div class="head">
           <h2 id="styles-title">Make it yours.</h2>
-          <p class="lede">Pick a theme and an effect, or build your own: key colours, shape and font, and what your taps, swipes and letters do. Type in a streak and the effects build up, with a combo count on the space bar.</p>
+          <p class="lede">That is the real keyboard above, typing by itself. Pick a theme and an effect, or build your own: key colours, shape and font, and what your taps, swipes and letters do. Type in a streak and the effects build up, with a combo count on the space bar.</p>
         </div>
         <div class="gallery">
-          <figure class="style-card" data-style="classic" data-left="wsx" data-right="ujm"><div class="mini" aria-hidden="true"><div class="rows"></div><svg class="trails"></svg><div class="fx"></div></div><figcaption><h3>Classic</h3><p>Keys like Apple's, with soft rings and a trail in each thumb's colour. Free.</p></figcaption></figure>
-          <figure class="style-card" data-style="sugar" data-left="qaz" data-right="hjk"><div class="mini" aria-hidden="true"><div class="sky on candy"></div><div class="rows"></div><svg class="trails"></svg><div class="fx"></div></div><figcaption><h3>Sugar Rush<span class="badge">PRO</span></h3><p>Hearts fly from every tap, and letters wobble like jelly.</p></figcaption></figure>
-          <figure class="style-card" data-style="arcade" data-left="ert" data-right="nm"><div class="mini" aria-hidden="true"><div class="sky on retro"></div><div class="rows"></div><svg class="trails"></svg><div class="fx"></div></div><figcaption><h3>Arcade<span class="badge">PRO</span></h3><p>Neon keys, pixel bursts and a retro grid behind it all.</p></figcaption></figure>
-          <figure class="style-card" data-style="space" data-left="sdf" data-right="pol"><div class="mini" aria-hidden="true"><div class="sky on space"></div><div class="rows"></div><svg class="trails"></svg><div class="fx"></div></div><figcaption><h3>Space<span class="badge">PRO</span></h3><p>Comet trails, bursts of stars and a slowly turning galaxy.</p></figcaption></figure>
+          <figure class="style-card" data-style="classic"><video class="clip" src="videos/calm-classic-light.mp4" poster="videos/calm-classic-light.jpg" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback aria-hidden="true"></video><figcaption><h3>Classic</h3><p>Keys like Apple's, with soft rings and a trail in each thumb's colour. Free.</p></figcaption></figure>
+          <figure class="style-card" data-style="sugar"><video class="clip" src="videos/sugarRush-krill-light.mp4" poster="videos/sugarRush-krill-light.jpg" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback aria-hidden="true"></video><figcaption><h3>Sugar Rush<span class="badge">PRO</span></h3><p>Hearts fly from every tap, and letters wobble like jelly.</p></figcaption></figure>
+          <figure class="style-card" data-style="arcade"><video class="clip" src="videos/arcade-arcade-dark.mp4" poster="videos/arcade-arcade-dark.jpg" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback aria-hidden="true"></video><figcaption><h3>Arcade<span class="badge">PRO</span></h3><p>Neon keys, pixel bursts and a retro grid behind it all.</p></figcaption></figure>
+          <figure class="style-card" data-style="space"><video class="clip" src="videos/space-midnight-dark.mp4" poster="videos/space-midnight-dark.jpg" muted loop playsinline preload="none" disablepictureinpicture disableremoteplayback aria-hidden="true"></video><figcaption><h3>Space<span class="badge">PRO</span></h3><p>Comet trails, bursts of stars and a slowly turning galaxy.</p></figcaption></figure>
         </div>
-        <p class="more-styles">Also Glitch, Rainbow and Zen, eight themes for light and dark, and letter effects like jelly, wave and liquid. Tap the keys above to try a few.</p>
+        <p class="more-styles">Also Glitch, Rainbow and Zen, eight themes for light and dark, and letter effects like jelly, wave and liquid.</p>
       </div>
     </section>
 
@@ -525,7 +523,7 @@
   (() => {
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // ---- The keyboards: the hero demo and the style cards ----
+    // ---- The hero keyboard ----
     // Each style copies an app theme and effect preset (KeyboardTheme.swift,
     // EffectsSettings.swift): rings, hearts, pixels and stars, as the app draws. The hero types "Type with both thumbs", one style a word.
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -561,7 +559,7 @@
       back: '<svg viewBox="0 0 26 24" width="23" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><path d="M8 5h14v14H8l-6-7z"/><path d="M12 9l6 6M18 9l-6 6"/></svg>',
       emoji: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 14.5c1 1.5 2.4 2.2 4 2.2s3-.7 4-2.2"/><circle cx="9" cy="10" r=".8" fill="currentColor"/><circle cx="15" cy="10" r=".8" fill="currentColor"/></svg>',
     };
-    function buildKeys(rows, mini) {
+    function buildKeys(rows) {
       const keys = {};
       const add = (row, label, cls = '', id = label) => {
         const k = document.createElement('b');
@@ -575,12 +573,10 @@
         if (i === 2) add(row, ICON.back, 'fn wide', 'back');
         rows.appendChild(row);
       });
-      if (!mini) {
-        const row = document.createElement('div'); row.className = 'row';
-        add(row, '123', 'fn wide'); add(row, ICON.emoji, 'fn wide', 'emoji');
-        add(row, 'Astrotype', 'space', 'space'); add(row, 'return', 'fn ret');
-        rows.appendChild(row);
-      }
+      const row = document.createElement('div'); row.className = 'row';
+      add(row, '123', 'fn wide'); add(row, ICON.emoji, 'fn wide', 'emoji');
+      add(row, 'Astrotype', 'space', 'space'); add(row, 'return', 'fn ret');
+      rows.appendChild(row);
       return keys;
     }
     function applyStyle(el, st) { for (const [k, v] of Object.entries(st.vars)) el.style.setProperty(k, v); }
@@ -725,26 +721,15 @@
       })();
     }
 
-    // The style cards: a still keyboard each, mid-swipe.
-    document.querySelectorAll('[data-style]').forEach(card => {
-      const st = STYLES[card.dataset.style], stage = card.querySelector('.mini');
-      applyStyle(card, st);
-      const keys = buildKeys(stage.querySelector('.rows'), true);
-      const svg = stage.querySelector('.trails'), fx = stage.querySelector('.fx');
-      const fxs = effects(stage, svg, fx);
-      const draw = () => {
-        svg.innerHTML = ''; fx.innerHTML = '';
-        fxs.swipe([...card.dataset.left].map(ch => keys[ch]), st.vars['--l'], st, true);
-        fxs.swipe([...card.dataset.right].map(ch => keys[ch]), st.vars['--r'], st, true);
-      };
-      requestAnimationFrame(draw);
-      addEventListener('resize', draw);
-      if (!reduced) card.addEventListener('pointerdown', e => {
-        const k = e.target.closest('.k'); if (!k) return;
-        const c = k.getBoundingClientRect().left - stage.getBoundingClientRect().left < stage.clientWidth / 2 ? st.vars['--l'] : st.vars['--r'];
-        fxs.letters(k, c, st); fxs.tap(k, c, st);
-      });
-    });
+    // The style clips (made by the app repo's apps/astrotype/design/recordings/record.sh):
+    // each plays while it is on screen, and not at all under Reduce Motion (the poster stays).
+    const clips = document.querySelectorAll('.clip');
+    if (!reduced && 'IntersectionObserver' in window) {
+      const seen = new IntersectionObserver(entries => entries.forEach(e => {
+        if (e.isIntersecting) e.target.play().catch(() => {}); else e.target.pause();
+      }), { rootMargin: '120px' });
+      clips.forEach(c => seen.observe(c));
+    }
   })();
   </script>
 </body>
