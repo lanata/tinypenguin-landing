@@ -31,6 +31,7 @@
       <ul>
         <li>"Hand off the flaky test fix to a new agent and keep going on the feature."</li>
         <li>"Start an agent to write tests for this once you're done."</li>
+        <li>"Ask the api-auth agent which endpoint to call, and use its answer." The agent waits for the reply before carrying on.</li>
         <li>"Tell the api-auth agent that the endpoint name changed."</li>
         <li>"Let me know when the build is green." The agent sends you a notification.</li>
         <li>"Set up a scheduled task that runs the full test suite every night."</li>
@@ -44,7 +45,9 @@
           <tr><td><code>flotilla agents</code></td><td>List every agent and what it's doing.</td></tr>
           <tr><td><code>flotilla new fix-login --prompt "…"</code></td><td>Start a new agent on a task.</td></tr>
           <tr><td><code>flotilla fork</code></td><td>Start a copy of this agent, conversation included.</td></tr>
-          <tr><td><code>flotilla send api-auth "…"</code></td><td>Message another agent.</td></tr>
+          <tr><td><code>flotilla send api-auth "…"</code></td><td>Message another agent. Add <code>--wait</code> to wait for its answer.</td></tr>
+          <tr><td><code>flotilla wait api-auth</code></td><td>Wait until another agent finishes or needs someone, and show what it said.</td></tr>
+          <tr><td><code>flotilla read api-auth</code></td><td>Show another agent's last reply.</td></tr>
           <tr><td><code>flotilla commander "…"</code></td><td>Report to the <a href="/flotilla/docs/commander/">commander</a>.</td></tr>
           <tr><td><code>flotilla notify "…"</code></td><td>Send yourself a notification.</td></tr>
           <tr><td><code>flotilla status "…"</code></td><td>Set the line under this agent in the sidebar, like "building release". It clears when the agent's next turn starts, or with <code>--clear</code>.</td></tr>
