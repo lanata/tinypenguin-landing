@@ -245,7 +245,7 @@
             </ul>
             <div class="cta">
               <a class="btn btn-sea" href="/flotilla/">Take the tour</a>
-              <a class="btn btn-ghost" data-download href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest">Download</a>
+              <a class="btn btn-ghost" href="https://github.com/tiny-penguin-dev/flotilla-releases/releases/latest/download/Flotilla.dmg">Download</a>
             </div>
             <div class="fine">Free to use, with a 14-day Pro trial.</div>
           </div>
@@ -366,16 +366,6 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
-
-    // Release zips are versioned (Flotilla-6.1.0.zip), so point Download at the
-    // latest one; it keeps the releases page if GitHub doesn't answer.
-    fetch('https://api.github.com/repos/tiny-penguin-dev/flotilla-releases/releases/latest')
-      .then(r => r.ok ? r.json() : Promise.reject(r.status))
-      .then(release => {
-        const zip = release.assets.find(a => /^Flotilla-.*\.zip$/.test(a.name));
-        if (zip) document.querySelectorAll('[data-download]').forEach(a => { a.href = zip.browser_download_url; });
-      })
-      .catch(() => {});
   </script>
 </body>
 </html>
