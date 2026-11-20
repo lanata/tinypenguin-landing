@@ -159,31 +159,94 @@
     .fine { margin-top: 14px; font-size: 14px; color: var(--ink-2); }
     .hero .fine { color: rgba(255,255,255,.6); }
 
-    /* ---- The demo keyboard ---- */
+    /* ---- The demo: the bottom of an iPhone with the keyboard up ----
+       Colours and shapes follow the app's own themes (KeyboardTheme.swift); the script
+       switches style per word: Classic, then Sugar Rush, Arcade and Space. */
+    .demo-wrap {
+      --top: #f2f3f5; --field: #fff; --field-ink: #000; --bd: #d1d3d9;
+      --key: rgba(255,255,255,.8); --fn: rgba(237,238,240,.8); --ink: #000; --sub: rgba(0,0,0,.6);
+      --l: #139fb5; --r: #ff6f86; --kr: 8px; --kb: transparent; --kf: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif;
+      --glow: none;
+      max-width: 400px; width: 100%; justify-self: center;
+    }
     .demo {
-      position: relative; max-width: 440px; width: 100%; justify-self: center;
-      background: #dce6ec; border-radius: 26px; padding: 10px 6px 14px;
-      box-shadow: 0 30px 80px -20px rgba(0,0,0,.6); color: #1e2945;
+      position: relative; overflow: hidden; border-radius: 40px; background: var(--top);
+      border: 8px solid #0a0f1c; box-shadow: 0 30px 80px -20px rgba(0,0,0,.65);
+      transition: background .4s;
     }
-    .bar { display: flex; justify-content: space-around; align-items: center; height: 46px; font: 600 18px var(--round); }
-    .bar span { color: #67748f; min-width: 30%; text-align: center; transition: color .2s; }
-    .bar .word { color: #1e2945; font-weight: 800; }
-    .rows { display: grid; gap: 10px; }
-    .row { display: flex; gap: 6px; justify-content: center; }
+    .field {
+      margin: 22px 14px 12px; min-height: 40px; padding: 8px 16px; border-radius: 20px;
+      background: var(--field); color: var(--field-ink); font: 17px/24px var(--font);
+      border: 1px solid rgba(127,127,127,.25); transition: background .4s, color .4s;
+    }
+    .caret { display: inline-block; width: 2px; height: 20px; margin-left: 1px; vertical-align: -4px; background: #139fb5; animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .panel { position: relative; background: var(--bd); border-radius: 26px 26px 0 0; padding: 0 3px; transition: background .4s; }
+    .sky { position: absolute; inset: 0; border-radius: inherit; opacity: 0; transition: opacity .5s; pointer-events: none; }
+    .sky.on { opacity: 1; }
+    .sky.candy { background: radial-gradient(60% 50% at 20% 30%, rgba(255,111,134,.35), transparent), radial-gradient(50% 60% at 85% 70%, rgba(255,159,28,.28), transparent); }
+    .sky.retro {
+      background:
+        linear-gradient(transparent 55%, rgba(255,45,170,.0) 55%),
+        repeating-linear-gradient(90deg, rgba(255,79,216,.35) 0 1px, transparent 1px 34px),
+        repeating-linear-gradient(0deg, rgba(0,240,255,.25) 0 1px, transparent 1px 22px),
+        linear-gradient(#0d0221, #2a0845);
+    }
+    .sky.space {
+      background:
+        radial-gradient(1.5px 1.5px at 12% 20%, #fff, transparent), radial-gradient(1px 1px at 30% 70%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 55% 15%, #fff, transparent), radial-gradient(1px 1px at 72% 55%, #fff, transparent),
+        radial-gradient(1.5px 1.5px at 88% 30%, #fff, transparent), radial-gradient(1px 1px at 8% 85%, #fff, transparent),
+        radial-gradient(1px 1px at 46% 92%, #fff, transparent), radial-gradient(1.5px 1.5px at 93% 82%, #fff, transparent),
+        radial-gradient(35% 45% at 50% 55%, rgba(123,97,255,.45), transparent 70%),
+        #0b1026;
+      animation: drift 30s linear infinite;
+    }
+    @keyframes drift { to { background-position: 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0; filter: hue-rotate(40deg); } }
+    .bar { position: relative; display: grid; grid-template-columns: 44px 1fr 44px; align-items: center; height: 44px; color: var(--sub); }
+    .mark { width: 27px; height: 19px; justify-self: center; background: var(--sub);
+      -webkit-mask: url(mark.png) center / contain no-repeat; mask: url(mark.png) center / contain no-repeat; }
+    .guesses { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 6px; font: 400 16px var(--kf); white-space: nowrap; }
+    .guesses span { text-align: center; overflow: hidden; text-overflow: clip; }
+    .guesses .word { min-width: 74px; padding: 5px 12px; border-radius: 9px; color: var(--ink); background: var(--fn); }
+    .guesses .word:empty, .guesses .word.idle { background: transparent; color: var(--sub); }
+    .bar svg { width: 19px; height: 19px; justify-self: center; }
+    .rows { position: relative; display: grid; gap: 9px; padding-top: 4px; }
+    .row { display: flex; gap: 5px; justify-content: center; }
     .k {
-      flex: 0 0 calc((100% - 54px) / 10); height: 46px; border-radius: 7px; background: #fff;
-      display: grid; place-items: center; font: 500 21px var(--round);
-      box-shadow: 0 1px 0 rgba(30,41,69,.28); transition: background .15s;
+      flex: 0 0 calc((100% - 45px) / 10); height: 44px; border-radius: var(--kr); background: var(--key);
+      border: 1px solid var(--kb); color: var(--ink); text-shadow: var(--glow);
+      display: grid; place-items: center; font: 400 22px var(--kf);
+      transition: background .3s, color .3s, border-color .3s, border-radius .3s;
     }
-    .k.fn { background: #c9d6de; font-size: 15px; }
-    .k.wide { flex: 0 0 calc((100% - 54px) / 10 * 1.4); }
-    .k.space { flex: 1 1 auto; font-size: 14px; color: #67748f; }
-    .k.hit-l { background: #bfeef5; } .k.hit-r { background: #ffd6de; }
-    .trails { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
-    .trails path { fill: none; stroke-width: 9; stroke-linecap: round; stroke-linejoin: round; opacity: .85; }
-    .trails circle { opacity: .85; }
-    .thumbs { display: flex; justify-content: space-between; margin-top: 18px; font: 600 14px var(--round); color: rgba(255,255,255,.7); }
-    .thumbs i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; }
+    .k.fn { background: var(--fn); font-size: 15px; }
+    .k.mid { flex-basis: calc((100% - 45px) / 10 * 1.3); }
+    .k.wide { flex: 0 0 calc((100% - 45px) / 10 * 1.3); }
+    .k.ret { flex: 0 0 calc((100% - 45px) / 10 * 2.2); }
+    .k.space { flex: 1 1 auto; font-size: 14px; color: var(--sub); }
+    .k.hit { transition: none; }
+    .strip { display: flex; justify-content: space-between; padding: 12px 22px 0; color: var(--sub); }
+    .strip svg { width: 24px; height: 24px; }
+    .homebar { width: 120px; height: 5px; border-radius: 3px; margin: 8px auto 8px; background: var(--ink); opacity: .85; }
+    .trails, .fx { position: absolute; inset: 0; pointer-events: none; overflow: visible; }
+    .trails path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .fx span { position: absolute; left: 0; top: 0; font-size: 18px; line-height: 1; will-change: transform, opacity; }
+    .thumbs { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; font: 600 14px var(--round); color: rgba(255,255,255,.7); }
+    .thumbs i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 8px; vertical-align: 1px; transition: background .4s; }
+    .thumbs .style { padding: 4px 12px; border-radius: 999px; background: rgba(255,255,255,.12); color: #fff; }
+
+    /* Make it yours: one card per style, a still keyboard mid-swipe (tap its keys). */
+    .gallery { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .style-card { margin: 0; padding: 14px 14px 22px; border-radius: 22px; background: var(--surface); border: 1px solid var(--line); box-shadow: var(--shadow); }
+    .mini { position: relative; overflow: hidden; background: var(--bd); border-radius: 16px; padding: 12px 3px 14px; }
+    .mini .rows { gap: 7px; padding: 0; }
+    .mini .row { gap: 3px; }
+    .mini .k { flex-basis: calc((100% - 27px) / 10); height: 32px; font-size: 15px; cursor: pointer; }
+    .mini .k.wide { flex-basis: calc((100% - 27px) / 10 * 1.3); }
+    .mini .k svg { width: 15px; height: 15px; }
+    .style-card h3 { margin-top: 18px; padding: 0 6px; }
+    .style-card p { margin-top: 6px; padding: 0 6px; color: var(--ink-2); font-size: 16px; }
+    .more-styles { margin-top: 28px; color: var(--ink-2); max-width: 46em; }
 
     /* ---- Sections ---- */
     section { padding: 104px 0; }
@@ -251,13 +314,16 @@
       .hero { padding-top: 112px; }
       .hero-grid { grid-template-columns: minmax(0, 1fr); gap: 48px; }
       .steps, .cards, .assurances, .plans { grid-template-columns: minmax(0, 1fr); }
+      .gallery { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       section { padding: 80px 0; }
     }
     @media (max-width: 520px) {
       .wrap { padding: 0 16px; }
-      .k { height: 40px; font-size: 18px; }
-      .row { gap: 5px; }
+      .demo .k { height: 40px; }
+      .demo .k:not(.fn):not(.space) { font-size: 19px; }
+      .row { gap: 4px; }
       .plan, .card { padding: 24px; }
+      .gallery { grid-template-columns: minmax(0, 1fr); }
     }
     @media (prefers-reduced-motion: reduce) {
       html { scroll-behavior: auto; }
@@ -297,17 +363,28 @@
         </div>
 
         <div>
-          <div class="demo" aria-label="A keyboard typing the word thumbs: the left thumb taps t, the right thumb swipes h, u, m, and the left thumb swipes b, s." role="img">
-            <div class="bar" aria-hidden="true"><span>the</span><span class="word" id="word">&nbsp;</span><span>thump</span></div>
-            <div class="rows" id="rows" aria-hidden="true">
-              <div class="row"><b class="k">q</b><b class="k">w</b><b class="k">e</b><b class="k">r</b><b class="k">t</b><b class="k">y</b><b class="k">u</b><b class="k">i</b><b class="k">o</b><b class="k">p</b></div>
-              <div class="row"><b class="k">a</b><b class="k">s</b><b class="k">d</b><b class="k">f</b><b class="k">g</b><b class="k">h</b><b class="k">j</b><b class="k">k</b><b class="k">l</b></div>
-              <div class="row"><b class="k fn wide">⇧</b><b class="k">z</b><b class="k">x</b><b class="k">c</b><b class="k">v</b><b class="k">b</b><b class="k">n</b><b class="k">m</b><b class="k fn wide">⌫</b></div>
-              <div class="row"><b class="k fn wide">123</b><b class="k space">space</b><b class="k fn wide">return</b></div>
+          <div class="demo-wrap" id="demo-wrap">
+            <div class="demo" role="img" aria-label="An iPhone typing “Type with both thumbs” with Astrotype. Each word is typed with taps and short swipes from both thumbs, in a different keyboard style: Classic, Sugar Rush, Arcade and Space, each with its own tap and trail effects.">
+              <div class="field" aria-hidden="true"><span id="typed"></span><i class="caret"></i></div>
+              <div class="panel" aria-hidden="true">
+                <div class="sky" id="sky"></div>
+                <div class="bar">
+                  <span class="mark"></span>
+                  <div class="guesses"><span id="g1"></span><span class="word idle" id="word"></span><span id="g2"></span></div>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16z"/><path d="M13.5 6.5l4 4"/></svg>
+                </div>
+                <div class="rows" id="rows"></div>
+                <div class="strip">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3.5 3 14.5 0 18M12 3c-3 3.5-3 14.5 0 18"/></svg>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21"/></svg>
+                </div>
+                <div class="homebar"></div>
+              </div>
+              <svg class="trails" id="trails" aria-hidden="true"></svg>
+              <div class="fx" id="fx" aria-hidden="true"></div>
             </div>
-            <svg class="trails" id="trails" aria-hidden="true"></svg>
+            <div class="thumbs" aria-hidden="true"><span><i style="background:var(--l)"></i>Left thumb</span><span class="style" id="style-name">Classic</span><span><i style="background:var(--r)"></i>Right thumb</span></div>
           </div>
-          <div class="thumbs" aria-hidden="true"><span><i style="background:#2fc6dc"></i>Left thumb</span><span><i style="background:#ff8a9e"></i>Right thumb</span></div>
         </div>
       </div>
     </section>
@@ -326,15 +403,31 @@
       </div>
     </section>
 
+    <section id="styles" aria-labelledby="styles-title" style="padding-top:0">
+      <div class="wrap">
+        <div class="head">
+          <h2 id="styles-title">Make it yours.</h2>
+          <p class="lede">Pick a theme and an effect, or build your own: key colours, shape and font, and what your taps, swipes and letters do. Type in a streak and the effects build up, with a combo count on the space bar.</p>
+        </div>
+        <div class="gallery">
+          <figure class="style-card" data-style="classic" data-left="wsx" data-right="ujm"><div class="mini" aria-hidden="true"><div class="rows"></div><svg class="trails"></svg><div class="fx"></div></div><figcaption><h3>Classic</h3><p>Keys like Apple's, with soft rings and a trail in each thumb's colour. Free.</p></figcaption></figure>
+          <figure class="style-card" data-style="sugar" data-left="qaz" data-right="hjk"><div class="mini" aria-hidden="true"><div class="sky on candy"></div><div class="rows"></div><svg class="trails"></svg><div class="fx"></div></div><figcaption><h3>Sugar Rush<span class="badge">PRO</span></h3><p>Hearts fly from every tap, and letters wobble like jelly.</p></figcaption></figure>
+          <figure class="style-card" data-style="arcade" data-left="ert" data-right="nm"><div class="mini" aria-hidden="true"><div class="sky on retro"></div><div class="rows"></div><svg class="trails"></svg><div class="fx"></div></div><figcaption><h3>Arcade<span class="badge">PRO</span></h3><p>Neon keys, pixel bursts and a retro grid behind it all.</p></figcaption></figure>
+          <figure class="style-card" data-style="space" data-left="sdf" data-right="pol"><div class="mini" aria-hidden="true"><div class="sky on space"></div><div class="rows"></div><svg class="trails"></svg><div class="fx"></div></div><figcaption><h3>Space<span class="badge">PRO</span></h3><p>Comet trails, bursts of stars and a slowly turning galaxy.</p></figcaption></figure>
+        </div>
+        <p class="more-styles">Also Glitch, Rainbow and Zen, eight themes for light and dark, and letter effects like jelly, wave and liquid. Tap the keys above to try a few.</p>
+      </div>
+    </section>
+
     <section aria-labelledby="features-title" style="padding-top:0">
       <div class="wrap">
         <div class="head"><h2 id="features-title">A whole keyboard, made to go fast.</h2></div>
         <div class="cards">
           <div class="card"><div class="ico">⚡</div><h3>Learns how you type</h3><p>Guesses, autocorrect and next-word suggestions that get to know your words. Fix an earlier word with a tap.</p></div>
           <div class="card"><div class="ico">⏱️</div><h3>See yourself get faster</h3><p>A speed test, your everyday speed on a graph, and weekly Game Center leaderboards. Drills build the habit.<span class="badge">PRO</span></p></div>
-          <div class="card"><div class="ico">✨</div><h3>Make it yours</h3><p>Themes, tap effects and swipe trails, a split layout for wide screens, and the height you like.<span class="badge">PRO</span></p></div>
-          <div class="card"><div class="ico">🌎</div><h3>English and Spanish</h3><p>Every language is free. Type in two at once and Astrotype tells them apart, with no switching.<span class="badge">PRO</span></p></div>
-          <div class="card"><div class="ico">⌨️</div><h3>Everything you expect</h3><p>Space-bar cursor, word delete, text replacements, numbers and symbols, all where you'd look for them.</p></div>
+          <div class="card"><div class="ico">✨</div><h3>Themes and effects</h3><p>Themes, tap effects and swipe trails, a split layout for wide screens, and the height you like.<span class="badge">PRO</span></p></div>
+          <div class="card"><div class="ico">🌎</div><h3>English and Spanish, more soon</h3><p>Every language is free, and more languages are coming soon. Type in two at once and Astrotype tells them apart, with no switching.<span class="badge">PRO</span></p></div>
+          <div class="card"><div class="ico">⌨️</div><h3>Everything you expect</h3><p>Emoji with search, space-bar cursor, word delete, text replacements, numbers and symbols, all where you'd look for them.</p></div>
           <div class="card"><div class="ico">🎯</div><h3>Practice inside the app</h3><p>Try the keyboard right in Astrotype before you switch, and learn two-thumb typing step by step.</p></div>
         </div>
       </div>
@@ -393,7 +486,7 @@
         <div class="faq">
           <details><summary>Is it hard to learn?</summary><p>Not at first: Astrotype works like a normal keyboard from the start, with taps and one-finger swipes. Two-thumb typing is a new habit, and the app's lessons and drills walk you through it. Most people feel the rhythm within a week.</p></details>
           <details><summary>Why does it ask for Full Access?</summary><p>Only for extras: syncing your words and settings through your iCloud, haptics, and sending a problem report when you tap Send. The keyboard types fully without it, and what you type never leaves your iPhone.</p></details>
-          <details><summary>Which iPhones and languages does it support?</summary><p>Any iPhone on iOS 18 or later. It types in English and Spanish, and Pro can do both at once. The app's screens are in English for now.</p></details>
+          <details><summary>Which iPhones and languages does it support?</summary><p>Any iPhone on iOS 18 or later. It types in English and Spanish, and Pro can do both at once. More languages are coming soon, and so are the app's screens in more languages (they're in English for now).</p></details>
           <details><summary>I used Nintype. Will this feel familiar?</summary><p>Yes. Astrotype is built around the same idea: both thumbs, taps and swipes mixed, and the word is only chosen when you press space. It's a fresh keyboard made for today's iPhones.</p></details>
           <details><summary>What happens when the trial ends?</summary><p>You keep the free keyboard, with all your learned words and settings. Pro features wait for you until you subscribe.</p></details>
           <details><summary>I need help.</summary><p>See <a href="/astrotype/support/">Support</a>, use Report an issue in the app, or email <a href="mailto:hello@tinypenguin.com?subject=Astrotype">hello@tinypenguin.com</a>.</p></details>
@@ -404,7 +497,7 @@
     <section class="final" aria-labelledby="final-title">
       <div class="wrap">
         <img src="icon.png" alt="" width="112" height="112" loading="lazy" />
-        <h2 id="final-title">Both flippers, go.</h2>
+        <h2 id="final-title">Put both thumbs to work.</h2>
         <p class="lede">Give your other thumb something to do.</p>
         <div class="cta">
           <a class="btn btn-primary" data-get href="mailto:hello@tinypenguin.com?subject=Astrotype%20beta">Join the beta</a>
@@ -432,66 +525,226 @@
   (() => {
     document.getElementById('year').textContent = new Date().getFullYear();
 
-    // The hero demo: "thumbs" typed with both thumbs. The left taps t, the right
-    // swipes h-u-m, the left swipes b-s, then space. Trails fade like the app's.
+    // ---- The keyboards: the hero demo and the style cards ----
+    // Each style copies an app theme and effect preset (KeyboardTheme.swift,
+    // EffectsSettings.swift): rings, hearts, pixels and stars, as the app draws. The hero types "Type with both thumbs", one style a word.
     const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const demo = document.querySelector('.demo'), svg = document.getElementById('trails'), word = document.getElementById('word');
-    const keys = {};
-    document.querySelectorAll('#rows .k').forEach(k => { keys[k.textContent] = k; });
-    const colors = { l: '#2fc6dc', r: '#ff8a9e' };
-    const strokes = [
-      { thumb: 'l', letters: 't', shows: 't' },
-      { thumb: 'r', letters: 'hum', shows: 'thum' },
-      { thumb: 'l', letters: 'bs', shows: 'thumbs' },
-    ];
-    const NS = 'http://www.w3.org/2000/svg';
-    const centre = ch => {
-      const d = demo.getBoundingClientRect(), r = keys[ch].getBoundingClientRect();
-      return [r.left - d.left + r.width / 2, r.top - d.top + r.height / 2];
+    const SYS = '-apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, sans-serif';
+    const ROUND = 'ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif';
+    const LIGHT = { '--top': '#f2f3f5', '--field': '#fff', '--field-ink': '#000' };
+    const DARK = { '--top': '#000', '--field': '#1c1c1e', '--field-ink': '#fff' };
+    const STYLES = {
+      classic: { name: 'Classic', sky: '', tap: 'ring', trail: 'line', letters: '', flow: false, emoji: [],
+        vars: { ...LIGHT, '--bd': '#d1d3d9', '--key': 'rgba(255,255,255,.8)', '--fn': 'rgba(237,238,240,.8)', '--ink': '#000',
+          '--sub': 'rgba(0,0,0,.6)', '--l': '#139fb5', '--r': '#ff6f86', '--kr': '8px', '--kb': 'transparent', '--kf': SYS, '--glow': 'none' } },
+      sugar: { name: 'Sugar Rush', sky: 'candy', tap: 'burst', trail: 'hearts', letters: 'jelly', flow: true, emoji: ['💖', '💕', '💗', '❤️'],
+        vars: { ...LIGHT, '--bd': '#ecd3d9', '--key': '#fff', '--fn': '#ffc7d1', '--ink': '#7a2e3b',
+          '--sub': 'rgba(122,46,59,.6)', '--l': '#ff6f86', '--r': '#ff9f1c', '--kr': '11px', '--kb': 'transparent', '--kf': ROUND, '--glow': 'none' } },
+      arcade: { name: 'Arcade', sky: 'retro', tap: 'pixels', trail: 'pixels', letters: 'neon', flow: true, emoji: [],
+        vars: { ...DARK, '--bd': '#120428', '--key': 'rgba(26,11,58,.72)', '--fn': 'rgba(20,8,48,.72)', '--ink': '#ff4fd8',
+          '--sub': 'rgba(255,79,216,.7)', '--l': '#00f0ff', '--r': '#ff4fd8', '--kr': '3px', '--kb': 'rgba(255,79,216,.45)',
+          '--kf': 'ui-monospace, "SF Mono", Menlo, monospace', '--glow': '0 0 6px rgba(255,79,216,.85)' } },
+      space: { name: 'Space', sky: 'space', tap: 'stars', trail: 'comet', letters: 'warp', flow: true, emoji: ['⭐', '✨', '🌟', '💫'],
+        vars: { ...DARK, '--bd': '#0b1026', '--key': 'rgba(26,34,70,.7)', '--fn': 'rgba(20,27,58,.7)', '--ink': '#c9f7ff',
+          '--sub': 'rgba(201,247,255,.6)', '--l': '#2fc6dc', '--r': '#b98cff', '--kr': '7px', '--kb': 'transparent', '--kf': ROUND,
+          '--glow': '0 0 5px rgba(201,247,255,.6)' } },
     };
+    const WORDS = [
+      { style: 'classic', strokes: [['l', 't'], ['r', 'yp'], ['l', 'e']], shows: ['T', 'Typ', 'Type'], sides: ['Tyre', 'Typo'], next: ['a', 'the', 'with'] },
+      { style: 'sugar', strokes: [['l', 'w'], ['r', 'i'], ['l', 't'], ['r', 'h']], shows: ['w', 'wi', 'wit', 'with'], sides: ['wish', 'witch'], next: ['the', 'a', 'both'] },
+      { style: 'arcade', strokes: [['l', 'b'], ['r', 'o'], ['l', 'th']], shows: ['b', 'bo', 'both'], sides: ['bath', 'moth'], next: ['of', 'hands', 'sides'] },
+      { style: 'space', strokes: [['l', 't'], ['r', 'hum'], ['l', 'bs']], shows: ['t', 'thum', 'thumbs'], sides: ['thumb', 'thump'], next: ['and', 'to', 'at'] },
+    ];
+
+    const ICON = {
+      shift: '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 4l8 8h-4.5v7h-7v-7H4z"/></svg>',
+      back: '<svg viewBox="0 0 26 24" width="23" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round" stroke-linecap="round"><path d="M8 5h14v14H8l-6-7z"/><path d="M12 9l6 6M18 9l-6 6"/></svg>',
+      emoji: '<svg viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M8 14.5c1 1.5 2.4 2.2 4 2.2s3-.7 4-2.2"/><circle cx="9" cy="10" r=".8" fill="currentColor"/><circle cx="15" cy="10" r=".8" fill="currentColor"/></svg>',
+    };
+    function buildKeys(rows, mini) {
+      const keys = {};
+      const add = (row, label, cls = '', id = label) => {
+        const k = document.createElement('b');
+        k.className = 'k ' + cls; k.innerHTML = label; row.appendChild(k); keys[id] = k;
+      };
+      const lines = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'];
+      lines.forEach((letters, i) => {
+        const row = document.createElement('div'); row.className = 'row';
+        if (i === 2) add(row, ICON.shift, 'fn wide', 'shift');
+        [...letters].forEach(ch => add(row, ch));
+        if (i === 2) add(row, ICON.back, 'fn wide', 'back');
+        rows.appendChild(row);
+      });
+      if (!mini) {
+        const row = document.createElement('div'); row.className = 'row';
+        add(row, '123', 'fn wide'); add(row, ICON.emoji, 'fn wide', 'emoji');
+        add(row, 'Astrotype', 'space', 'space'); add(row, 'return', 'fn ret');
+        rows.appendChild(row);
+      }
+      return keys;
+    }
+    function applyStyle(el, st) { for (const [k, v] of Object.entries(st.vars)) el.style.setProperty(k, v); }
+    const NS = 'http://www.w3.org/2000/svg';
     const wait = ms => new Promise(res => setTimeout(res, ms));
+    const pick = list => list[Math.floor(Math.random() * list.length)];
 
-    async function draw(stroke) {
-      const pts = [...stroke.letters].map(centre);
-      const c = colors[stroke.thumb];
-      let el;
-      if (pts.length === 1) {
-        el = document.createElementNS(NS, 'circle');
-        el.setAttribute('cx', pts[0][0]); el.setAttribute('cy', pts[0][1]); el.setAttribute('r', 16);
-        el.setAttribute('fill', c);
-      } else {
-        el = document.createElementNS(NS, 'path');
-        el.setAttribute('d', 'M' + pts.map(p => p.join(' ')).join(' L'));
+    // Effects, drawn over a box (`stage`) whose trails svg and fx layer cover it.
+    function effects(stage, svg, fx) {
+      const at = (key) => {
+        const s = stage.getBoundingClientRect(), r = key.getBoundingClientRect();
+        return [r.left - s.left - stage.clientLeft + r.width / 2, r.top - s.top - stage.clientTop + r.height / 2];
+      };
+      const fly = (x, y, text, { dist = 46, size = 18, ms = 800, angle, up = 0, steps = false } = {}) => {
+        const e = document.createElement('span');
+        e.textContent = text; e.style.fontSize = size + 'px';
+        fx.appendChild(e);
+        const a = angle ?? Math.random() * Math.PI * 2, d = dist * (0.6 + Math.random() * 0.6);
+        const from = `translate(${x - size / 2}px, ${y - size / 2}px) scale(.4)`;
+        const to = `translate(${x - size / 2 + Math.cos(a) * d}px, ${y - size / 2 + Math.sin(a) * d - up}px) scale(1.1) rotate(${(Math.random() - .5) * 60}deg)`;
+        e.animate([{ transform: from, opacity: 1 }, { transform: to, opacity: 1, offset: .6 }, { transform: to, opacity: 0 }],
+          { duration: ms, easing: steps ? 'steps(5)' : 'cubic-bezier(.2,.7,.3,1)', fill: 'forwards' }).onfinish = () => e.remove();
+      };
+      const square = (x, y, c, a) => {
+        const e = document.createElement('span');
+        Object.assign(e.style, { width: '6px', height: '6px', background: c, boxShadow: `0 0 6px ${c}` });
+        fx.appendChild(e);
+        e.animate([{ transform: `translate(${x - 3}px, ${y - 3}px)`, opacity: 1 },
+                   { transform: `translate(${x - 3 + Math.cos(a) * 34}px, ${y - 3 + Math.sin(a) * 34}px)`, opacity: 0 }],
+          { duration: 500, easing: 'steps(5)', fill: 'forwards' }).onfinish = () => e.remove();
+      };
+      const ring = (x, y, c) => {
+        const e = document.createElementNS(NS, 'circle');
+        e.setAttribute('cx', x); e.setAttribute('cy', y); e.setAttribute('fill', 'none'); e.setAttribute('stroke', c); e.setAttribute('stroke-width', 3);
+        svg.appendChild(e);
+        e.animate([{ r: '4px', opacity: .9 }, { r: '26px', opacity: 0 }], { duration: 550, easing: 'ease-out', fill: 'forwards' }).onfinish = () => e.remove();
+      };
+      function tap(key, c, st) {
+        const [x, y] = at(key);
+        if (st.tap === 'ring') ring(x, y, c);
+        if (st.tap === 'pixels') for (let i = 0; i < 8; i++) square(x, y, c, i * Math.PI / 4);
+        if (st.tap === 'stars') ring(x, y, c);
+        if (st.emoji.length) for (let i = 0; i < 4; i++) fly(x, y, pick(st.emoji), { steps: st.tap === 'pixels' });
+      }
+      function letters(key, c, st) {
+        key.classList.add('hit');
+        key.style.background = `color-mix(in srgb, ${c} 45%, var(--key))`;
+        if (st.letters === 'jelly') key.animate([{ transform: 'scale(1)' }, { transform: 'scale(1.3, 1.15)' }, { transform: 'scale(.88, .95)' }, { transform: 'scale(1.06)' }, { transform: 'scale(1)' }], { duration: 480 });
+        if (st.letters === 'neon') key.animate([{ boxShadow: `0 0 0 ${c}` }, { boxShadow: `0 0 16px ${c}` }, { boxShadow: `0 0 0 ${c}` }], { duration: 450 });
+        if (st.letters === 'warp') key.animate([{ transform: 'scale(1)', filter: 'blur(0)' }, { transform: 'scale(1.2) translateY(-3px)', filter: 'blur(1px)' }, { transform: 'scale(1)', filter: 'blur(0)' }], { duration: 420 });
+        setTimeout(() => { key.style.background = ''; key.classList.remove('hit'); }, 260);
+      }
+      function trailPath(c, st) {
+        const el = document.createElementNS(NS, 'path');
         el.setAttribute('stroke', c);
+        el.setAttribute('stroke-width', st.trail === 'line' ? 8 : 7);
+        el.style.opacity = .9;
+        if (st.trail === 'pixels') { el.setAttribute('stroke-dasharray', '7 5'); el.style.strokeLinecap = 'butt'; }
+        if (st.trail === 'pixels' || st.trail === 'comet') el.style.filter = `drop-shadow(0 0 5px ${c})`;
+        svg.appendChild(el);
+        return el;
       }
-      svg.appendChild(el);
-      [...stroke.letters].forEach(ch => keys[ch].classList.add('hit-' + stroke.thumb));
-      if (!reduced && el.getTotalLength && pts.length > 1) {
-        const len = el.getTotalLength();
-        el.style.strokeDasharray = len; el.style.strokeDashoffset = len;
-        el.animate([{ strokeDashoffset: len }, { strokeDashoffset: 0 }], { duration: 260 * (pts.length - 1), fill: 'forwards', easing: 'ease-out' });
-        await wait(260 * (pts.length - 1));
-        el.style.strokeDashoffset = 0;
+      // A swipe: the path drawn along the keys, an emoji dropped at each key.
+      async function swipe(keys, c, st, still) {
+        const pts = keys.map(at), el = trailPath(c, st);
+        const lens = pts.slice(1).map((p, i) => Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]));
+        const total = lens.reduce((a, b) => a + b, 0), ms = still ? 0 : 240 * (pts.length - 1);
+        const drawTo = t => {
+          let left = t * total, d = 'M' + pts[0].join(' ');
+          for (let i = 0; i < lens.length; i++) {
+            const f = Math.min(1, left / lens[i]);
+            d += ` L${pts[i][0] + (pts[i + 1][0] - pts[i][0]) * f} ${pts[i][1] + (pts[i + 1][1] - pts[i][1]) * f}`;
+            left -= lens[i]; if (left <= 0) break;
+          }
+          el.setAttribute('d', d);
+        };
+        if (still) { drawTo(1); pts.forEach(([x, y]) => drop(x, y, st)); return el; }
+        let done = 0;
+        await new Promise(res => {
+          const start = performance.now();
+          const step = now => {
+            const t = Math.min(1, (now - start) / ms); drawTo(t);
+            const reached = Math.floor(t * (pts.length - 1) + 1e-6);
+            while (done <= reached) { letters(keys[done], c, st); if (st.emoji.length) fly(pts[done][0], pts[done][1], pick(st.emoji), { dist: 22, size: 15, up: 18 }); done++; }
+            t < 1 ? requestAnimationFrame(step) : res();
+          };
+          requestAnimationFrame(step);
+        });
+        setTimeout(() => el.animate([{ opacity: .9 }, { opacity: 0 }], { duration: 1000, fill: 'forwards' }).onfinish = () => el.remove(), 300);
+        return el;
       }
-      word.textContent = stroke.shows;
-      setTimeout(() => {
-        [...stroke.letters].forEach(ch => keys[ch].classList.remove('hit-' + stroke.thumb));
-        if (reduced) return;
-        el.animate([{ opacity: .85 }, { opacity: 0 }], { duration: 1200, fill: 'forwards' });
-      }, 300);
+      function drop(x, y, st) {
+        if (!st.emoji.length) return;
+        const e = document.createElement('span');
+        e.textContent = pick(st.emoji); e.style.fontSize = '13px';
+        e.style.transform = `translate(${x - 6 + (Math.random() - .5) * 20}px, ${y - 22 + (Math.random() - .5) * 10}px)`;
+        fx.appendChild(e);
+      }
+      return { tap, letters, swipe, at, drop };
     }
 
-    async function loop() {
-      for (;;) {
-        svg.innerHTML = ''; word.innerHTML = '&nbsp;';
-        for (const s of strokes) { await draw(s); await wait(reduced ? 700 : 320); }
-        keys['space'].classList.add('hit-l'); await wait(180); keys['space'].classList.remove('hit-l');
-        word.textContent = 'thumbs';
-        await wait(2400);
-        if (reduced) return;
-      }
+    // The hero.
+    const wrap = document.getElementById('demo-wrap');
+    if (wrap) {
+      const demo = wrap.querySelector('.demo'), keys = buildKeys(document.getElementById('rows'));
+      const fxs = effects(demo, document.getElementById('trails'), document.getElementById('fx'));
+      const sky = document.getElementById('sky'), typed = document.getElementById('typed');
+      const word = document.getElementById('word'), g1 = document.getElementById('g1'), g2 = document.getElementById('g2');
+      const name = document.getElementById('style-name');
+      const setStyle = st => { applyStyle(wrap, st); sky.className = 'sky' + (st.sky ? ' on ' + st.sky : ''); name.textContent = st.name; };
+      const bar = (a, w, b, idle) => { g1.textContent = a; word.textContent = w; g2.textContent = b; word.classList.toggle('idle', !!idle); };
+      const sentence = WORDS.map(w => w.shows.at(-1)).join(' ');
+
+      if (reduced) {
+        setStyle(STYLES.classic); typed.textContent = sentence + ' '; bar(...WORDS.at(-1).next, true);
+      } else (async () => {
+        for (;;) {
+          typed.textContent = ''; bar('I', 'The', 'You', true);
+          let combo = 0;
+          for (const w of WORDS) {
+            const st = STYLES[w.style];
+            setStyle(st); await wait(450);
+            for (const [i, [thumb, letters]] of w.strokes.entries()) {
+              const c = st.vars['--' + thumb];
+              const ks = [...letters].map(ch => keys[ch]);
+              if (ks.length === 1) { fxs.letters(ks[0], c, st); fxs.tap(ks[0], c, st); }
+              else await fxs.swipe(ks, c, st);
+              bar(i === w.strokes.length - 1 ? w.sides[0] : '', w.shows[i], i === w.strokes.length - 1 ? w.sides[1] : '');
+              await wait(330);
+            }
+            await wait(200);
+            combo = st.flow ? combo + 1 : 0;
+            fxs.letters(keys.space, st.vars['--l'], st);
+            keys.space.textContent = combo > 0 ? `Astrotype  ×${combo}` : 'Astrotype';
+            typed.textContent += (typed.textContent ? ' ' : '') + w.shows.at(-1);
+            bar(...w.next, true);
+            await wait(900);
+          }
+          await wait(1800);
+          keys.space.textContent = 'Astrotype';
+        }
+      })();
     }
-    loop();
+
+    // The style cards: a still keyboard each, mid-swipe.
+    document.querySelectorAll('[data-style]').forEach(card => {
+      const st = STYLES[card.dataset.style], stage = card.querySelector('.mini');
+      applyStyle(card, st);
+      const keys = buildKeys(stage.querySelector('.rows'), true);
+      const svg = stage.querySelector('.trails'), fx = stage.querySelector('.fx');
+      const fxs = effects(stage, svg, fx);
+      const draw = () => {
+        svg.innerHTML = ''; fx.innerHTML = '';
+        fxs.swipe([...card.dataset.left].map(ch => keys[ch]), st.vars['--l'], st, true);
+        fxs.swipe([...card.dataset.right].map(ch => keys[ch]), st.vars['--r'], st, true);
+      };
+      requestAnimationFrame(draw);
+      addEventListener('resize', draw);
+      if (!reduced) card.addEventListener('pointerdown', e => {
+        const k = e.target.closest('.k'); if (!k) return;
+        const c = k.getBoundingClientRect().left - stage.getBoundingClientRect().left < stage.clientWidth / 2 ? st.vars['--l'] : st.vars['--r'];
+        fxs.letters(k, c, st); fxs.tap(k, c, st);
+      });
+    });
   })();
   </script>
 </body>
