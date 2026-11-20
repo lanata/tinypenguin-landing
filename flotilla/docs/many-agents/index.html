@@ -48,7 +48,7 @@
       <p>If every new worktree needs the same setup, like installing dependencies or copying a <code>.env</code> file, put it in the repo's settings and Flotilla does it before an agent arrives. See <a href="/flotilla/docs/repo-settings/">Repo settings</a>.</p>
 
       <h2 id="sleep">Let idle agents sleep <span class="badge">PRO</span></h2>
-      <p>An agent that's done and waiting still uses memory. Flotilla can put idle agents to sleep after a while (30 minutes, unless you change it in Settings › Agents). A sleeping agent keeps its last screen; press <kbd>↩</kbd> in its pane or click <b>Resume</b> and it carries on with its conversation. An agent with a command still running in the background, like a build or a dev server, stays awake until it finishes.</p>
+      <p>An agent that's done and waiting still uses memory. Flotilla can put idle agents to sleep after a while (30 minutes, unless you change it in Settings › Agents). A sleeping agent keeps its last screen right where it was, with <b>Resume</b> over its last rows, and if you resize the pane the screen is cut at the edge instead of redrawn. Press <kbd>↩</kbd> in its pane or click <b>Resume</b> and it carries on with its conversation. An agent with a command still running in the background, like a build or a dev server, stays awake until it finishes.</p>
       <p>You can change this for a project in Edit Project, or for a single agent by right-clicking it and choosing <b>Sleep When Idle</b> or <b>Sleep Now</b>. When your Mac runs low on memory, Flotilla puts idle agents to sleep sooner.</p>
 
       <h2 id="environment">Give a project's agents environment variables</h2>
