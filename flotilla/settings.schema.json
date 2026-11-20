@@ -50,6 +50,55 @@
         }
       },
       "additionalProperties": true
+    },
+    "commands": {
+      "description": "Tabs and buttons for every agent's pane, after those set in Flotilla for every agent and for the project. Each either runs a shell command in the agent's checkout (run) or sends the agent a message (message). Commands from the committed file ask for your approval before they first run. Both files' lists are combined, the committed file's first.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "What its button or tab is called.",
+            "type": "string",
+            "examples": ["Tests", "Lazygit", "Push"]
+          },
+          "run": {
+            "description": "A shell command to run in the agent's checkout, in zsh with the agent's environment.",
+            "type": "string",
+            "examples": ["make test", "lazygit"]
+          },
+          "message": {
+            "description": "Text to send the agent as if you had typed it, instead of running a command.",
+            "type": "string",
+            "examples": ["Commit what is done and push it.", "/review"]
+          },
+          "kind": {
+            "description": "Where a run command shows: a tab after the agent's other tabs (the default), a popup button over the window, or a button that runs it in the background.",
+            "enum": ["tab", "popup", "background"],
+            "default": "tab"
+          },
+          "icon": {
+            "description": "An SF Symbol's name for its tab or button.",
+            "type": "string",
+            "examples": ["hammer", "checkmark.diamond", "arrow.up.circle"]
+          },
+          "key": {
+            "description": "A key that runs it with ⌃⌥ held, for the focused agent.",
+            "type": "string",
+            "maxLength": 1,
+            "examples": ["t"]
+          }
+        },
+        "oneOf": [
+          {
+            "required": ["run"]
+          },
+          {
+            "required": ["message"]
+          }
+        ],
+        "additionalProperties": true
+      }
     }
   },
   "additionalProperties": true

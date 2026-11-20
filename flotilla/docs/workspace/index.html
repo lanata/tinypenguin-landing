@@ -52,14 +52,15 @@
       <p><kbd>⌃⇥</kbd> cycles through them and <kbd>⌃K</kbd> takes you back to the agent. Want to watch the agent and its changes at the same time? Add <kbd>⇧</kbd>, as in <kbd>⌃⇧3</kbd>, to open a tab beside the agent instead of over it. <kbd>⌃⇧W</kbd> closes that split.</p>
 
       <h2 id="commands">Your own tabs and buttons</h2>
-      <p>Put the things you do all the time one click away in every agent's pane: run the tests, open lazygit, or tell the agent to push. In Settings › Commands, add a command, give it a name and an icon, and pick its kind:</p>
+      <p>Put the things you do all the time one click away in agents' panes: run the tests, open lazygit, or tell the agent to push. In Settings › Commands, choose whether a command is for every agent or one project's, add it, give it a name and an icon, and pick its kind:</p>
       <ul>
         <li><strong>Tab</strong>: a tab after the agent's other tabs that runs a command in its checkout, like your tests. When the command ends, it waits for a key so you can read the result. Right-click the tab to open it beside the agent.</li>
         <li><strong>Popup</strong>: a button that runs a command in a window over the grid, for tools you work in like lazygit. It closes when the command ends; if the command failed, it waits for a key so you can read why. <kbd>⌘W</kbd> or a click outside closes it early.</li>
         <li><strong>In the background</strong>: a button that runs a command with no window. The button lights up while it runs, and the bottom of the sidebar says whether it finished or failed.</li>
         <li><strong>Message to the agent</strong>: a button that sends the agent a message, as if you had typed it, like "Commit what's done and push it" or a slash command.</li>
       </ul>
-      <p>Buttons sit in the pane's header, just before its tabs. Commands run with the same environment as the agent.</p>
+      <p>Buttons sit in the pane's header, just before its tabs. Commands run with the same environment as the agent. A project's commands come after the ones every agent has; you can also reach them from Edit Project.</p>
+      <p>To share commands with everyone on a repo, add them to its <a href="/flotilla/docs/repo-settings/#commands">settings file</a> instead. Everyone who works on the repo gets them, and Flotilla asks before running one the first time.</p>
       <p>Give a command a key too, and <kbd>⌃⌥</kbd> with that key runs it for the focused agent, as in <kbd>⌃⌥G</kbd> for lazygit. <kbd>⌃⌥</kbd> is all yours: none of Flotilla's own shortcuts use it. Your commands are in the Pane menu and the <kbd>⌘/</kbd> guide too, and a few ready-made ones are under Add Command.</p>
 
       <h2 id="windows">Windows and tabs</h2>
