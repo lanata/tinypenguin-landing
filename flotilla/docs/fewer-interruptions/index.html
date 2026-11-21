@@ -38,6 +38,7 @@
       </table>
       <p>When an agent asks to do something on the list, Flotilla answers for you and the agent keeps going. Everything else still asks. Rules apply to every Claude Code and Codex agent.</p>
       <p>A command that chains several together, with pipes, loops like <code>for</code> and <code>while</code>, <code>if</code>, or <code>$(...)</code>, runs without asking when every command inside it is on the list. A rule for <code>curl</code> also covers <code>xargs curl</code>, and a rule for <code>python3</code> also covers the full path, like <code>/opt/homebrew/bin/python3</code> or <code>/usr/bin/python3</code>. Agents are told your list, so they write commands in a form it covers.</p>
+      <p>Claude Code agents keep their scratchpad and other temporary files in your repo's <code>.flotilla/tmp</code> folder rather than the system's temp folder, so they can use them without asking. Like everything else in <code>.flotilla</code>, it stays out of git.</p>
       <div class="tip"><p>Start small. Add a rule the third time you find yourself approving the same thing.</p></div>
 
       <h2 id="auto">Auto-approve one agent <span class="badge">PRO</span></h2>
