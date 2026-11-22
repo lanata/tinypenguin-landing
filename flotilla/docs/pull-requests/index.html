@@ -55,6 +55,10 @@
       <p>Before deleting, Flotilla checks that nothing would be lost. If the agent is mid-task, has a pull request still open, or has changes that aren't committed or pushed, it tells you exactly what, and you can still choose <b>Delete Anyway</b>.</p>
       <p>To clear out a whole batch at once, press <kbd>⌥⇧Q</kbd> (<b>Delete All Completed Sessions</b>). It deletes every agent whose pull requests are merged or closed and that has nothing left to lose, and leaves the rest alone.</p>
 
+      <h2 id="storage">Keep your disk from filling up</h2>
+      <p>Every agent's checkout takes space, and builds can make each one several gigabytes. <b>Settings &gt; Storage</b> shows how full your disk is and how much each agent takes, grouped by project, with completed ones marked. <b>Delete Completed Sessions</b> under a project clears them in one go.</p>
+      <p>Flotilla tells you when free space drops below 20 GB. Pick another limit there, or <b>Never</b>. Finished agents also clean themselves up: an agent nobody has touched for a week, with its pull requests merged or closed and nothing uncommitted or unpushed, is deleted by itself. Change the wait (a day up to a month) or turn it off with <b>Delete completed sessions</b>.</p>
+
       <h2 id="stop">Stop, without deleting</h2>
       <p>Not finished, but want an agent out of the way? <kbd>⌥W</kbd> stops it. Its checkout and conversation are kept, and opening it again picks up the conversation where it left off.</p>
 
