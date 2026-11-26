@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Repo settings · Flotilla Docs</title>
   <meta name="description" content="Set up each worktree Flotilla checks out: commands to run, files to copy, and what the editor leaves out, from .flotilla/settings.json in your repo." />
-  <link rel="canonical" href="https://tinypenguin.com/flotilla/docs/repo-settings/" />
+  <link rel="canonical" href="https://stellorum.com/flotilla/docs/repo-settings/" />
   <link rel="icon" type="image/png" href="/flotilla/boat.png" />
   <link rel="stylesheet" href="/legal.css" />
   <link rel="stylesheet" href="/flotilla/docs/docs.css" />
@@ -51,7 +51,7 @@
 
           <h2 id="example">An example</h2>
       <pre><code>{
-        "$schema": "https://tinypenguin.com/flotilla/settings.schema.json",
+        "$schema": "https://stellorum.com/flotilla/settings.schema.json",
         "worktree": {
           "setup": "npm install",
           "copy": [".env.local", "config/master.key"],
@@ -148,7 +148,7 @@
 
           <h2 id="schema">Editor help with $schema</h2>
           <p>Put this line first in either file, and editors such as VS Code and Zed check the file as you type, complete its keys and explain each one on hover:</p>
-      <pre><code>"$schema": "https://tinypenguin.com/flotilla/settings.schema.json"</code></pre>
+      <pre><code>"$schema": "https://stellorum.com/flotilla/settings.schema.json"</code></pre>
           <p>The starter file Flotilla writes already has it.</p>
           <div class="note"><p>If <code>git status</code> does not show a new <code>.flotilla/settings.json</code>, a global gitignore may be hiding the <code>.flotilla</code> folder. Add the file with <code>git add -f .flotilla/settings.json</code>.</p></div>
       <nav id="pager" class="pager" aria-label="Previous and next guide"></nav>
@@ -156,7 +156,7 @@
   </div>
 
   <footer>
-    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@tinypenguin.com">hello@tinypenguin.com</a></div>
+    <div class="bar"><span>© 2026 Tiny Penguin LLC</span><a href="mailto:hello@stellorum.com">hello@stellorum.com</a></div>
   </footer>
   <!-- Cloudflare Web Analytics: cookieless page-view counts, see /privacy/ -->
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "5aa902c4d59040669014a87fd06ae7e8"}'></script>

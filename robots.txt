@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://tinypenguin.com/sitemap.xml
+Sitemap: https://stellorum.com/sitemap.xml
