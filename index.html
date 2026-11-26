@@ -3,13 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Stellorum · Small, careful apps</title>
-  <meta name="description" content="Stellorum makes small, careful apps: Flotilla runs a fleet of coding agents on your Mac, Moonbud gives every task on your list a helper, and Astrotype is a two-thumb iPhone keyboard." />
+  <title>Stellorum · Software for serious work</title>
+  <meta name="description" content="Stellorum builds native software for Mac and iPhone that puts AI to real work: Flotilla commands a fleet of coding agents, Moonbud puts an agent on every task, and Astrotype types at full speed with both thumbs." />
   <link rel="canonical" href="https://stellorum.com/" />
 
   <meta property="og:title" content="Stellorum" />
   <meta property="og:site_name" content="Stellorum" />
-  <meta property="og:description" content="Small, careful apps for Mac and iPhone: Flotilla, Moonbud and Astrotype." />
+  <meta property="og:description" content="Native software for Mac and iPhone that puts AI to real work: Flotilla, Moonbud and Astrotype." />
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://stellorum.com/" />
   <meta property="og:image" content="https://stellorum.com/brand/og.png" />
@@ -33,8 +33,6 @@
     :root {
       --graphite: #111214; --graphite-2: #2A2C31; --amber: #E39B4B; --amber-deep: #C47A2C;
       --bone: #F5EFE6; --ash: #8C8F96; --line: rgba(245,239,230,.12);
-      /* Kept for the app mockups below. */
-      --green: #a6e3a1; --red: #f28ca8; --yellow: #f2cc73; --mauve: #cca6f7; --sea: #E39B4B;
       --display: "Michroma", "Arial Black", sans-serif;
       --font: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
       --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
@@ -91,17 +89,12 @@
     .featured .cta { justify-content: flex-start; }
     .featured .fine { margin-top: 14px; font-size: 13px; color: var(--ash); }
 
-    .fleet { border-radius: 16px; border: 1px solid rgba(255,255,255,.1); background: #1b1c1f; padding: 14px 10px; box-shadow: 0 30px 70px -20px rgba(0,0,0,.7); font-size: 13px; }
-    .fleet .lights { display: flex; gap: 7px; padding: 0 6px 14px; }
-    .fleet .lights i { width: 11px; height: 11px; border-radius: 50%; }
-    .fleet .lights i:nth-child(1) { background: #ff5f57; } .fleet .lights i:nth-child(2) { background: #febc2e; } .fleet .lights i:nth-child(3) { background: #28c840; }
-    .fleet .grp { display: flex; align-items: center; gap: 8px; padding: 4px 8px 6px; font-size: 11px; font-weight: 600; letter-spacing: .06em; color: #a1a1a6; }
-    .fleet .grp i { width: 8px; height: 8px; border-radius: 50%; background: var(--amber); }
-    .fleet .row { display: grid; grid-template-columns: 22px 1fr; column-gap: 10px; align-items: center; padding: 7px 8px; border-radius: 8px; }
-    .fleet .row.sel { background: rgba(255,255,255,.08); }
-    .fleet .g { grid-row: span 2; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font: 700 10px var(--mono); }
-    .fleet b { color: #f2f2f4; font-weight: 600; }
-    .fleet small { color: #8e8e93; font-size: 12px; }
+    .visual { border-radius: 16px; overflow: hidden; display: grid; place-items: center; }
+    .visual-icon { aspect-ratio: 4 / 3; background: radial-gradient(circle at 50% 45%, rgba(227,155,75,.16), transparent 60%), #1b1c1f; border: 1px solid var(--line); }
+    .visual-icon img { width: 46%; max-width: 220px; filter: drop-shadow(0 24px 40px rgba(0,0,0,.6)); }
+    .visual-phone { overflow: visible; }
+    .visual-phone img { width: min(280px, 72vw); height: auto; border-radius: 36px; border: 1px solid rgba(255,255,255,.14); box-shadow: 0 30px 70px -20px rgba(0,0,0,.8); }
+    .visual-keys video { width: 100%; display: block; border-radius: 16px; box-shadow: 0 30px 70px -20px rgba(0,0,0,.7); }
 
     .values { background: var(--bone); color: var(--graphite); }
     .values .section-head p { color: #5E6068; }
@@ -128,7 +121,7 @@
         <a href="/astrotype/">Astrotype</a>
         <a href="#contact">Contact</a>
       </nav>
-      <a class="btn btn-primary" href="#apps">See the apps</a>
+      <a class="btn btn-primary" href="#apps">Products</a>
     </div>
   </header>
 
@@ -143,11 +136,11 @@
       </svg>
       <div class="wrap">
         <svg class="mark" viewBox="23.5 13 55.5 71.5" aria-hidden="true"><polyline points="70,22 32,40 68,60 30,78" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round"/><circle cx="70" cy="22" r="9" fill="var(--amber)"/><circle cx="32" cy="40" r="6.5" fill="currentColor"/><circle cx="68" cy="60" r="6.5" fill="currentColor"/><circle cx="30" cy="78" r="6.5" fill="currentColor"/></svg>
-        <p class="eyebrow">OF THE STARS</p>
-        <h1>Small, careful apps</h1>
-        <p>Stellorum is a small studio making fast, private apps for Mac and iPhone. Each one does one thing well.</p>
+        <p class="eyebrow">STELLORUM</p>
+        <h1>Software for serious work</h1>
+        <p>We build native tools for Mac and iPhone that put capable AI to real work. Agents that ship code in parallel, an agent on every task, and a keyboard built for speed. Private by design, built to last.</p>
         <div class="cta">
-          <a class="btn btn-primary" href="#apps">Meet the apps</a>
+          <a class="btn btn-primary" href="#apps">Explore our products</a>
           <a class="btn btn-ghost" href="#contact">Get in touch</a>
         </div>
       </div>
@@ -158,14 +151,14 @@
         <div class="featured">
           <div>
             <div class="icon"><img src="/flotilla/boat.png" alt="" /></div>
-            <span class="tag">Out now · macOS</span>
+            <span class="tag">Available now · macOS</span>
             <h2>Flotilla</h2>
-            <p class="sub">Run a fleet of coding agents on your Mac.</p>
-            <p>Claude Code, Codex and Cursor agents side by side, each in its own checkout and its own pane, with a sidebar that tells you who's working and who needs you.</p>
+            <p class="sub">Command a fleet of coding agents.</p>
+            <p>Run Claude Code, Codex and Cursor agents in parallel, each in its own checkout, with one view of what every agent is doing and which one needs you next.</p>
             <ul>
-              <li>Tile, zoom and switch agents from the keyboard</li>
-              <li>Pull requests, CI and review state built in</li>
-              <li>Scheduled tasks that run agents on a schedule</li>
+              <li>Many agents at once, driven from the keyboard</li>
+              <li>Pull requests, CI and reviews in the same window</li>
+              <li>Scheduled agents that keep working while you're away</li>
             </ul>
             <div class="cta">
               <a class="btn btn-primary" href="/flotilla/">Take the tour</a>
@@ -173,15 +166,7 @@
             </div>
             <div class="fine">Free to use, with a 14-day Pro trial.</div>
           </div>
-          <div class="fleet" aria-hidden="true">
-            <div class="lights"><i></i><i></i><i></i></div>
-            <div class="grp"><i></i>STOREFRONT</div>
-            <div class="row sel"><span class="g" style="color:var(--green);background:rgba(166,227,161,.16)">▶</span><b>saved-carts</b><small>Update(CartSummary.tsx) · 2m</small></div>
-            <div class="row alert"><span class="g" style="color:var(--red);background:rgba(242,140,168,.16)">!</span><b>fix-flaky-tests</b><small style="color:var(--red)">needs: Bash(npm test)</small></div>
-            <div class="row"><span class="g" style="color:var(--red);background:rgba(242,140,168,.16)">?</span><b>api-pagination</b><small style="color:var(--red)">Which cursor format?</small></div>
-            <div class="row"><span class="g" style="color:var(--yellow);background:rgba(242,204,115,.16)">✓</span><b>dark-mode</b><small style="color:var(--yellow)">done</small></div>
-            <div class="row"><span class="g" style="color:var(--mauve);background:rgba(204,166,247,.16)">●</span><b>search-index</b><small>#418 merged</small></div>
-          </div>
+          <div class="visual visual-icon"><img src="/flotilla/boat.png" alt="Flotilla" /></div>
         </div>
 
         <div class="featured">
@@ -189,36 +174,28 @@
             <div class="icon"><img src="/moonbud/icon.png" alt="" /></div>
             <span class="tag">Coming soon · iPhone, iPad and Mac</span>
             <h2>Moonbud</h2>
-            <p class="sub">Your list, with a helper for every task.</p>
-            <p>Add a task and its helper gets going. It gathers what it needs, writes a short brief and asks you only what it must. Answer in a tap, even from the lock screen.</p>
+            <p class="sub">An agent on every task.</p>
+            <p>Add a task and Moonbud starts on it. It researches, drafts and plans, then hands you a short brief and asks only what it must. Answer in a tap, even from the lock screen.</p>
             <ul>
-              <li>A helper that does the legwork on every task</li>
+              <li>Every task gets an agent that does the legwork</li>
               <li>Ask Moonbud anything, from any screen</li>
-              <li>Learns how you work, and keeps your list yours</li>
+              <li>Learns how you work, and keeps your data yours</li>
             </ul>
             <div class="cta">
               <a class="btn btn-primary" href="https://moonbud.ai/">Take a look</a>
             </div>
             <div class="fine">Coming soon to the App Store.</div>
           </div>
-          <div class="fleet" aria-hidden="true">
-            <div class="lights"><i></i><i></i><i></i></div>
-            <div class="grp"><i></i>NOW</div>
-            <div class="row sel"><span class="g" style="color:var(--mauve);background:rgba(204,166,247,.16)">●</span><b>Draft the Q4 planning doc</b><small>working on it</small></div>
-            <div class="row"><span class="g" style="color:var(--yellow);background:rgba(242,204,115,.16)">?</span><b>Book flights for Lisbon</b><small style="color:var(--yellow)">pick a flight</small></div>
-            <div class="row"><span class="g" style="color:var(--green);background:rgba(166,227,161,.16)">✓</span><b>Renew the car insurance</b><small style="color:var(--green)">ready to check</small></div>
-            <div class="grp"><i></i>NEXT</div>
-            <div class="row"><span class="g" style="color:var(--green);background:rgba(166,227,161,.16)">✓</span><b>Compare standing desks</b><small style="color:var(--green)">ready to check</small></div>
-          </div>
+          <div class="visual visual-phone"><img src="/moonbud/screens/today-dark.webp" width="603" height="1311" alt="Moonbud's Today screen, with agents working on tasks" loading="lazy" /></div>
         </div>
 
         <div class="featured">
           <div>
             <div class="icon"><img src="/astrotype/icon.png" alt="" /></div>
-            <span class="tag">Out now · iPhone</span>
+            <span class="tag">Available now · iPhone</span>
             <h2>Astrotype</h2>
-            <p class="sub">Type fast with both thumbs.</p>
-            <p>An iPhone keyboard where each thumb taps or swipes a few letters at a time, both in the same word. What you type stays on your iPhone.</p>
+            <p class="sub">Type at full speed with both thumbs.</p>
+            <p>An iPhone keyboard where both thumbs tap and swipe within the same word, so your typing keeps pace with your thinking. Everything you type stays on your iPhone.</p>
             <ul>
               <li>Taps and swipes from both thumbs in one word</li>
               <li>A speed test, drills and weekly leaderboards</li>
@@ -230,14 +207,7 @@
             </div>
             <div class="fine">Free, with 14 days of Pro to try.</div>
           </div>
-          <div class="fleet" aria-hidden="true">
-            <div class="lights"><i></i><i></i><i></i></div>
-            <div class="grp"><i></i>BOTH THUMBS</div>
-            <div class="row"><span class="g" style="color:var(--sea);background:rgba(79,190,250,.16)">◀</span><b>t</b><small>left thumb taps</small></div>
-            <div class="row"><span class="g" style="color:var(--red);background:rgba(242,140,168,.16)">▶</span><b>h · u · m</b><small>right thumb swipes</small></div>
-            <div class="row"><span class="g" style="color:var(--sea);background:rgba(79,190,250,.16)">◀</span><b>b · s</b><small>left thumb swipes</small></div>
-            <div class="row sel"><span class="g" style="color:var(--green);background:rgba(166,227,161,.16)">✓</span><b>thumbs</b><small>space</small></div>
-          </div>
+          <div class="visual visual-keys"><video src="/astrotype/videos/space-midnight-dark.mp4" poster="/astrotype/videos/space-midnight-dark.jpg" autoplay muted loop playsinline aria-label="Typing with both thumbs on Astrotype"></video></div>
         </div>
       </div>
     </section>
@@ -245,22 +215,22 @@
     <section class="values">
       <div class="wrap">
         <div class="section-head">
-          <h2>How we build</h2>
-          <p>The same four rules for every app.</p>
+          <h2>What we stand for</h2>
+          <p>The principles behind everything we ship.</p>
         </div>
         <div class="features">
-          <div class="feature"><h4>Private by default</h4><p>Your data stays on your devices. No ads, no tracking, nothing sold.</p></div>
-          <div class="feature"><h4>Fast</h4><p>Native apps that open instantly and keep up with you.</p></div>
-          <div class="feature"><h4>Careful design</h4><p>Clean and focused, with the details thought through.</p></div>
-          <div class="feature"><h4>Looked after</h4><p>Regular updates from people who use the apps every day.</p></div>
+          <div class="feature"><h4>AI that does the work</h4><p>Agents take on real work from start to finish, and bring you in only when it matters.</p></div>
+          <div class="feature"><h4>Private by design</h4><p>Your data stays yours. No ads, no tracking, nothing sold.</p></div>
+          <div class="feature"><h4>Native and fast</h4><p>Built for Apple platforms from the ground up, so everything responds instantly.</p></div>
+          <div class="feature"><h4>Built to last</h4><p>Held to a high bar, improved constantly, and used every day by the people who make it.</p></div>
         </div>
       </div>
     </section>
 
     <section id="contact">
       <div class="wrap section-head" style="margin-bottom:0;">
-        <h2>Get in touch</h2>
-        <p>Questions about an app, an idea, or a problem to report? Write to us.</p>
+        <h2>Talk to us</h2>
+        <p>Questions, partnerships or press. We read everything.</p>
         <p style="margin-top:24px;"><a class="btn btn-primary" href="mailto:hello@stellorum.com">hello@stellorum.com</a></p>
       </div>
     </section>
