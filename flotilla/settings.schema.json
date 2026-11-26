@@ -1,8 +1,8 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema#",
-  "$id": "https://tinypenguin.com/flotilla/settings.schema.json",
+  "$id": "https://stellorum.com/flotilla/settings.schema.json",
   "title": "Flotilla repo settings",
-  "description": "What a repo tells Flotilla about itself. .flotilla/settings.json is committed and shared with the team; .flotilla/settings.local.json is your own and stays out of git. Docs: https://tinypenguin.com/flotilla/docs/repo-settings",
+  "description": "What a repo tells Flotilla about itself. .flotilla/settings.json is committed and shared with the team; .flotilla/settings.local.json is your own and stays out of git. Docs: https://stellorum.com/flotilla/docs/repo-settings",
   "type": "object",
   "properties": {
     "$schema": {

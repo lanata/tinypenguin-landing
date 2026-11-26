@@ -1,11 +1,11 @@
-# tinypenguin-landing — public marketing page
+# Stellorum website (stellorum.com)
 
 Static, build-free marketing page served by GitHub Pages. Public-facing.
 
 ## Edit
 
 Everything lives in `index.html` — a single self-contained file (HTML +
-inline CSS, no build step, no external dependencies). Rebrand by editing the
+inline CSS, no build step, no external dependencies). Brand colors and fonts follow the Stellorum brand book; they live in the
 `:root` design tokens at the top; add a roadmap entry by duplicating a `.card`
 block in the `#rookery` section (use `.tag.hatching` for the next thing
 shipping, plain `.tag` for "still an egg").
@@ -24,5 +24,5 @@ Write for people using the app, starting simple; Pro features get a
 ## Deploy
 
 Served by GitHub Pages from the repository root. Push to the published branch
-and Pages redeploys automatically. The custom domain (`tinypenguin.com`) is
+and Pages redeploys automatically. The custom domain (`stellorum.com`) is
 configured via the `CNAME` file.
