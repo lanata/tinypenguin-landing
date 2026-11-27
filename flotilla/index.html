@@ -22,7 +22,7 @@
   <meta name="twitter:image" content="https://stellorum.com/flotilla/og.png" />
   <link rel="canonical" href="https://stellorum.com/flotilla/" />
 
-  <link rel="icon" type="image/png" href="boat.png" />
+  <link rel="icon" type="image/png" href="icon.png" />
 
   <style>
     /* ---- Design tokens. Status colors match the app's sidebar palette. ---- */
@@ -154,23 +154,17 @@
       animation: twinkle 6s ease-in-out infinite alternate;
     }
     @keyframes twinkle { from { opacity: .35; } to { opacity: .7; } }
-    /* Perspective sea: a grid floor drifting toward the viewer. */
-    .sea {
-      position: absolute; left: -50%; right: -50%; top: 800px; height: 700px;
-      transform: perspective(600px) rotateX(62deg); transform-origin: 50% 0;
-      background-image:
-        linear-gradient(rgba(79,190,250,.22) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(79,190,250,.16) 1px, transparent 1px);
-      background-size: 64px 64px;
-      mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 60%, transparent 100%);
-      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 60%, transparent 100%);
-      animation: sail 4s linear infinite;
-    }
-    @keyframes sail { to { background-position: 0 64px, 0 0; } }
-    .horizon {
-      position: absolute; left: 0; right: 0; top: 800px; height: 2px;
-      background: linear-gradient(90deg, transparent, rgba(79,190,250,.7), transparent);
-      filter: blur(1px); box-shadow: 0 0 60px 12px rgba(42,141,235,.25);
+    /* Planet horizon from the app icon: the lit rim of a huge sphere. */
+    .planet {
+      position: absolute; left: 50%; top: 800px; width: 3600px; height: 3600px; margin-left: -1800px;
+      border-radius: 50%;
+      background: radial-gradient(1400px 700px at 50% 0%, #10295c, #060d20 70%);
+      box-shadow:
+        0 0 90px 18px rgba(42,141,235,.28),
+        inset 0 2px 0 rgba(140,214,255,.75),
+        inset 0 40px 80px -30px rgba(79,190,250,.45);
+      mask-image: linear-gradient(to bottom, #000 300px, transparent 700px);
+      -webkit-mask-image: linear-gradient(to bottom, #000 300px, transparent 700px);
     }
 
     .badge {
@@ -189,14 +183,14 @@
     .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
     .fine { margin-top: 16px; font-size: 13px; color: var(--faint); }
 
-    .hero-boat {
+    .hero-rocket {
       width: 84px; margin: 0 auto 18px;
       filter: drop-shadow(0 0 24px var(--glow));
-      animation: bob 5s ease-in-out infinite;
+      animation: float 5s ease-in-out infinite;
     }
-    @keyframes bob {
-      0%, 100% { transform: translateY(0) rotate(-3deg); }
-      50%      { transform: translateY(-8px) rotate(3deg); }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
     }
 
     /* Hero window: tilted back, flattens as you scroll (--hero set by JS). */
@@ -610,7 +604,7 @@
       background: conic-gradient(from 0deg, rgba(79,190,250,.0), rgba(79,190,250,.35), rgba(204,166,247,.25), rgba(138,219,235,.2), rgba(79,190,250,.0));
       border-radius: 50%; filter: blur(80px); opacity: .6; animation: spin 18s linear infinite; }
     @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
-    .final img { width: 120px; margin: 0 auto 26px; filter: drop-shadow(0 0 30px var(--glow)); animation: bob 5s ease-in-out infinite; }
+    .final img { width: 120px; margin: 0 auto 26px; filter: drop-shadow(0 0 30px var(--glow)); animation: float 5s ease-in-out infinite; }
     .final h2 { font-size: clamp(38px, 6.5vw, 76px); line-height: 1; letter-spacing: -0.045em; margin: 0 0 18px; font-weight: 800; }
     .final p { color: var(--muted); font-size: 19px; margin: 0 auto 32px; max-width: 560px; }
 
@@ -635,7 +629,7 @@
   <header id="top">
     <div class="wrap nav">
       <div class="brand">
-        <a href="#"><img src="boat.png" alt="" /> Flotilla</a>
+        <a href="#"><img src="rocket.png" alt="" /> Flotilla</a>
         <small>by <a href="/">Stellorum</a></small>
       </div>
       <nav class="nav-links">
@@ -654,9 +648,9 @@
   <main>
     <!-- HERO -->
     <section class="hero">
-      <div class="sky" aria-hidden="true"><div class="stars"></div><div class="horizon"></div><div class="sea"></div></div>
+      <div class="sky" aria-hidden="true"><div class="stars"></div><div class="planet"></div></div>
       <div class="wrap">
-        <img class="hero-boat rv" src="boat.png" alt="" />
+        <img class="hero-rocket rv" src="rocket.png" alt="" />
         <div class="rv" style="--d:.05s"><span class="badge"><b>Mac</b> Many agents in parallel, all in one place</span></div>
         <h1 class="rv" style="--d:.1s"><span class="grad-text">Run a fleet of coding agents.</span></h1>
         <p class="lede rv" style="--d:.2s">
@@ -765,7 +759,7 @@
             <h3>Agents outlive the app <span class="pro">Pro</span></h3>
             <p>Quit, update or crash Flotilla and your agents keep running in the background. Open it again and every pane is right where you left it.</p>
             <div class="vis survive">
-              <div class="appbox"><img src="boat.png" alt="" /></div>
+              <div class="appbox"><img src="rocket.png" alt="" /></div>
               <div class="lanes">
                 <div class="lane" style="--d:0s"></div><div class="lane" style="--d:.4s"></div><div class="lane" style="--d:.9s"></div><div class="lane" style="--d:1.3s"></div>
               </div>
@@ -931,7 +925,7 @@
       <div class="wrap">
         <div class="head center rv">
           <span class="eyebrow">Pricing</span>
-          <h2>Free to sail. Pro for the whole fleet.</h2>
+          <h2>Free to fly. Pro for the whole fleet.</h2>
           <p>The core of Flotilla is free, for good. Every new account gets 14 days of Pro to try everything.</p>
         </div>
 
@@ -983,8 +977,8 @@
     <section id="download" class="final">
       <div class="halo" aria-hidden="true"></div>
       <div class="wrap">
-        <img class="rv" src="boat.png" alt="" />
-        <h2 class="rv"><span class="grad-text">Set sail.</span></h2>
+        <img class="rv" src="rocket.png" alt="" />
+        <h2 class="rv"><span class="grad-text">Lift off.</span></h2>
         <p class="rv">Download Flotilla, point it at a repo and start your first agent.</p>
         <div class="cta rv">
           <a class="btn btn-primary" data-download href="https://github.com/stellorum/flotilla-releases/releases/latest">Download for Mac</a>
@@ -1227,7 +1221,7 @@
         <div class="grid4" style="height:100%;grid-template-columns:1fr">
           ${pane({ name: 'fix-flaky-tests', c: 'red', focus: true, body: term('e') })}
         </div>
-        <div class="toast"><img src="boat.png" alt="" /><div><b>fix-flaky-tests needs you</b><span>Bash(npm test -- --runInBand)</span></div></div>
+        <div class="toast"><img src="rocket.png" alt="" /><div><b>fix-flaky-tests needs you</b><span>Bash(npm test -- --runInBand)</span></div></div>
       </div>`;
 
     const shipScene = `
